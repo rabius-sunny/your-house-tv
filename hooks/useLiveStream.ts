@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useTimeSync } from './useTimeSync';
 
 interface Video {
   id: number;
@@ -24,6 +25,7 @@ interface LiveStreamState {
 }
 
 export const useLiveStream = (channel: Channel) => {
+  const { getServerTime, isSync } = useTimeSync();
   const [state, setState] = useState<LiveStreamState>({
     currentVideoIndex: 0,
     currentVideoTime: 0,
@@ -37,9 +39,10 @@ export const useLiveStream = (channel: Channel) => {
     0
   );
 
-  // Calculate current position based on real time
+  // Calculate current position based on server-synchronized time
   const calculateCurrentPosition = useCallback(() => {
-    const now = new Date();
+    // Use server-synchronized time instead of local client time
+    const now = getServerTime();
     const startTime = new Date(channel.startedAt);
     const endTime = new Date(channel.endedAt);
 
@@ -80,10 +83,13 @@ export const useLiveStream = (channel: Channel) => {
       totalElapsedTime: elapsedSeconds,
       isPlaying: true
     };
-  }, [channel, totalDuration]);
+  }, [channel, totalDuration, getServerTime]);
 
-  // Update position every second
+  // Update position every second, but only after time sync is complete
   useEffect(() => {
+    // Don't start the timer until time is synchronized
+    if (!isSync) return;
+
     const updatePosition = () => {
       setState(calculateCurrentPosition());
     };
@@ -95,7 +101,7 @@ export const useLiveStream = (channel: Channel) => {
     const interval = setInterval(updatePosition, 1000);
 
     return () => clearInterval(interval);
-  }, [calculateCurrentPosition]);
+  }, [calculateCurrentPosition, isSync]);
 
   const getCurrentVideo = () => {
     return channel.videos[state.currentVideoIndex];
@@ -119,6 +125,7 @@ export const useLiveStream = (channel: Channel) => {
     getCurrentVideo,
     getNextVideo,
     formatTime,
-    totalDuration
+    totalDuration,
+    isTimeSync: isSync
   };
 };

@@ -17,15 +17,20 @@ export interface Channel {
 }
 
 /**
- * Calculate the current video and playback position based on real time
+ * Calculate the current video and playback position based on provided time
+ * @param channel - The channel configuration
+ * @param currentTime - The current time to use for calculations (can be server-synchronized time)
  */
-export function calculateLivePosition(channel: Channel): {
+export function calculateLivePosition(
+  channel: Channel,
+  currentTime?: Date
+): {
   currentVideoIndex: number;
   currentVideoTime: number;
   totalElapsedTime: number;
   isLive: boolean;
 } {
-  const now = new Date();
+  const now = currentTime || new Date();
   const startTime = new Date(channel.startedAt);
   const endTime = new Date(channel.endedAt);
 

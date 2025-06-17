@@ -38,7 +38,8 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     getCurrentVideo,
     getNextVideo,
     formatTime,
-    totalDuration
+    totalDuration,
+    isTimeSync
   } = useLiveStream(channel);
 
   const currentVideo = getCurrentVideo();
@@ -191,6 +192,32 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
     return () => clearInterval(syncInterval);
   }, [isPlaying, currentVideoTime, isLoading]);
+
+  // Show syncing state if time is not yet synchronized
+  if (!isTimeSync) {
+    return (
+      <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+        <div className='flex items-center space-x-2'>
+          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+          <span>Loading....</span>
+        </div>
+      </div>
+
+      //   <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden'>
+      //     <div className='aspect-video flex items-center justify-center bg-gray-900 text-white'>
+      //       <div className='text-center'>
+      //         <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto mb-4'></div>
+      //         <h2 className='text-2xl font-bold mb-2'>
+      //           Synchronizing with server...
+      //         </h2>
+      //         <p className='text-gray-300'>
+      //           Ensuring all devices show the same content timing
+      //         </p>
+      //       </div>
+      //     </div>
+      //   </div>
+    );
+  }
 
   if (!isPlaying) {
     return (
