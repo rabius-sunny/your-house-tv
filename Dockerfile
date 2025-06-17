@@ -42,7 +42,7 @@ RUN mkdir .next && chown nextjs:nodejs .next
 # COPY --from=builder /app/public ./public
 
 # Set proper permissions for the public directory
-RUN chown -R nextjs:nodejs ./public
+# RUN chown -R nextjs:nodejs ./public
 
 # Copy .next directory and standalone output
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
