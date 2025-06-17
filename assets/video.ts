@@ -8,12 +8,17 @@ export const channel = {
     {
       id: 1,
       url: 'https://YHTV-pullzone123.b-cdn.net/susan_b_komen_-_psa..._the_power_of_one%20(720p).mp4',
-      duration: 100
+      duration: 40
     },
     {
       id: 2,
       url: 'https://YHTV-pullzone123.b-cdn.net/test%20folder/332_mill_creek_drive_clayton%2C_nc_27527%20(720p).mp4',
-      duration: 100
+      duration: 40
+    },
+    {
+      id: 3,
+      url: `https://yhtv-pullzone123.b-cdn.net/home_depot_ad_-_doer's_do%20(720p).mp4`,
+      duration: 40
     }
   ]
 };
