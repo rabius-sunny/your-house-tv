@@ -1,0 +1,21 @@
+services:
+  app:
+    container_name: your-house-tv
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - '3003:3003'
+    # environment:
+    #   - NODE_ENV=production
+    #   - MONGODB_URI=${MONGODB_URI}
+    #   - NEXT_PUBLIC_APP_URL=${NEXT_PUBLIC_APP_URL}
+    #   - JWT_SECRET=${JWT_SECRET}
+    # Add any other required environment variables here
+#     networks:
+#       - app-network
+
+# networks:
+#   app-network:
+#     driver: bridge
