@@ -82,6 +82,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   // Handle video loading and time synchronization
   useEffect(() => {
     const video = videoRef.current;
+    console.log('log', { video, currentVideo, isPlaying });
     if (!video || !currentVideo) return;
 
     const handleLoadedData = async () => {
