@@ -28,6 +28,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string>('');
+  const [initialized, setInitialized] = useState(false);
 
   const {
     currentVideoIndex,
@@ -42,27 +43,40 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   const currentVideo = getCurrentVideo();
 
-  // Debug effect to log current state
+  // Initialize on first render
   useEffect(() => {
-    if (currentVideo) {
-      console.log('Video Player State:', {
-        currentVideoIndex,
-        currentVideoTime,
-        isPlaying,
-        videoUrl: currentVideo.url,
-        videoDuration: currentVideo.duration,
-        isLoading,
-        error
-      });
+    if (currentVideo && !initialized) {
+      console.log('Initializing video player');
+      setCurrentVideoUrl(currentVideo.url);
+      setInitialized(true);
     }
-  }, [
-    currentVideoIndex,
-    currentVideoTime,
-    isPlaying,
-    currentVideo,
-    isLoading,
-    error
-  ]);
+  }, [currentVideo, initialized]);
+
+  // Debug effect to log current state
+  //   useEffect(() => {
+  //     if (currentVideo) {
+  //       console.log('Video Player State:', {
+  //         currentVideoIndex,
+  //         currentVideoTime,
+  //         isPlaying,
+  //         videoUrl: currentVideo.url,
+  //         videoDuration: currentVideo.duration,
+  //         isLoading,
+  //         error,
+  //         initialized,
+  //         currentVideoUrl
+  //       });
+  //     }
+  //   }, [
+  //     currentVideoIndex,
+  //     currentVideoTime,
+  //     isPlaying,
+  //     currentVideo,
+  //     isLoading,
+  //     error,
+  //     initialized,
+  //     currentVideoUrl
+  //   ]);
 
   // Handle video loading and time synchronization
   useEffect(() => {
@@ -70,6 +84,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     if (!video || !currentVideo) return;
 
     const handleLoadedData = async () => {
+      console.log('Video loaded data event fired');
       setIsLoading(false);
       setError(null);
 
@@ -80,6 +95,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       if (isPlaying) {
         try {
           await video.play();
+          console.log('Video started playing');
         } catch (err) {
           console.error('Failed to play video:', err);
           setError('Failed to play video');
@@ -87,17 +103,33 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       }
     };
 
+    const handleCanPlay = () => {
+      console.log('Video can play event fired');
+      setIsLoading(false);
+      setError(null);
+    };
+
     const handleError = () => {
+      console.error('Video error event fired');
       setError('Failed to load video');
       setIsLoading(false);
     };
 
+    const handleLoadStart = () => {
+      console.log('Video load start event fired');
+      setIsLoading(true);
+    };
+
     video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('canplay', handleCanPlay);
     video.addEventListener('error', handleError);
+    video.addEventListener('loadstart', handleLoadStart);
 
     return () => {
       video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('canplay', handleCanPlay);
       video.removeEventListener('error', handleError);
+      video.removeEventListener('loadstart', handleLoadStart);
     };
   }, [currentVideo, currentVideoTime, isPlaying]);
 
@@ -123,11 +155,22 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
     // Only change source if it's actually different
     if (currentVideoUrl !== currentVideo.url) {
+      console.log('Changing video source to:', currentVideo.url);
       setIsLoading(true);
       setError(null);
       setCurrentVideoUrl(currentVideo.url);
       video.src = currentVideo.url;
       video.load();
+
+      // Fallback timeout to clear loading state if events don't fire
+      const loadTimeout = setTimeout(() => {
+        console.log('Video loading timeout - clearing loading state');
+        setIsLoading(false);
+      }, 10000); // 10 second timeout
+
+      return () => {
+        clearTimeout(loadTimeout);
+      };
     }
   }, [currentVideo, currentVideoUrl]);
 
@@ -169,24 +212,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl'>
       {/* Video Player */}
       <div className='relative aspect-video'>
-        {isLoading && (
-          <div className='absolute inset-0 flex items-center justify-center bg-gray-900 text-white z-10'>
-            <div className='flex items-center space-x-2'>
-              <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-              <span>Loading...</span>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className='absolute inset-0 flex items-center justify-center bg-red-900 text-white z-10'>
-            <div className='text-center'>
-              <p className='text-2xl font-semibold'>Error</p>
-              <p className='text-3xl'>{error}</p>
-            </div>
-          </div>
-        )}
-
         <video
           ref={videoRef}
           className='w-full h-full object-cover'
@@ -196,11 +221,33 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           preload='metadata'
         />
 
-        {/* Live indicator */}
-        <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
-          <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
-          <span>LIVE</span>
-        </div>
+        {/* Loading overlay - only show if loading and no error */}
+        {isLoading && !error && (
+          <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+            <div className='flex items-center space-x-2'>
+              <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+              <span>Loading...</span>
+            </div>
+          </div>
+        )}
+
+        {/* Error overlay */}
+        {error && (
+          <div className='absolute inset-0 flex items-center justify-center bg-red-900 text-white z-20'>
+            <div className='text-center'>
+              <p className='text-xl font-semibold'>Error</p>
+              <p className='text-sm'>{error}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Live indicator - only show when not loading or in error */}
+        {!isLoading && !error && (
+          <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
+            <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
+            <span>LIVE</span>
+          </div>
+        )}
       </div>
 
       {/* Video Info */}

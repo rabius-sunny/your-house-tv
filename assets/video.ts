@@ -7,13 +7,13 @@ export const channel = {
   videos: [
     {
       id: 1,
-      url: 'https://YHTV-pullzone123.b-cdn.net/test%20folder/332_mill_creek_drive_clayton%2C_nc_27527%20(720p).mp4',
-      duration: 300 // 5 minutes in seconds
+      url: 'https://YHTV-pullzone123.b-cdn.net/susan_b_komen_-_psa..._the_power_of_one%20(720p).mp4',
+      duration: 100
     },
     {
       id: 2,
-      url: 'https://YHTV-pullzone123.b-cdn.net/test%20folder/3924-ivory-rose-lnbranded%20(720p).mp4',
-      duration: 420 // 7 minutes in seconds
+      url: 'https://YHTV-pullzone123.b-cdn.net/test%20folder/332_mill_creek_drive_clayton%2C_nc_27527%20(720p).mp4',
+      duration: 100
     }
   ]
 };
