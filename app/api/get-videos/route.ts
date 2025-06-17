@@ -1,7 +1,16 @@
-import { channel } from '@/assets/video';
+import { channelConfig } from '@/assets/video';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  // Getting the video array from assets/video.ts, in future this could be replaced with a database call.
-  return NextResponse.json(channel, { status: 200 });
+  try {
+    // Return the base channel configuration without durations
+    // The client will fetch actual durations dynamically using the videoDuration utility
+    return NextResponse.json(channelConfig, { status: 200 });
+  } catch (error) {
+    console.error('Error fetching channel data:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch channel data' },
+      { status: 500 }
+    );
+  }
 }

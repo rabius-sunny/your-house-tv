@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useChannelWithDurations } from '@/hooks/useChannelWithDurations';
 import { LiveVideoPlayer } from '@/components/LiveVideoPlayer';
 
 interface Video {
@@ -18,28 +18,7 @@ interface Channel {
 }
 
 export default function HomePage() {
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchChannel = async () => {
-      try {
-        const response = await fetch('/api/get-videos');
-        if (!response.ok) {
-          throw new Error('Failed to fetch channel data');
-        }
-        const data = await response.json();
-        setChannel(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChannel();
-  }, []);
+  const { channel, loading, error, durationsReady } = useChannelWithDurations();
 
   if (loading) {
     return (
@@ -78,7 +57,10 @@ export default function HomePage() {
   return (
     <div className='min-h-screen bg-gray-100 py-8 px-4'>
       <div className='container mx-auto'>
-        <LiveVideoPlayer channel={channel} />
+        <LiveVideoPlayer
+          channel={channel}
+          durationsReady={durationsReady}
+        />
       </div>
     </div>
   );
