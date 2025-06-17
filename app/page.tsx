@@ -55,8 +55,11 @@ export default function HomePage() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-100 py-8 px-4'>
+    <div className=' bg-gray-100 py-8 px-4'>
       <div className='container mx-auto'>
+        <h1 className='text-5xl my-6 font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent text-center'>
+          Your House TV
+        </h1>
         <LiveVideoPlayer
           channel={channel}
           durationsReady={durationsReady}

@@ -46,60 +46,31 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   const currentVideo = getCurrentVideo();
 
-  // Initialize on first render
   useEffect(() => {
-    if (currentVideo && !initialized) {
-      console.log('Initializing video player');
+    if (
+      currentVideo &&
+      isTimeSync &&
+      (!initialized || currentVideoUrl !== currentVideo.url)
+    ) {
       setCurrentVideoUrl(currentVideo.url);
       setInitialized(true);
+      setError(null);
     }
-  }, [currentVideo, initialized]);
+  }, [currentVideo, isTimeSync, initialized, currentVideoUrl]);
 
-  // Debug effect to log current state
-  //   useEffect(() => {
-  //     if (currentVideo) {
-  //       console.log('Video Player State:', {
-  //         currentVideoIndex,
-  //         currentVideoTime,
-  //         isPlaying,
-  //         videoUrl: currentVideo.url,
-  //         videoDuration: currentVideo.duration,
-  //         isLoading,
-  //         error,
-  //         initialized,
-  //         currentVideoUrl
-  //       });
-  //     }
-  //   }, [
-  //     currentVideoIndex,
-  //     currentVideoTime,
-  //     isPlaying,
-  //     currentVideo,
-  //     isLoading,
-  //     error,
-  //     initialized,
-  //     currentVideoUrl
-  //   ]);
-
-  // Handle video loading and time synchronization
   useEffect(() => {
     const video = videoRef.current;
-    console.log('log', { video, currentVideo, isPlaying });
-    if (!video || !currentVideo) return;
+    if (!video || !currentVideo || !isTimeSync) return;
 
     const handleLoadedData = async () => {
-      console.log('Video loaded data event fired');
       setIsLoading(false);
       setError(null);
 
-      // Sync video time with calculated position
       video.currentTime = currentVideoTime;
 
-      // Start playing if should be playing
       if (isPlaying) {
         try {
           await video.play();
-          console.log('Video started playing');
         } catch (err) {
           console.error('Failed to play video:', err);
           setError('Failed to play video');
@@ -108,19 +79,16 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     };
 
     const handleCanPlay = () => {
-      console.log('Video can play event fired');
       setIsLoading(false);
       setError(null);
     };
 
     const handleError = () => {
-      console.error('Video error event fired');
       setError('Failed to load video');
       setIsLoading(false);
     };
 
     const handleLoadStart = () => {
-      console.log('Video load start event fired');
       setIsLoading(true);
     };
 
@@ -135,12 +103,11 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       video.removeEventListener('error', handleError);
       video.removeEventListener('loadstart', handleLoadStart);
     };
-  }, [currentVideo, currentVideoTime, isPlaying]);
+  }, [currentVideo, currentVideoTime, isPlaying, isTimeSync]);
 
-  // Handle play/pause state
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !isTimeSync) return;
 
     if (isPlaying && video.paused && !isLoading) {
       video.play().catch((err) => {
@@ -150,59 +117,61 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     } else if (!isPlaying && !video.paused) {
       video.pause();
     }
-  }, [isPlaying, isLoading]);
+  }, [isPlaying, isLoading, isTimeSync]);
 
-  // Handle video source changes
   useEffect(() => {
     const video = videoRef.current;
-    if (!video || !currentVideo) return;
+    if (!video || !currentVideo || !isTimeSync) return;
 
-    // Only change source if it's actually different
-    if (currentVideoUrl !== currentVideo.url) {
-      console.log('Changing video source to:', currentVideo.url);
+    if (currentVideoUrl !== currentVideo.url || !video.src) {
       setIsLoading(true);
       setError(null);
       setCurrentVideoUrl(currentVideo.url);
       video.src = currentVideo.url;
       video.load();
 
-      // Fallback timeout to clear loading state if events don't fire
       const loadTimeout = setTimeout(() => {
-        console.log('Video loading timeout - clearing loading state');
         setIsLoading(false);
-      }, 10000); // 10 second timeout
+      }, 10000);
 
       return () => {
         clearTimeout(loadTimeout);
       };
     }
-  }, [currentVideo, currentVideoUrl]);
+  }, [currentVideo, currentVideoUrl, isTimeSync, initialized]);
 
-  // Periodic time sync to keep videos in sync (less aggressive)
   useEffect(() => {
-    if (!isPlaying) return;
+    if (!isPlaying || !isTimeSync) return;
 
     const syncInterval = setInterval(() => {
       const video = videoRef.current;
       if (!video || isLoading) return;
 
       const timeDiff = Math.abs(video.currentTime - currentVideoTime);
-      // Only sync if drift is significant (more than 5 seconds)
       if (timeDiff > 5) {
         video.currentTime = currentVideoTime;
       }
-    }, 5000); // Check every 5 seconds
+    }, 5000);
 
     return () => clearInterval(syncInterval);
-  }, [isPlaying, currentVideoTime, isLoading]);
+  }, [isPlaying, currentVideoTime, isLoading, isTimeSync]);
 
-  // Show syncing state if time is not yet synchronized
-  if (!isTimeSync || !durationsReady) {
+  if (!isTimeSync) {
     return (
       <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
         <div className='flex items-center space-x-2'>
           <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-          <span>Loading....</span>
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+  if (!durationsReady) {
+    return (
+      <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+        <div className='flex items-center space-x-2'>
+          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+          <span>Loading...</span>
         </div>
       </div>
     );
@@ -226,7 +195,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   return (
     <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl'>
-      {/* Video Player */}
       <div className='relative aspect-video'>
         <video
           ref={videoRef}
@@ -237,7 +205,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           preload='metadata'
         />
 
-        {/* Loading overlay - only show if loading and no error */}
         {isLoading && !error && (
           <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
             <div className='flex items-center space-x-2'>
@@ -247,7 +214,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           </div>
         )}
 
-        {/* Error overlay */}
         {error && (
           <div className='absolute inset-0 flex items-center justify-center bg-red-900 text-white z-20'>
             <div className='text-center'>
@@ -257,7 +223,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           </div>
         )}
 
-        {/* Live indicator - only show when not loading or in error */}
         {!isLoading && !error && (
           <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
             <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
@@ -266,7 +231,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
         )}
       </div>
 
-      {/* Video Info */}
       <div className='p-4 bg-gray-900 text-white'>
         <div className='flex justify-between items-start mb-2'>
           <div>
@@ -280,7 +244,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className='mt-4'>
           <div className='flex justify-between text-xs text-gray-400 mb-1'>
             <span>{formatTime(currentVideoTime)}</span>
@@ -299,7 +262,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
           </div>
         </div>
 
-        {/* Next Video Preview */}
         <div className='mt-3 text-xs text-gray-400'>
           Up next: Video {getNextVideo().id}
         </div>
