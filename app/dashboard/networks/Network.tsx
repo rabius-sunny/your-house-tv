@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
+import ImageUploader from '@/components/shared/ImageUploader';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
   FormControl,
@@ -13,21 +13,23 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
 import { CreateNetwork, createNetworkSchema } from '@/helper/schema/network';
 import request from '@/services/http';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 export default function NetworkComp() {
   const [isLoading, setIsLoading] = useState(false);
+  const [thumbnail, setThumbnail] = useState<string>();
 
   const form = useForm<CreateNetwork>({
     resolver: zodResolver(createNetworkSchema),
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      thumbnail: '',
+      // thumbnail: '',
       isFeatured: false
     }
   });
@@ -36,11 +38,26 @@ export default function NetworkComp() {
     try {
       setIsLoading(true);
 
-      const response = await request.post('/network', data);
+      // Upload file if selected
+      if (!thumbnail) {
+        toast.error('Please select a thumbnail image');
+        return;
+      }
+
+      console.log('thumbnail', thumbnail);
+
+      // Submit form data with uploaded thumbnail URL
+      const formData = {
+        ...data,
+        thumbnail
+      };
+
+      const response = await request.post('/network', formData);
 
       toast.success('Network created successfully!');
 
       form.reset();
+      setThumbnail(undefined);
     } catch (error: any) {
       console.error('Error creating network:', error);
 
@@ -90,25 +107,14 @@ export default function NetworkComp() {
               )}
             />
 
-            {/* Thumbnail URL */}
-            <FormField
-              control={form.control}
-              name='thumbnail'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Thumbnail URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='url'
-                      placeholder='https://example.com/network-logo.jpg'
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Thumbnail Upload */}
+
+            <div className='space-y-2'>
+              <ImageUploader
+                setSelectedFile={setThumbnail}
+                isLoading={isLoading}
+              />
+            </div>
 
             {/* Featured Toggle */}
             <FormField

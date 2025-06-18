@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import db from '@/config/db';
 import { createNetworkSchema } from '@/helper/schema/network';
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all networks or a specific network by ID
 export async function GET(request: NextRequest) {
@@ -59,11 +59,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate the request body
-    const validatedData = createNetworkSchema.parse(body);
+    const { error } = createNetworkSchema.safeParse(body);
+    if (error) {
+      return NextResponse.json(
+        { error: 'Invalid data provided', details: error.errors },
+        { status: 400 }
+      );
+    }
 
     // Create the network
     const network = await db.network.create({
-      data: validatedData,
+      data: { ...body },
       include: {
         city: {
           include: {

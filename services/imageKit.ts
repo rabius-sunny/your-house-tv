@@ -29,9 +29,9 @@ class ImageKitService {
   private urlEndpoint: string;
 
   constructor() {
-    const publicKey = process.env.IMAGEKIT_PUBLIC_KEY || '';
-    const privateKey = process.env.IMAGEKIT_PRIVATE_KEY || '';
-    this.urlEndpoint = process.env.IMAGEKIT_URL_ENDPOINT || '';
+    const publicKey = process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || '';
+    const privateKey = process.env.NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY || '';
+    this.urlEndpoint = process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT || '';
 
     if (!publicKey || !privateKey || !this.urlEndpoint) {
       console.warn(
