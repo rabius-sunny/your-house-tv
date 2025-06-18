@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -23,6 +24,10 @@ export default function RootLayout({
         className={`${montserrat.className} antialiased`}
       >
         {children}
+        <Toaster
+          richColors
+          closeButton
+        />
       </body>
     </html>
   );
