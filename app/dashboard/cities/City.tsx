@@ -1,0 +1,199 @@
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { CreateCity, createCitySchema } from '@/helper/schema/city';
+import request from '@/services/http';
+import { Network } from '@/types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+
+type TProps = {
+  networks: Network[];
+};
+
+export default function CityComp({ networks }: TProps) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<CreateCity>({
+    resolver: zodResolver(createCitySchema),
+    mode: 'onSubmit',
+    defaultValues: {
+      name: '',
+      thumbnail: '',
+      isFeatured: false,
+      networkId: ''
+    }
+  });
+
+  const onSubmit = async (data: CreateCity) => {
+    try {
+      setIsLoading(true);
+
+      const response = await request.post('/city', data);
+
+      toast.success('City created successfully!');
+
+      form.reset();
+    } catch (error: any) {
+      console.error('Error creating city:', error);
+
+      let errorMessage = 'Failed to create city';
+
+      if (error.name === 'ZodError') {
+        errorMessage = error.errors[0]?.message || 'Invalid data provided';
+      } else if (error?.response?.data?.error) {
+        errorMessage = error.response.data.error;
+      }
+
+      toast.error('Failed to create city', {
+        description: errorMessage
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Card className='w-full max-w-2xl mx-auto'>
+      <CardHeader>
+        <CardTitle className='text-2xl font-bold'>Create New City</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className='space-y-6'
+          >
+            {/* City Name */}
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Enter city name (e.g., New York, Los Angeles)'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Thumbnail URL */}
+            <FormField
+              control={form.control}
+              name='thumbnail'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Thumbnail URL</FormLabel>
+                  <FormControl>
+                    <Input
+                      type='url'
+                      placeholder='https://example.com/city-image.jpg'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Network Selection */}
+            <FormField
+              control={form.control}
+              name='networkId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Network</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isLoading}
+                  >
+                    <FormControl>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='Select a network' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {networks.map((network) => (
+                        <SelectItem
+                          key={network.id}
+                          value={network.id}
+                        >
+                          {network.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Featured Toggle */}
+            <FormField
+              control={form.control}
+              name='isFeatured'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
+                  <div className='space-y-0.5'>
+                    <FormLabel className='text-base cursor-pointer'>
+                      Featured City
+                    </FormLabel>
+                    <div className='text-sm text-muted-foreground'>
+                      Mark this city as featured to highlight it
+                    </div>
+                  </div>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            {/* Action Buttons */}
+            <div className='flex gap-4 pt-4'>
+              <Button
+                type='submit'
+                disabled={isLoading}
+                className='flex-1'
+              >
+                {isLoading ? 'Creating...' : 'Create City'}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}
