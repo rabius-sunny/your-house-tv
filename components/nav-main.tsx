@@ -13,7 +13,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
-  SidebarMenuSubItem
+  SidebarMenuSubItem,
+  useSidebar
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 
@@ -32,6 +33,7 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { toggleSidebar, isMobile } = useSidebar();
   return (
     <SidebarGroup className='px-3 py-2'>
       <SidebarMenu className='gap-2 mt-2'>
@@ -65,7 +67,10 @@ export function NavMain({
                         key={subItem.title}
                         className='mb-1'
                       >
-                        <SidebarMenuButton className='w-full px-4 py-5 rounded-md hover:bg-accent/30 transition-all duration-200 ease-in-out group'>
+                        <SidebarMenuButton
+                          onClick={() => isMobile && toggleSidebar()}
+                          className='w-full px-4 py-5 rounded-md hover:bg-accent/30 transition-all duration-200 ease-in-out group'
+                        >
                           <Link
                             href={subItem.url}
                             className='flex items-center w-full'
@@ -90,6 +95,7 @@ export function NavMain({
               className='mb-1'
             >
               <SidebarMenuButton
+                onClick={() => isMobile && toggleSidebar()}
                 asChild
                 className='w-full px-4 py-5 rounded-lg hover:bg-accent/50 transition-all duration-200 ease-in-out group hover:shadow-sm'
               >
