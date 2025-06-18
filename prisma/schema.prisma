@@ -92,6 +92,7 @@ model Vlog {
   title       String
   video       String
   isFeatured  Boolean        @default(false)
+  type        VlogType       @default(VLOG)
   categories  VlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId
 
@@ -103,4 +104,9 @@ model Settings {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   key   String @unique
   value String
+}
+
+enum VlogType {
+  VLOG
+  PODCAST
 }
