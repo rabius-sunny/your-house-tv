@@ -1,6 +1,6 @@
 'use client';
 
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+import { ChevronsUpDown, Home, LogOut } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -16,6 +16,7 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
+import { useRouter } from 'next/navigation';
 
 export function NavUser({
   user
@@ -27,6 +28,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const { push } = useRouter();
 
   return (
     <SidebarMenu>
@@ -73,6 +75,10 @@ export function NavUser({
               </div>
             </DropdownMenuLabel>
 
+            <DropdownMenuItem onClick={() => push('/')}>
+              <Home />
+              Go to Site
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <LogOut />
               Log out
