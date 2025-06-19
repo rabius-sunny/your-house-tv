@@ -14,15 +14,15 @@ echo -e "${BLUE}======================================${NC}"
 echo -e "${BLUE}     Your House TV Docker Setup      ${NC}"
 echo -e "${BLUE}======================================${NC}"
 
-# Check if required environment variables are set
-if [ -z "$DATABASE_URL" ]; then
-    echo -e "${RED}Error: DATABASE_URL environment variable is not set.${NC}"
-    echo -e "${YELLOW}Please set DATABASE_URL in your environment or .env file.${NC}"
-    echo -e "${YELLOW}Example: export DATABASE_URL='mongodb://your-connection-string'${NC}"
-    exit 1
-fi
+# # Check if required environment variables are set
+# if [ -z "$DATABASE_URL" ]; then
+#     echo -e "${RED}Error: DATABASE_URL environment variable is not set.${NC}"
+#     echo -e "${YELLOW}Please set DATABASE_URL in your environment or .env file.${NC}"
+#     echo -e "${YELLOW}Example: export DATABASE_URL='mongodb://your-connection-string'${NC}"
+#     exit 1
+# fi
 
-echo -e "${GREEN}✓ DATABASE_URL is set${NC}"
+# echo -e "${GREEN}✓ DATABASE_URL is set${NC}"
 
 # Pull latest changes from git
 echo -e "${BLUE}Pulling latest changes from git...${NC}"
