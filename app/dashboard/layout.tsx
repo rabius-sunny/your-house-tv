@@ -15,6 +15,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -27,6 +28,7 @@ export default function DashboardLayout({
                 'Dashboard'}
             </h2>
           </div>
+
           {children}
         </div>
       </SidebarInset>

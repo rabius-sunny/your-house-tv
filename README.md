@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Your House TV
 
-## Getting Started
+A Next.js application for managing TV networks, cities, channels, and stations with Docker deployment support.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 22 or higher
+- pnpm package manager
+- Docker and Docker Compose (for production deployment)
+- MongoDB database
+
+## Environment Setup
+
+1. Copy the environment example file:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+cp .env.example .env
+```
+
+2. Update the `.env` file with your actual values:
+
+```bash
+# Database
+DATABASE_URL="mongodb://your-mongodb-connection-string"
+
+# ImageKit Configuration
+NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY=your-imagekit-private-key
+NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=your-imagekit-public-key
+NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT=https://ik.imageio.io/your-endpoint
+```
+
+## Development Setup
+
+1. Install dependencies:
+
+```bash
+pnpm install
+```
+
+2. Generate Prisma client:
+
+```bash
+pnpm db:generate
+```
+
+3. Push database schema (if needed):
+
+```bash
+pnpm db:push
+```
+
+4. Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Production Deployment with Docker
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Make sure you have your environment variables set up in your system or `.env` file.
 
-## Learn More
+2. Build and run with Docker Compose:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker compose build --no-cache
+docker compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Or use the provided setup script:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+chmod +x docker-setup.sh
+./docker-setup.sh
+```
 
-## Deploy on Vercel
+The application will be available at [http://localhost:3003](http://localhost:3003).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Project Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `app/` - Next.js app router pages and API routes
+- `components/` - Reusable React components
+- `prisma/` - Database schema and migrations
+- `lib/` - Utility functions and configurations
+- `types.ts` - TypeScript type definitions
+
+## API Endpoints
+
+- `/api/city` - City management (GET, POST, PUT, DELETE)
+- `/api/network` - Network management
+- `/api/gallery` - Gallery/media management
+- `/api/get-videos` - Video retrieval
+- `/api/server-time` - Server time synchronization
+
+## Database Schema
+
+The application uses MongoDB with Prisma ORM. Main entities:
+
+- Networks
+- Cities
+- Channels
+- Stations
+- Vlogs
+- Gallery
+- Users
+
+## Tech Stack
+
+- **Frontend**: Next.js 15, React 19, TypeScript
+- **Backend**: Next.js API Routes
+- **Database**: MongoDB with Prisma ORM
+- **UI**: Tailwind CSS, Radix UI components
+- **Media**: ImageKit for image/video management
+- **Deployment**: Docker
+
+## Scripts
+
+- `pnpm dev` - Start development server
+- `pnpm build` - Build for production
+- `pnpm start` - Start production server
+- `pnpm db:generate` - Generate Prisma client
+- `pnpm db:push` - Push database schema changes
