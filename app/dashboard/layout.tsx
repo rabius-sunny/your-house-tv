@@ -16,6 +16,15 @@ export default function DashboardLayout({
 }) {
   const pathname = usePathname();
 
+  const title =
+    navData.navMain.find((item) => item.url === pathname)?.title ||
+    navData.navMain.map((item) => {
+      if (item.items) {
+        return item.items.find((sub) => sub.url === pathname)?.title;
+      }
+    }) ||
+    'Dashboard';
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -23,10 +32,7 @@ export default function DashboardLayout({
         <div className='p-4 md:p-6 xl:p-8'>
           <div className='flex items-center gap-3 mb-8'>
             <SidebarTrigger className='-ml-1' />
-            <h2 className='font-bold'>
-              {navData.navMain.find((item) => item.url === pathname)?.title ||
-                'Dashboard'}
-            </h2>
+            <h2 className='font-bold'>{title}</h2>
           </div>
 
           {children}

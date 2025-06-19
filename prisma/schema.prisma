@@ -38,6 +38,7 @@ model Network {
   thumbnail  String
   isFeatured Boolean @default(false)
   city       City[]
+  meta       Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,6 +52,7 @@ model City {
   network    Network   @relation(fields: [networkId], references: [id], onDelete: Cascade)
   networkId  String    @db.ObjectId
   channels   Channel[]
+  meta       Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -65,6 +67,7 @@ model Channel {
   cityId      String    @db.ObjectId
   city        City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
   stations    Station[]
+  meta        Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +83,34 @@ model Station {
   isFeatured Boolean  @default(false)
   channelId  String   @db.ObjectId
   channel    Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  meta       Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model BlogCategory {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  thumbnail   String
+  isFeatured  Boolean  @default(false)
+  blogIds     String[] @db.ObjectId
+  blogs       Blog[]   @relation(fields: [blogIds], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Blog {
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  thumbnail   String
+  description String
+  isFeatured  Boolean        @default(false)
+  categories  BlogCategory[] @relation(fields: [categoryIds], references: [id])
+  categoryIds String[]       @db.ObjectId
+  meta        Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -101,11 +132,13 @@ model VlogCategory {
 model Vlog {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   title       String
+  thumbnail   String
   video       String
   isFeatured  Boolean        @default(false)
   type        VlogType       @default(VLOG)
   categories  VlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId
+  meta        Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

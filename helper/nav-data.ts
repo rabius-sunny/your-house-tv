@@ -1,5 +1,6 @@
 import {
   Building2,
+  FileStack,
   FileVideo2,
   Frame,
   Globe,
@@ -44,8 +45,21 @@ export const navData = {
     },
     {
       title: 'Video Gallery',
-      url: '/dashboard/video-gallery',
-      icon: FileVideo2
+      url: '#',
+      icon: FileVideo2,
+      isActive: true,
+      items: [
+        {
+          title: 'Category',
+          url: '/dashboard/category',
+          icon: FileStack
+        },
+        {
+          title: 'Videos',
+          url: '/dashboard/videos',
+          icon: FileVideo2
+        }
+      ]
     },
 
     {

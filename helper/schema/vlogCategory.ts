@@ -4,8 +4,7 @@ import { z } from 'zod';
 export const createVlogCategorySchema = z.object({
   name: z.string().min(1, 'Category name is required'),
   description: z.string().min(1, 'Description is required'),
-  thumbnail: z.string().url('Thumbnail must be a valid URL'),
-  isFeatured: z.boolean().optional().default(false),
+  isFeatured: z.boolean(),
   vlogIds: z.array(z.string()).optional()
 });
 
