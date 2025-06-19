@@ -20,7 +20,7 @@ export default function VideoUploader({
   setSelectedVideo,
   isLoading,
   accept = 'video/*',
-  maxSizeMB = 100, // 100MB default for videos
+  maxSizeMB = 1024, // 1024MB default for videos
   multiple = false,
   setIsLoading
 }: TProps) {

@@ -127,6 +127,9 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
                 setSelectedFile={setThumbnail}
                 isLoading={isLoading}
               />
+              <p className='text-xs text-muted-foreground'>
+                Recommended size: 400x280px
+              </p>
             </div>
 
             {/* Channel Selection */}

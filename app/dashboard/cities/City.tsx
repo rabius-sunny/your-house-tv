@@ -125,6 +125,9 @@ export default function CityComp({ networks }: TProps) {
                 setSelectedFile={setThumbnail}
                 isLoading={isLoading}
               />
+              <p className='text-xs text-muted-foreground'>
+                Recommended size: 400x280px
+              </p>
             </div>
 
             {/* Network Selection */}
