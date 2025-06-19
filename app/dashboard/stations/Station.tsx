@@ -46,6 +46,11 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
     setUploadedVideos((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Helper function to reorder videos
+  const reorderVideos = (reorderedVideos: string[]) => {
+    setUploadedVideos(reorderedVideos);
+  };
+
   const form = useForm<CreateStation>({
     resolver: zodResolver(createStationSchema),
     mode: 'onSubmit',
@@ -272,6 +277,7 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
                 uploadedVideos={uploadedVideos}
                 onVideoAdd={addVideo}
                 onVideoRemove={removeVideo}
+                onVideoReorder={reorderVideos}
                 setIsUploading={setIsUploading}
                 isLoading={isLoading}
               />

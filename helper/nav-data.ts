@@ -1,5 +1,6 @@
 import {
   Building2,
+  FileVideo2,
   Frame,
   Globe,
   Map,
@@ -40,6 +41,11 @@ export const navData = {
       title: 'Stations',
       url: '/dashboard/stations',
       icon: RadioTower
+    },
+    {
+      title: 'Video Gallery',
+      url: '/dashboard/video-gallery',
+      icon: FileVideo2
     },
 
     {
