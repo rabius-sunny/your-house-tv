@@ -13,6 +13,7 @@ type TProps = {
   accept?: string;
   maxSizeMB?: number;
   multiple?: boolean;
+  setIsLoading?: (loading: boolean) => void;
 };
 
 export default function VideoUploader({
@@ -20,7 +21,8 @@ export default function VideoUploader({
   isLoading,
   accept = 'video/*',
   maxSizeMB = 100, // 100MB default for videos
-  multiple = false
+  multiple = false,
+  setIsLoading
 }: TProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
@@ -62,6 +64,7 @@ export default function VideoUploader({
 
       setFile(selectedFile);
       setIsUploading(true);
+      setIsLoading?.(true);
       setUploadProgress(0);
 
       try {
@@ -101,6 +104,7 @@ export default function VideoUploader({
         toast.error('Failed to upload video');
       } finally {
         setIsUploading(false);
+        setIsLoading?.(false);
         setUploadProgress(0);
       }
     }
@@ -142,7 +146,6 @@ export default function VideoUploader({
         onChange={handleFileChange}
         disabled={isLoading || isUploading}
         multiple={multiple}
-        className='file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100'
       />
 
       {isUploading && (
@@ -153,7 +156,7 @@ export default function VideoUploader({
           </div>
           <Progress
             value={uploadProgress}
-            className='h-2'
+            className='h-2 '
           />
         </div>
       )}

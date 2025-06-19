@@ -32,7 +32,7 @@ import { toast } from 'sonner';
 
 export default function StationComp({ channels }: { channels: Channel[] }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [videos, setVideos] = useState<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
   const [selectedVideo, setSelectedVideo] = useState<string>();
 
@@ -43,7 +43,6 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
       name: '',
       startedAt: new Date(),
       endedAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-      videos: [],
       isFeatured: false,
       channelId: ''
     }
@@ -59,16 +58,11 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
         return;
       }
 
-      if (videos.length === 0) {
-        toast.error('Please add at least one video URL');
-        return;
-      }
-
       // Submit form data with videos
       const formData = {
         ...data,
         thumbnail,
-        videos
+        videos: [selectedVideo]
       };
 
       const response = await request.post('/station', formData);
@@ -77,7 +71,6 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
 
       form.reset();
       setThumbnail(undefined);
-      setVideos([]);
     } catch (error: any) {
       console.error('Error creating station:', error);
 
@@ -95,20 +88,6 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const addVideoUrl = () => {
-    setVideos([...videos, '']);
-  };
-
-  const updateVideoUrl = (index: number, url: string) => {
-    const newVideos = [...videos];
-    newVideos[index] = url;
-    setVideos(newVideos);
-  };
-
-  const removeVideoUrl = (index: number) => {
-    setVideos(videos.filter((_, i) => i !== index));
   };
 
   return (
@@ -148,12 +127,6 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
                 setSelectedFile={setThumbnail}
                 isLoading={isLoading}
               />
-            </div>
-
-            {/* Video Upload */}
-            <div className='space-y-2'>
-              <Label>Video</Label>
-              <VideoUploader setSelectedVideo={setSelectedVideo} />
             </div>
 
             {/* Channel Selection */}
@@ -248,42 +221,6 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
               )}
             />
 
-            {/* Video URLs */}
-            <div className='space-y-2'>
-              <Label>Video URLs</Label>
-              <div className='space-y-2'>
-                {videos.map((video, index) => (
-                  <div
-                    key={index}
-                    className='flex gap-2'
-                  >
-                    <Input
-                      placeholder='Enter video URL'
-                      value={video}
-                      onChange={(e) => updateVideoUrl(index, e.target.value)}
-                      disabled={isLoading}
-                    />
-                    <Button
-                      type='button'
-                      variant='outline'
-                      onClick={() => removeVideoUrl(index)}
-                      disabled={isLoading}
-                    >
-                      Remove
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type='button'
-                  variant='outline'
-                  onClick={addVideoUrl}
-                  disabled={isLoading}
-                >
-                  Add Video URL
-                </Button>
-              </div>
-            </div>
-
             {/* Featured Toggle */}
             <FormField
               control={form.control}
@@ -309,11 +246,20 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
               )}
             />
 
+            {/* Video Upload */}
+            <div className='space-y-2'>
+              <Label>Video</Label>
+              <VideoUploader
+                setIsLoading={setIsUploading}
+                setSelectedVideo={setSelectedVideo}
+              />
+            </div>
+
             {/* Action Buttons */}
             <div className='flex gap-4 pt-4'>
               <Button
                 type='submit'
-                disabled={isLoading}
+                disabled={isLoading || isUploading}
                 className='flex-1'
               >
                 {isLoading ? 'Creating...' : 'Create Station'}
