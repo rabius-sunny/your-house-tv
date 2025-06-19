@@ -22,6 +22,17 @@ export type Gallery = {
   updatedAt: Date;
 };
 
+export type VideoGallery = {
+  id: string;
+  fileId: string;
+  url: string;
+  filePath: string;
+  size: number;
+  fileType: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Network = {
   id: string;
   name: string;

@@ -1,6 +1,7 @@
 'use client';
 
 import ImageUploader from '@/components/shared/ImageUploader';
+import VideoUploader from '@/components/shared/VideoUploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -33,6 +34,7 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
   const [isLoading, setIsLoading] = useState(false);
   const [videos, setVideos] = useState<string[]>([]);
   const [thumbnail, setThumbnail] = useState<string>();
+  const [selectedVideo, setSelectedVideo] = useState<string>();
 
   const form = useForm<CreateStation>({
     resolver: zodResolver(createStationSchema),
@@ -146,6 +148,12 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
                 setSelectedFile={setThumbnail}
                 isLoading={isLoading}
               />
+            </div>
+
+            {/* Video Upload */}
+            <div className='space-y-2'>
+              <Label>Video</Label>
+              <VideoUploader setSelectedVideo={setSelectedVideo} />
             </div>
 
             {/* Channel Selection */}
