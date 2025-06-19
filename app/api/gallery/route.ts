@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         }
       });
       if (filesToDelete.length) {
-        const deleted = await imageKitService.deleteMultipleFiles(
+        await imageKitService.deleteMultipleFiles(
           filesToDelete.map((file) => file.fileId)
         );
         await db.gallery.deleteMany({

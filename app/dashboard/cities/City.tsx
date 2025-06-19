@@ -1,5 +1,6 @@
 'use client';
 
+import ImageUploader from '@/components/shared/ImageUploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -12,6 +13,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -33,13 +35,13 @@ type TProps = {
 
 export default function CityComp({ networks }: TProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [thumbnail, setThumbnail] = useState<string>();
 
   const form = useForm<CreateCity>({
     resolver: zodResolver(createCitySchema),
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      thumbnail: '',
       isFeatured: false,
       networkId: ''
     }
@@ -49,11 +51,24 @@ export default function CityComp({ networks }: TProps) {
     try {
       setIsLoading(true);
 
-      const response = await request.post('/city', data);
+      // Upload file if selected
+      if (!thumbnail) {
+        toast.error('Please select a thumbnail image');
+        return;
+      }
+
+      // Submit form data with uploaded thumbnail URL
+      const formData = {
+        ...data,
+        thumbnail
+      };
+
+      const response = await request.post('/city', formData);
 
       toast.success('City created successfully!');
 
       form.reset();
+      setThumbnail(undefined);
     } catch (error: any) {
       console.error('Error creating city:', error);
 
@@ -103,25 +118,14 @@ export default function CityComp({ networks }: TProps) {
               )}
             />
 
-            {/* Thumbnail URL */}
-            <FormField
-              control={form.control}
-              name='thumbnail'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Thumbnail URL</FormLabel>
-                  <FormControl>
-                    <Input
-                      type='url'
-                      placeholder='https://example.com/city-image.jpg'
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Thumbnail Upload */}
+            <div className='space-y-2'>
+              <Label>Thumbnail</Label>
+              <ImageUploader
+                setSelectedFile={setThumbnail}
+                isLoading={isLoading}
+              />
+            </div>
 
             {/* Network Selection */}
             <FormField

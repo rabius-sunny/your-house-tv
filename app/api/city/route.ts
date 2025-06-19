@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
 import db from '@/config/db';
 import { createCitySchema } from '@/helper/schema/city';
+import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all cities or a specific city by ID
 export async function GET(request: NextRequest) {
@@ -63,11 +63,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate the request body
-    const validatedData = createCitySchema.parse(body);
+    const { error } = createCitySchema.safeParse(body);
+    if (error) {
+      return NextResponse.json(
+        { error: 'Invalid data provided', details: error.errors },
+        { status: 400 }
+      );
+    }
 
     // Check if the network exists
     const network = await db.network.findUnique({
-      where: { id: validatedData.networkId }
+      where: { id: body.networkId }
     });
 
     if (!network) {
@@ -76,11 +82,7 @@ export async function POST(request: NextRequest) {
 
     // Create the city
     const city = await db.city.create({
-      data: validatedData,
-      include: {
-        network: true,
-        channels: true
-      }
+      data: body
     });
 
     return NextResponse.json(city, { status: 201 });

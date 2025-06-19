@@ -87,8 +87,9 @@ The application will be available at [http://localhost:3003](http://localhost:30
 
 ## API Endpoints
 
+- `/api/network` - Network management (GET, POST, PUT, DELETE)
 - `/api/city` - City management (GET, POST, PUT, DELETE)
-- `/api/network` - Network management
+- `/api/channel` - Channel management (GET, POST, PUT, DELETE)
 - `/api/gallery` - Gallery/media management
 - `/api/get-videos` - Video retrieval
 - `/api/server-time` - Server time synchronization

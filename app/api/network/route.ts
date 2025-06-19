@@ -69,14 +69,7 @@ export async function POST(request: NextRequest) {
 
     // Create the network
     const network = await db.network.create({
-      data: { ...body },
-      include: {
-        city: {
-          include: {
-            channels: true
-          }
-        }
-      }
+      data: { ...body }
     });
 
     return NextResponse.json(network, { status: 201 });

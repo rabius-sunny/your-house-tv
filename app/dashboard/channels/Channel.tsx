@@ -14,28 +14,42 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CreateNetwork, createNetworkSchema } from '@/helper/schema/network';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { CreateChannel, createChannelSchema } from '@/helper/schema';
 import request from '@/services/http';
+import { City } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-export default function NetworkComp() {
+type TProps = {
+  cities: City[];
+};
+
+export default function ChannelComp({ cities: networks }: TProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 
-  const form = useForm<CreateNetwork>({
-    resolver: zodResolver(createNetworkSchema),
+  const form = useForm<CreateChannel>({
+    resolver: zodResolver(createChannelSchema),
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      // thumbnail: '',
-      isFeatured: false
+      description: '',
+      isFeatured: false,
+      cityId: ''
     }
   });
 
-  const onSubmit = async (data: CreateNetwork) => {
+  const onSubmit = async (data: CreateChannel) => {
     try {
       setIsLoading(true);
 
@@ -51,16 +65,16 @@ export default function NetworkComp() {
         thumbnail
       };
 
-      const response = await request.post('/network', formData);
+      const response = await request.post('/channel', formData);
 
-      toast.success('Network created successfully!');
+      toast.success('Channel created successfully!');
 
       form.reset();
       setThumbnail(undefined);
     } catch (error: any) {
-      console.error('Error creating network:', error);
+      console.error('Error creating channel:', error);
 
-      let errorMessage = 'Failed to create network';
+      let errorMessage = 'Failed to create channel';
 
       if (error.name === 'ZodError') {
         errorMessage = error.errors[0]?.message || 'Invalid data provided';
@@ -68,7 +82,7 @@ export default function NetworkComp() {
         errorMessage = error.response.data.error;
       }
 
-      toast.error('Failed to create network', {
+      toast.error('Failed to create channel', {
         description: errorMessage
       });
     } finally {
@@ -79,7 +93,7 @@ export default function NetworkComp() {
   return (
     <Card className='w-full max-w-2xl mx-auto'>
       <CardHeader>
-        <CardTitle className='text-2xl font-bold'>Create New Network</CardTitle>
+        <CardTitle className='text-2xl font-bold'>Create New Channel</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -87,16 +101,35 @@ export default function NetworkComp() {
             onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-6'
           >
-            {/* Network Name */}
+            {/* Channel Name */}
             <FormField
               control={form.control}
               name='name'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Network Name</FormLabel>
+                  <FormLabel>Channel Name</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='Enter network name (e.g., HBO, Netflix)'
+                      placeholder='Enter channel name (e.g., HBO, Netflix)'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Channel Description */}
+            <FormField
+              control={form.control}
+              name='description'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Channel Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder='Enter channel description'
                       {...field}
                       disabled={isLoading}
                     />
@@ -107,7 +140,6 @@ export default function NetworkComp() {
             />
 
             {/* Thumbnail Upload */}
-
             <div className='space-y-2'>
               <Label>Thumbnail</Label>
               <ImageUploader
@@ -115,6 +147,39 @@ export default function NetworkComp() {
                 isLoading={isLoading}
               />
             </div>
+
+            {/* Network Selection */}
+            <FormField
+              control={form.control}
+              name='cityId'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={isLoading}
+                  >
+                    <FormControl>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder='Select a city' />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {networks.map((network) => (
+                        <SelectItem
+                          key={network.id}
+                          value={network.id}
+                        >
+                          {network.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             {/* Featured Toggle */}
             <FormField
@@ -124,10 +189,10 @@ export default function NetworkComp() {
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base cursor-pointer'>
-                      Featured Network
+                      Featured Channel
                     </FormLabel>
                     <div className='text-sm text-muted-foreground'>
-                      Mark this network as featured to highlight it
+                      Mark this channel as featured to highlight it
                     </div>
                   </div>
                   <FormControl>
@@ -148,7 +213,7 @@ export default function NetworkComp() {
                 disabled={isLoading}
                 className='flex-1'
               >
-                {isLoading ? 'Creating...' : 'Create Network'}
+                {isLoading ? 'Creating...' : 'Create Channel'}
               </Button>
             </div>
           </form>
