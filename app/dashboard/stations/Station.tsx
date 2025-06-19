@@ -1,7 +1,7 @@
 'use client';
 
 import ImageUploader from '@/components/shared/ImageUploader';
-import VideoUploader from '@/components/shared/VideoUploader';
+import MultipleVideoUploader from '@/components/shared/MultipleVideoUploader';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -34,7 +34,17 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
-  const [selectedVideo, setSelectedVideo] = useState<string>();
+  const [uploadedVideos, setUploadedVideos] = useState<string[]>([]);
+
+  // Helper function to add a new video
+  const addVideo = (videoUrl: string) => {
+    setUploadedVideos((prev) => [...prev, videoUrl]);
+  };
+
+  // Helper function to remove a video
+  const removeVideo = (index: number) => {
+    setUploadedVideos((prev) => prev.filter((_, i) => i !== index));
+  };
 
   const form = useForm<CreateStation>({
     resolver: zodResolver(createStationSchema),
@@ -58,19 +68,25 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
         return;
       }
 
+      if (uploadedVideos.length === 0) {
+        toast.error('Please upload at least one video');
+        return;
+      }
+
       // Submit form data with videos
       const formData = {
         ...data,
         thumbnail,
-        videos: [selectedVideo]
+        videos: uploadedVideos
       };
 
       const response = await request.post('/station', formData);
 
       toast.success('Station created successfully!');
 
-      form.reset();
-      setThumbnail(undefined);
+      // form.reset();
+      // setThumbnail(undefined);
+      // setUploadedVideos([]);
     } catch (error: any) {
       console.error('Error creating station:', error);
 
@@ -250,11 +266,14 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
             />
 
             {/* Video Upload */}
-            <div className='space-y-2'>
-              <Label>Video</Label>
-              <VideoUploader
-                setIsLoading={setIsUploading}
-                setSelectedVideo={setSelectedVideo}
+            <div className='space-y-4'>
+              <Label>Videos</Label>
+              <MultipleVideoUploader
+                uploadedVideos={uploadedVideos}
+                onVideoAdd={addVideo}
+                onVideoRemove={removeVideo}
+                setIsUploading={setIsUploading}
+                isLoading={isLoading}
               />
             </div>
 
