@@ -3,8 +3,8 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 // Create Axios client instance
 const createAxiosClient = (): AxiosInstance => {
   const client = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
-    timeout: 10000
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL + '/api' || '/api',
+    timeout: 20000
   });
 
   // Request interceptor

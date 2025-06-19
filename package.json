@@ -10,7 +10,8 @@
     "lint": "next lint",
     "check": "pnpm tsc --noEmit",
     "db:generate": "pnpm prisma generate",
-    "db:push": "pnpm prisma db push"
+    "db:push": "pnpm prisma db push",
+    "docker:build": "docker compose build --no-cache"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
