@@ -89,9 +89,9 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
 
       toast.success('Station created successfully!');
 
-      // form.reset();
-      // setThumbnail(undefined);
-      // setUploadedVideos([]);
+      form.reset();
+      setThumbnail(undefined);
+      setUploadedVideos([]);
     } catch (error: any) {
       console.error('Error creating station:', error);
 

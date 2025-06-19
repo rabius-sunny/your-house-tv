@@ -134,6 +134,7 @@ model Vlog {
   title       String
   thumbnail   String
   video       String
+  description String
   isFeatured  Boolean        @default(false)
   type        VlogType       @default(VLOG)
   categories  VlogCategory[] @relation(fields: [categoryIds], references: [id])

@@ -16,12 +16,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CreateNetwork, createNetworkSchema } from '@/helper/schema/network';
 import request from '@/services/http';
+import { Network } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-export default function NetworkComp() {
+export default function NetworkComp({ networks }: { networks: Network[] }) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 

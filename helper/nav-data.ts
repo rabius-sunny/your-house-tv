@@ -51,7 +51,7 @@ export const navData = {
       items: [
         {
           title: 'Category',
-          url: '/dashboard/category',
+          url: '/dashboard/categories',
           icon: FileStack
         },
         {

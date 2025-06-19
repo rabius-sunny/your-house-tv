@@ -1,11 +1,5 @@
-import Network from './Network';
+import Networks from './Networks';
 
-type TProps = {};
-
-export default async function NetworkPage({}: TProps) {
-  return (
-    <div>
-      <Network />
-    </div>
-  );
+export default function NetworkPage() {
+  return <Networks />;
 }

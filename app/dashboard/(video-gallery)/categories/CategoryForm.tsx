@@ -17,17 +17,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CreateVlogCategory, createVlogCategorySchema } from '@/helper/schema';
 import request from '@/services/http';
-import { City } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 type TProps = {
-  cities: City[];
+  onCategoryCreated: () => void;
 };
 
-export default function VideoCategoryPage({ cities: networks }: TProps) {
+export default function VideoCategoryPage({ onCategoryCreated }: TProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 
@@ -60,6 +59,7 @@ export default function VideoCategoryPage({ cities: networks }: TProps) {
       const response = await request.post('/category', formData);
 
       toast.success('Category created successfully!');
+      onCategoryCreated();
 
       form.reset();
       setThumbnail(undefined);

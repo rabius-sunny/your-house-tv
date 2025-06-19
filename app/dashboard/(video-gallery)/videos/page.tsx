@@ -1,5 +1,13 @@
-type TProps = {};
+'use client';
 
-export default function VideoGallery({}: TProps) {
-  return <div>VideoGallery</div>;
+import { useAsync } from '@/hooks/useAsync';
+import Vlogs from './Vlogs';
+
+export default function VideoGallery() {
+  const { data } = useAsync('/category');
+  return (
+    <div>
+      <Vlogs categories={data || []} />
+    </div>
+  );
 }
