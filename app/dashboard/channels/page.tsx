@@ -1,15 +1,15 @@
 'use client';
 
 import { useAsync } from '@/hooks/useAsync';
-import ChannelComp from './Channel';
+import Channels from './Channels';
 
 type TProps = {};
 
-export default function NetworkPage({}: TProps) {
+export default function ChannelsPage({}: TProps) {
   const { data } = useAsync('/city');
   return (
     <div>
-      <ChannelComp cities={data || []} />
+      <Channels cities={data || []} />
     </div>
   );
 }

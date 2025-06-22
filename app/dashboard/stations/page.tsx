@@ -1,7 +1,7 @@
 'use client';
 
 import { useAsync } from '@/hooks/useAsync';
-import StationComp from './Station';
+import Stations from './Stations';
 
 type TProps = {};
 
@@ -9,7 +9,7 @@ export default function StationPage({}: TProps) {
   const { data } = useAsync('/channel');
   return (
     <div>
-      <StationComp channels={data || []} />
+      <Stations channels={data || []} />
     </div>
   );
 }

@@ -31,9 +31,10 @@ import { toast } from 'sonner';
 
 type TProps = {
   networks: Network[];
+  onCreate: () => void;
 };
 
-export default function CityComp({ networks }: TProps) {
+export default function CityComp({ onCreate, networks }: TProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 
@@ -64,6 +65,7 @@ export default function CityComp({ networks }: TProps) {
       };
 
       const response = await request.post('/city', formData);
+      onCreate();
 
       toast.success('City created successfully!');
 

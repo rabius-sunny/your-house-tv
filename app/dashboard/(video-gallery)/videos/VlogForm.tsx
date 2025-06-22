@@ -79,7 +79,7 @@ export default function VlogForm({
 
       const response = await request.post('/vlogs', formData);
 
-      toast.success('Vlog created successfully!');
+      toast.success('Video created successfully!');
 
       // Reset form
       //   form.reset();
@@ -89,9 +89,9 @@ export default function VlogForm({
       // Call success callback
       onSuccess?.();
     } catch (error: any) {
-      console.error('Error creating vlog:', error);
+      console.error('Error creating vloVideog:', error);
 
-      let errorMessage = 'Failed to create vlog';
+      let errorMessage = 'Failed to create Video';
 
       if (error.name === 'ZodError') {
         errorMessage = error.errors[0]?.message || 'Invalid data provided';
@@ -99,7 +99,7 @@ export default function VlogForm({
         errorMessage = error.response.data.error;
       }
 
-      toast.error('Failed to create vlog', {
+      toast.error('Failed to create Video', {
         description: errorMessage
       });
     } finally {
@@ -110,7 +110,7 @@ export default function VlogForm({
   return (
     <Card className='w-full max-w-2xl mx-auto'>
       <CardHeader>
-        <CardTitle className='text-2xl font-bold'>Create New Vlog</CardTitle>
+        <CardTitle className='text-2xl font-bold'>Create New Video</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -118,16 +118,16 @@ export default function VlogForm({
             onSubmit={form.handleSubmit(onSubmit)}
             className='space-y-6'
           >
-            {/* Vlog Title */}
+            {/* Video Title */}
             <FormField
               control={form.control}
               name='title'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vlog Title</FormLabel>
+                  <FormLabel>Video Title</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='Enter vlog title'
+                      placeholder='Enter video title'
                       {...field}
                       disabled={isLoading}
                     />
@@ -136,16 +136,16 @@ export default function VlogForm({
                 </FormItem>
               )}
             />
-            {/* Vlog Description */}
+            {/* Video Description */}
             <FormField
               control={form.control}
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Vlog Description</FormLabel>
+                  <FormLabel>Video Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter vlog description'
+                      placeholder='Enter video description'
                       {...field}
                       disabled={isLoading}
                     />
@@ -189,7 +189,7 @@ export default function VlogForm({
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
-                        <SelectValue placeholder='Select vlog type' />
+                        <SelectValue placeholder='Select Video type' />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -257,10 +257,10 @@ export default function VlogForm({
                 <FormItem className='flex flex-row items-center justify-between rounded-lg border p-4'>
                   <div className='space-y-0.5'>
                     <FormLabel className='text-base cursor-pointer'>
-                      Featured Vlog
+                      Featured Video
                     </FormLabel>
                     <div className='text-sm text-muted-foreground'>
-                      Mark this vlog as featured to highlight it
+                      Mark this video as featured to highlight it
                     </div>
                   </div>
                   <FormControl>
@@ -281,7 +281,7 @@ export default function VlogForm({
                 disabled={isLoading || isUploading}
                 className='flex-1'
               >
-                {isLoading ? 'Creating...' : 'Create Vlog'}
+                {isLoading ? 'Creating...' : 'Create Video'}
               </Button>
             </div>
           </form>

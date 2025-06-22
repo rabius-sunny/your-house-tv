@@ -32,9 +32,13 @@ import { toast } from 'sonner';
 
 type TProps = {
   cities: City[];
+  onChannelCreated?: () => void;
 };
 
-export default function ChannelComp({ cities: networks }: TProps) {
+export default function ChannelComp({
+  cities: networks,
+  onChannelCreated
+}: TProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 
@@ -71,6 +75,11 @@ export default function ChannelComp({ cities: networks }: TProps) {
 
       form.reset();
       setThumbnail(undefined);
+
+      // Call the callback if provided
+      if (onChannelCreated) {
+        onChannelCreated();
+      }
     } catch (error: any) {
       console.error('Error creating channel:', error);
 

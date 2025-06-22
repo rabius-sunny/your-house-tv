@@ -30,7 +30,13 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-export default function StationComp({ channels }: { channels: Channel[] }) {
+export default function StationComp({
+  channels,
+  onCreate
+}: {
+  channels: Channel[];
+  onCreate: () => void;
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
@@ -86,6 +92,7 @@ export default function StationComp({ channels }: { channels: Channel[] }) {
       };
 
       const response = await request.post('/station', formData);
+      onCreate();
 
       toast.success('Station created successfully!');
 

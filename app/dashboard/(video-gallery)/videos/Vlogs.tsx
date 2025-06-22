@@ -27,7 +27,7 @@ export default function Vlogs({ categories }: TProps) {
             className='flex items-center gap-2'
           >
             <List className='h-4 w-4' />
-            View Vlogs
+            View Videos
           </Button>
           <Button
             variant={activeTab === 'create' ? 'default' : 'outline'}
@@ -35,7 +35,7 @@ export default function Vlogs({ categories }: TProps) {
             className='flex items-center gap-2'
           >
             <Plus className='h-4 w-4' />
-            Create Vlog
+            Create Video
           </Button>
         </div>
       </div>
