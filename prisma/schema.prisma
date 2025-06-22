@@ -145,16 +145,6 @@ model Vlog {
   updatedAt DateTime @updatedAt
 }
 
-model Sponsor {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  designation String
-  logo        String
-  url         String
-
-  createdAt DateTime @default(now())
-}
-
 model Settings {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
   key   String @unique

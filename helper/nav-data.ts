@@ -79,6 +79,11 @@ export const navData = {
           icon: Frame
         }
       ]
+    },
+    {
+      title: 'Sponsors',
+      url: '/dashboard/sponsors',
+      icon: FileStack
     }
   ],
   projects: [

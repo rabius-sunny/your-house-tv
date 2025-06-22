@@ -13,10 +13,12 @@ type TProps = {
 
 export default function ImageUploader({ setSelectedFile, isLoading }: TProps) {
   const [file, setFile] = useState<File | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    setLoading(true);
     const file = event.target.files?.[0];
     if (file) {
       // Validate file type
@@ -30,6 +32,7 @@ export default function ImageUploader({ setSelectedFile, isLoading }: TProps) {
         toast.error('Invalid file type', {
           description: 'Please select a valid image file (JPEG, PNG, WebP)'
         });
+        setLoading(false);
         return;
       }
 
@@ -39,6 +42,7 @@ export default function ImageUploader({ setSelectedFile, isLoading }: TProps) {
         toast.error('File too large', {
           description: 'Please select a file smaller than 5MB'
         });
+        setLoading(false);
         return;
       }
 
@@ -50,14 +54,17 @@ export default function ImageUploader({ setSelectedFile, isLoading }: TProps) {
           // existing file url for deleting previous file when update a network's thumbnail
           ['']
         );
+        setLoading(false);
         if (uploadResult?.error || !uploadResult.data) {
           toast.error(uploadResult.error);
+          setLoading(false);
           return;
         }
 
         if (uploadResult.data?.length > 0) {
           setSelectedFile(uploadResult.data[0]);
         } else {
+          setLoading(false);
           throw new Error('Failed to upload file');
         }
       }
@@ -90,9 +97,14 @@ export default function ImageUploader({ setSelectedFile, isLoading }: TProps) {
         type='file'
         accept='image/*'
         onChange={handleFileChange}
-        disabled={isLoading}
+        disabled={isLoading || loading}
         className='file:border-0 file:text-sm file:font-semibold '
       />
+      {loading && (
+        <p className='text-xs mt-1 ml-3 text-green-600 animate-caret-blink font-medium'>
+          Uploading file...
+        </p>
+      )}
       {file && (
         <p className='text-xs mt-1 ml-3 text-muted-foreground'>
           Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
