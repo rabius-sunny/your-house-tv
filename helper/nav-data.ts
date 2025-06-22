@@ -69,8 +69,13 @@ export const navData = {
       isActive: true,
       items: [
         {
-          title: 'Sliders',
-          url: '#',
+          title: 'Hero Sliders',
+          url: '/dashboard/sliders',
+          icon: Frame
+        },
+        {
+          title: 'Bottom Sliders',
+          url: '/dashboard/bottom-sliders',
           icon: Frame
         }
       ]

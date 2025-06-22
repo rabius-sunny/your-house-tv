@@ -106,11 +106,30 @@ export type Vlog = {
   updatedAt: Date;
 };
 
+export type Sponsor = {
+  id: string;
+  name: string;
+  designation: string;
+  logo: string;
+  url: string;
+  createdAt: Date;
+};
+
 export type Settings = {
   id: string;
   key: string;
-  value: string;
+  value: any;
 };
+
+export type Sliders = {
+  key: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  link: string;
+  linktext: string;
+}[];
 
 export enum VlogType {
   VLOG = 'VLOG',
