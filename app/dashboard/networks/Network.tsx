@@ -16,13 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CreateNetwork, createNetworkSchema } from '@/helper/schema/network';
 import request from '@/services/http';
-import { Network } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-export default function NetworkComp({ networks }: { networks: Network[] }) {
+export default function NetworkComp({ onCreate }: { onCreate: () => void }) {
   const [isLoading, setIsLoading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
 
@@ -31,7 +30,6 @@ export default function NetworkComp({ networks }: { networks: Network[] }) {
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      // thumbnail: '',
       isFeatured: false
     }
   });
@@ -53,6 +51,7 @@ export default function NetworkComp({ networks }: { networks: Network[] }) {
       };
 
       const response = await request.post('/network', formData);
+      onCreate();
 
       toast.success('Network created successfully!');
 

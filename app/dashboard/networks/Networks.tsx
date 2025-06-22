@@ -52,16 +52,12 @@ export default function Networks() {
         </div>
 
         {/* Tab Navigation */}
-        <div className='flex items-center bg-muted/30 rounded-lg p-1 border border-border/40'>
+        <div className='flex items-center bg-muted/30 rounded-lg p-1 gap-2 border border-border/40'>
           <Button
             variant={activeTab === 'list' ? 'default' : 'ghost'}
             size='sm'
             onClick={() => setActiveTab('list')}
-            className={`flex items-center gap-2 transition-all duration-200 ${
-              activeTab === 'list'
-                ? 'shadow-sm bg-background'
-                : 'hover:bg-muted/50'
-            }`}
+            className={`flex items-center gap-2 transition-all duration-200}`}
           >
             <List className='h-4 w-4' />
             Networks
@@ -75,11 +71,7 @@ export default function Networks() {
             variant={activeTab === 'create' ? 'default' : 'ghost'}
             size='sm'
             onClick={() => setActiveTab('create')}
-            className={`flex items-center gap-2 transition-all duration-200 ${
-              activeTab === 'create'
-                ? 'shadow-sm bg-background'
-                : 'hover:bg-muted/50'
-            }`}
+            className={`flex items-center gap-2 transition-all duration-200`}
           >
             <Plus className='h-4 w-4' />
             Create New
@@ -102,7 +94,7 @@ export default function Networks() {
         {activeTab === 'create' && (
           <div className='animate-in fade-in-0 slide-in-from-right-1 duration-300'>
             <div className='flex justify-center'>
-              <NetworkComp networks={networks} />
+              <NetworkComp onCreate={handleNetworkCreated} />
             </div>
           </div>
         )}
