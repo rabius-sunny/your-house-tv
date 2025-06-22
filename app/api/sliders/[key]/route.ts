@@ -20,7 +20,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'No sliders found' }, { status: 404 });
     }
 
-    const existingSliders = JSON.parse(slidersSettings.value);
+    const existingSliders = JSON.parse(slidersSettings.value as string);
 
     // Find the slider to delete
     const sliderIndex = existingSliders.findIndex(
@@ -75,7 +75,7 @@ export async function PUT(
       return NextResponse.json({ error: 'No sliders found' }, { status: 404 });
     }
 
-    const existingSliders = JSON.parse(slidersSettings.value);
+    const existingSliders = JSON.parse(slidersSettings.value as string);
 
     // Find the slider to update
     const sliderIndex = existingSliders.findIndex(

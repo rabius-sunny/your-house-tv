@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Parse the JSON value
-    const sliders = JSON.parse(slidersSettings.value);
+    const sliders = JSON.parse(slidersSettings.value as string);
     return NextResponse.json(sliders, { status: 200 });
   } catch (error) {
     console.error('Error fetching sliders:', error);
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     let existingSliders = [];
     if (slidersSettings) {
-      existingSliders = JSON.parse(slidersSettings.value);
+      existingSliders = JSON.parse(slidersSettings.value as string);
     }
 
     // Create new slider with a unique key
