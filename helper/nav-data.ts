@@ -4,6 +4,7 @@ import {
   FileVideo2,
   Frame,
   Globe,
+  Image,
   Map,
   PieChart,
   RadioTower,
@@ -68,6 +69,11 @@ export const navData = {
       icon: Settings2,
       isActive: true,
       items: [
+        {
+          title: 'Logo',
+          url: '/dashboard/logo',
+          icon: Image
+        },
         {
           title: 'Hero Sliders',
           url: '/dashboard/sliders',
