@@ -1,3 +1,5 @@
+'use client';
+
 import { EmblaOptions } from '@/config/site';
 import { Sliders } from '@/types';
 import { EmblaCarouselType } from 'embla-carousel';
@@ -63,10 +65,10 @@ const HeroCarousel: React.FC<PropType> = (props) => {
                 />
 
                 {/* Content container positioned to the left */}
-                <div className='absolute inset-0 flex justify-start'>
+                <div className='absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent' />
+                <div className='absolute inset-0 flex justify-start box'>
                   <div className='relative px-4 lg:px-8 py-8 max-w-2xl h-full flex items-center'>
                     {/* Gradient overlay only for text area */}
-                    <div className='absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent' />
 
                     <div className='relative z-10 text-white'>
                       {/* Title */}

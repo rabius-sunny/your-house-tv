@@ -47,6 +47,7 @@ model Network {
 model City {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
+  slug       String?
   thumbnail  String
   isFeatured Boolean   @default(false)
   sortOrder  Int? // For ordering featured cities (1st, 2nd, 3rd, etc.)

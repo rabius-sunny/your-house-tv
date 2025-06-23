@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
         network: true,
         channels: true
       },
-      orderBy: [{ sortOrder: 'asc' }, { createdAt: 'desc' }]
+      orderBy: [{ sortOrder: 'desc' }]
     });
 
     return NextResponse.json(cities);

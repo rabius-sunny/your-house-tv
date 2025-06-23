@@ -10,7 +10,10 @@ const nextConfig: NextConfig = {
   output: 'standalone', // Output as standalone build
   /* config options here */
   images: {
-    remotePatterns: [new URL('https://ik.imagekit.io/**')]
+    remotePatterns: [
+      new URL('https://ik.imagekit.io/**'),
+      new URL('https://image.com/**')
+    ]
   }
 };
 

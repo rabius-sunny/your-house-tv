@@ -43,6 +43,7 @@ export default function CityComp({ onCreate, networks }: TProps) {
     mode: 'onSubmit',
     defaultValues: {
       name: '',
+      slug: '',
       isFeatured: false,
       sortOrder: undefined,
       networkId: ''
@@ -112,6 +113,25 @@ export default function CityComp({ onCreate, networks }: TProps) {
                   <FormControl>
                     <Input
                       placeholder='Enter city name (e.g., New York, Los Angeles)'
+                      {...field}
+                      disabled={isLoading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* City Slug */}
+            <FormField
+              control={form.control}
+              name='slug'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City Slug</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder='Enter city slug (e.g., northcarolina, california)'
                       {...field}
                       disabled={isLoading}
                     />
