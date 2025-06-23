@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createCitySchema } from '@/helper/schema/city';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all cities or a specific city by ID
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // Create the city
     const city = await db.city.create({
-      data: body
+      data: { ...body, slug: generateSlug(body.name) }
     });
 
     return NextResponse.json(city, { status: 201 });

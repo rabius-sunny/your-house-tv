@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createNetworkSchema } from '@/helper/schema/network';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all networks or a specific network by ID
@@ -69,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     // Create the network
     const network = await db.network.create({
-      data: { ...body }
+      data: { ...body, slug: generateSlug(body.name) }
     });
 
     return NextResponse.json(network, { status: 201 });

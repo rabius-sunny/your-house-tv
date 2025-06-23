@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createStationSchema } from '@/helper/schema/station';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all stations or a specific station by ID
@@ -95,6 +96,7 @@ export async function POST(request: NextRequest) {
     const station = await db.station.create({
       data: {
         name: body.name,
+        slug: generateSlug(body.name),
         thumbnail: body.thumbnail,
         startedAt: body.startedAt,
         endedAt: body.endedAt,

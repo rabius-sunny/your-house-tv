@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createVlogCategorySchema } from '@/helper/schema';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all categories or a specific category by ID
@@ -60,6 +61,7 @@ export async function POST(request: NextRequest) {
     const category = await db.vlogCategory.create({
       data: {
         name: body.name,
+        slug: generateSlug(body.name),
         description: body.description,
         thumbnail: body.thumbnail,
         isFeatured: body.isFeatured || false

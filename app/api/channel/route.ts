@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createChannelSchema } from '@/helper/schema/channel';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all channels or a specific channel by ID
@@ -102,6 +103,7 @@ export async function POST(request: NextRequest) {
     const channel = await db.channel.create({
       data: {
         name: body.name,
+        slug: generateSlug(body.name),
         description: body.description,
         thumbnail: body.thumbnail,
         isFeatured: body.isFeatured || false,

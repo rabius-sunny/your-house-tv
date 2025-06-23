@@ -1,5 +1,6 @@
 import db from '@/config/db';
 import { createVlogSchema } from '@/helper/schema/vlog';
+import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
 // GET - Get all vlogs or a specific vlog by ID
@@ -102,6 +103,7 @@ export async function POST(request: NextRequest) {
     const vlog = await db.vlog.create({
       data: {
         title: body.title,
+        slug: generateSlug(body.title),
         thumbnail: body.thumbnail,
         description: body.description,
         video: body.video,

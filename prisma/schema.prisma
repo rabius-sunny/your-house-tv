@@ -35,6 +35,7 @@ model VideoGallery {
 model Network {
   id         String  @id @default(auto()) @map("_id") @db.ObjectId
   name       String
+  slug       String  @unique
   thumbnail  String
   isFeatured Boolean @default(false)
   sortOrder  Int?    @unique
@@ -64,6 +65,7 @@ model City {
 model Channel {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  slug        String    @unique
   thumbnail   String
   description String
   isFeatured  Boolean   @default(false)
@@ -80,6 +82,7 @@ model Channel {
 model Station {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
+  slug       String   @unique
   thumbnail  String
   startedAt  DateTime
   endedAt    DateTime
@@ -97,6 +100,7 @@ model Station {
 model BlogCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  slug        String   @unique
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
@@ -111,6 +115,7 @@ model BlogCategory {
 model Blog {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   title       String
+  slug        String         @unique
   thumbnail   String
   description String
   isFeatured  Boolean        @default(false)
@@ -126,6 +131,7 @@ model Blog {
 model VlogCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
+  slug        String   @unique
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
@@ -140,6 +146,7 @@ model VlogCategory {
 model Vlog {
   id          String         @id @default(auto()) @map("_id") @db.ObjectId
   title       String
+  slug        String         @unique
   thumbnail   String
   video       String
   description String
