@@ -49,6 +49,7 @@ model City {
   name       String
   thumbnail  String
   isFeatured Boolean   @default(false)
+  sortOrder  Int? // For ordering featured cities (1st, 2nd, 3rd, etc.)
   network    Network   @relation(fields: [networkId], references: [id], onDelete: Cascade)
   networkId  String    @db.ObjectId
   channels   Channel[]

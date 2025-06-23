@@ -105,6 +105,14 @@ export default function CityDetailsDialog({ city, open, onOpenChange }: Props) {
               >
                 {city.isFeatured ? 'Featured City' : 'Regular City'}
               </Badge>
+              {city.isFeatured && city.sortOrder && (
+                <Badge
+                  variant='secondary'
+                  className='text-xs'
+                >
+                  Order: {city.sortOrder}
+                </Badge>
+              )}
             </div>
           </div>
 

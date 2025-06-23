@@ -48,6 +48,7 @@ export type City = {
   name: string;
   thumbnail: string;
   isFeatured: boolean;
+  sortOrder?: number | null;
   network: Network;
   networkId: string;
   channels: Channel[];
