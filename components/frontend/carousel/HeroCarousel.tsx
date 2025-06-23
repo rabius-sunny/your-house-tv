@@ -42,15 +42,15 @@ const HeroCarousel: React.FC<PropType> = (props) => {
   } = usePrevNextButtons(emblaApi, onNavButtonClick);
 
   return (
-    <section className='embla relative'>
+    <section className='embla-hero min-h-[70vh]  relative'>
       <div
-        className='embla__viewport'
+        className='embla__viewport h-full'
         ref={emblaRef}
       >
-        <div className='embla__container'>
+        <div className='embla__container h-full'>
           {slides.map((slide, idx) => (
             <div
-              className='embla__slide relative'
+              className='embla__slide w-full flex-[0_0_100%]  h-full relative'
               key={idx}
             >
               {/* 70vh viewport image */}

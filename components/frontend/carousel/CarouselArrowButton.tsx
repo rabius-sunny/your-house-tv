@@ -54,7 +54,7 @@ export const usePrevNextButtons = (
   };
 };
 
-type PropType = ComponentPropsWithRef<'button'> & { styles: string };
+type PropType = ComponentPropsWithRef<'button'> & { styles?: string };
 
 export const PrevButton: React.FC<PropType> = (props) => {
   const { children, ...restProps } = props;

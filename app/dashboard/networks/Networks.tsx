@@ -43,14 +43,7 @@ export default function Networks() {
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
-      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
-        <div>
-          <h1 className='text-2xl font-bold tracking-tight'>Networks</h1>
-          <p className='text-muted-foreground'>
-            Manage broadcasting networks and channels
-          </p>
-        </div>
-
+      <div className='flex gap-3'>
         {/* Tab Navigation */}
         <div className='flex items-center bg-muted/30 rounded-lg p-1 gap-2 border border-border/40'>
           <Button

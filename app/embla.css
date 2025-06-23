@@ -1,6 +1,15 @@
+/* Hero Carousel - Full viewport height */
+.embla-hero {
+  margin: auto;
+  --slide-height: 100vh !important;
+  --slide-spacing: 0;
+  --slide-size: 100%;
+}
+
+/* General Carousel - Responsive height */
 .embla {
   margin: auto;
-  --slide-height: 100vh;
+  --slide-height: auto;
   --slide-spacing: 0;
   --slide-size: 100%;
 }
@@ -16,7 +25,7 @@
 }
 .embla__slide {
   transform: translate3d(0, 0, 0);
-  flex: 0 0 var(--slide-size);
+  /* flex: 0 0 var(--slide-size); */
   min-height: 0;
   padding-top: var(--slide-spacing);
 }

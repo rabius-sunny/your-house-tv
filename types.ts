@@ -38,6 +38,7 @@ export type Network = {
   name: string;
   thumbnail: string;
   isFeatured: boolean;
+  sortOrder?: number | null;
   city: City[];
   createdAt: Date;
   updatedAt: Date;
@@ -63,6 +64,7 @@ export type Channel = {
   thumbnail: string;
   description: string;
   isFeatured: boolean;
+  sortOrder?: number | null;
   cityId: string;
   city: City;
   stations: Station[];
@@ -78,6 +80,7 @@ export type Station = {
   endedAt: Date;
   videos: string[];
   isFeatured: boolean;
+  sortOrder?: number | null;
   channelId: string;
   channel: Channel;
   createdAt: Date;
@@ -90,6 +93,7 @@ export type VlogCategory = {
   description: string;
   thumbnail: string;
   isFeatured: boolean;
+  sortOrder?: number | null;
   vlogIds: string[];
   vlogs: Vlog[];
   createdAt: Date;
@@ -101,6 +105,7 @@ export type Vlog = {
   title: string;
   video: string;
   isFeatured: boolean;
+  sortOrder?: number | null;
   type: VlogType;
   categories: VlogCategory[];
   categoryIds: string[];
@@ -144,6 +149,12 @@ export type Sliders = {
   link: string;
   linktext: string;
 }[];
+
+export type CarouselSlide = {
+  thumbnail: string;
+  title?: string;
+  link: string;
+};
 
 export enum VlogType {
   VLOG = 'VLOG',

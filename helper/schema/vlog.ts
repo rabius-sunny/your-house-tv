@@ -7,6 +7,7 @@ export const VlogTypeSchema = z.enum(['VLOG', 'PODCAST']);
 export const createVlogSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().optional(),
+  sortOrder: z.number().int().positive().optional(),
   isFeatured: z.boolean(),
   type: VlogTypeSchema.optional().default('VLOG'),
   categoryIds: z.array(z.string().min(1, 'Category ID is required'))
