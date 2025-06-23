@@ -36,6 +36,7 @@ export type VideoGallery = {
 export type Network = {
   id: string;
   name: string;
+  slug: string;
   thumbnail: string;
   isFeatured: boolean;
   sortOrder?: number | null;
@@ -61,6 +62,7 @@ export type City = {
 export type Channel = {
   id: string;
   name: string;
+  slug: string;
   thumbnail: string;
   description: string;
   isFeatured: boolean;
@@ -152,9 +154,19 @@ export type Sliders = {
 
 export type CarouselSlide = {
   thumbnail: string;
-  title?: string;
-  link: string;
+  name?: string;
+  slug: string;
 };
+export type Resource =
+  | 'cities'
+  | 'vlogs'
+  | 'channels'
+  | 'networks'
+  | 'stations'
+  | 'vlog-categories'
+  | 'blog-categories'
+  | 'blogs'
+  | 'vlogs';
 
 export enum VlogType {
   VLOG = 'VLOG',

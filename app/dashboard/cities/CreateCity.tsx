@@ -43,10 +43,9 @@ export default function CityComp({ onCreate, networks }: TProps) {
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      slug: '',
       isFeatured: false,
       sortOrder: undefined,
-      networkId: ''
+      networkSlug: ''
     }
   });
 
@@ -122,25 +121,6 @@ export default function CityComp({ onCreate, networks }: TProps) {
               )}
             />
 
-            {/* City Slug */}
-            <FormField
-              control={form.control}
-              name='slug'
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>City Slug</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder='Enter city slug (e.g., northcarolina, california)'
-                      {...field}
-                      disabled={isLoading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             {/* Thumbnail Upload */}
             <div className='space-y-2'>
               <Label>Thumbnail</Label>
@@ -156,7 +136,7 @@ export default function CityComp({ onCreate, networks }: TProps) {
             {/* Network Selection */}
             <FormField
               control={form.control}
-              name='networkId'
+              name='networkSlug'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Network</FormLabel>
@@ -174,7 +154,7 @@ export default function CityComp({ onCreate, networks }: TProps) {
                       {networks.map((network) => (
                         <SelectItem
                           key={network.id}
-                          value={network.id}
+                          value={network.slug}
                         >
                           {network.name}
                         </SelectItem>

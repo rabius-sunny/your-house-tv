@@ -93,10 +93,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Network not found' }, { status: 404 });
     }
 
+    const { networkSlug, ...rest } = body;
+
     // Create the city
     const city = await db.city.create({
       data: {
-        ...body,
+        ...rest,
         slug: generateSlug(body.name),
         networkId: network.id
       }

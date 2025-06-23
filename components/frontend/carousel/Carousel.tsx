@@ -53,26 +53,26 @@ const Carousel: React.FC<PropType> = (props) => {
               className='embla__slide  pl-4 first:pl-0 min-w-0'
               key={idx}
             >
-              <div className='relative group cursor-pointer overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-all duration-300 w-full'>
-                {slide.link ? (
+              <div className='relative group cursor-pointer overflow-hidden rounded-md shadow-md hover:shadow-lg transition-all duration-300 w-full'>
+                {slide.slug ? (
                   <Link
-                    href={slide.link}
-                    className='block'
+                    href={slide.slug}
+                    className='block bg-black/20'
                   >
                     <div className='relative aspect-[4/2] overflow-hidden'>
                       <Image
                         src={slide.thumbnail}
-                        alt={slide.title || 'Slide image'}
+                        alt={slide.name || 'Slide image'}
                         width={400}
                         height={300}
-                        className='w-full rounded-md  h-full object-cover group-hover:scale-105 transition-transform duration-300'
+                        className='w-full rounded-t-md  h-full object-cover group-hover:scale-105 transition-transform duration-300'
                         sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
                       />
                     </div>
-                    {slide.title && (
+                    {slide.name && (
                       <div className='p-4'>
                         <h3 className='text-sm md:text-base font-medium text-gray-300 line-clamp-2 transition-colors duration-200'>
-                          {slide.title}
+                          {slide.name}
                         </h3>
                       </div>
                     )}
@@ -82,17 +82,17 @@ const Carousel: React.FC<PropType> = (props) => {
                     <div className='relative aspect-[4/3] overflow-hidden'>
                       <Image
                         src={slide.thumbnail}
-                        alt={slide.title || 'Slide image'}
+                        alt={slide.name || 'Slide image'}
                         width={400}
                         height={300}
                         className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
                         sizes='(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
                       />
                     </div>
-                    {slide.title && (
+                    {slide.name && (
                       <div className='p-4'>
                         <h3 className='text-sm md:text-base font-medium text-gray-300 line-clamp-2'>
-                          {slide.title}
+                          {slide.name}
                         </h3>
                       </div>
                     )}

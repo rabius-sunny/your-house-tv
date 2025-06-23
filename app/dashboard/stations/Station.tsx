@@ -65,7 +65,7 @@ export default function StationComp({
       startedAt: new Date(),
       endedAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       isFeatured: false,
-      channelId: ''
+      channelSlug: ''
     }
   });
 
@@ -163,7 +163,7 @@ export default function StationComp({
             {/* Channel Selection */}
             <FormField
               control={form.control}
-              name='channelId'
+              name='channelSlug'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Channel</FormLabel>
@@ -180,7 +180,7 @@ export default function StationComp({
                       {channels.map((channel) => (
                         <SelectItem
                           key={channel.id}
-                          value={channel.id}
+                          value={channel.slug}
                         >
                           {channel.name}
                         </SelectItem>
