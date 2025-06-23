@@ -37,6 +37,7 @@ model Network {
   name       String
   thumbnail  String
   isFeatured Boolean @default(false)
+  sortOrder  Int?    @unique
   city       City[]
   meta       Json?
 
@@ -47,10 +48,10 @@ model Network {
 model City {
   id         String    @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  slug       String?
+  slug       String    @unique
   thumbnail  String
   isFeatured Boolean   @default(false)
-  sortOrder  Int? // For ordering featured cities (1st, 2nd, 3rd, etc.)
+  sortOrder  Int?      @unique
   network    Network   @relation(fields: [networkId], references: [id], onDelete: Cascade)
   networkId  String    @db.ObjectId
   channels   Channel[]
@@ -66,6 +67,7 @@ model Channel {
   thumbnail   String
   description String
   isFeatured  Boolean   @default(false)
+  sortOrder   Int?      @unique
   cityId      String    @db.ObjectId
   city        City      @relation(fields: [cityId], references: [id], onDelete: Cascade)
   stations    Station[]
@@ -83,6 +85,7 @@ model Station {
   endedAt    DateTime
   videos     String[]
   isFeatured Boolean  @default(false)
+  sortOrder  Int?     @unique
   channelId  String   @db.ObjectId
   channel    Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
   meta       Json?
@@ -97,6 +100,7 @@ model BlogCategory {
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
+  sortOrder   Int?     @unique
   blogIds     String[] @db.ObjectId
   blogs       Blog[]   @relation(fields: [blogIds], references: [id])
 
@@ -110,6 +114,7 @@ model Blog {
   thumbnail   String
   description String
   isFeatured  Boolean        @default(false)
+  sortOrder   Int?           @unique
   categories  BlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId
   meta        Json?
@@ -124,6 +129,7 @@ model VlogCategory {
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
+  sortOrder   Int?     @unique
   vlogIds     String[] @db.ObjectId
   vlogs       Vlog[]   @relation(fields: [vlogIds], references: [id])
 
@@ -138,6 +144,7 @@ model Vlog {
   video       String
   description String
   isFeatured  Boolean        @default(false)
+  sortOrder   Int?           @unique
   type        VlogType       @default(VLOG)
   categories  VlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId
