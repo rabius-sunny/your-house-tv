@@ -220,4 +220,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  .box {
+    @apply max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
+  }
 }

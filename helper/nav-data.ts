@@ -1,15 +1,19 @@
 import {
   Building2,
+  Facebook,
   FileStack,
   FileVideo2,
   Frame,
   Globe,
   Image,
+  Instagram,
+  Linkedin,
   Map,
   PieChart,
   RadioTower,
   Settings2,
-  TvMinimalPlay
+  TvMinimalPlay,
+  Twitter
 } from 'lucide-react';
 
 export const navData = {
@@ -107,6 +111,88 @@ export const navData = {
       name: 'Travel',
       url: '#',
       icon: Map
+    }
+  ]
+};
+
+export const frontendNavData = [
+  {
+    title: 'Home',
+    url: '/'
+  },
+  {
+    title: 'Networks',
+    url: '/'
+  },
+  {
+    title: 'Cities',
+    url: '/'
+  },
+  {
+    title: 'Channels',
+    url: '/'
+  },
+  {
+    title: 'Stations',
+    url: '/'
+  },
+  {
+    title: 'Blogs',
+    url: '/'
+  }
+];
+
+export const footerData = {
+  description:
+    'YourHouseTV, Rogue Wolf, LLC, and all other programs and/or marks are the property of their respective owners. All rights reserved.',
+  policyLinks: [
+    {
+      title: 'Privacy Policy',
+      url: '/privacy-policy'
+    },
+    {
+      title: 'Terms & Conditions',
+      url: '/terms-and-conditions'
+    },
+    {
+      title: 'Cookie Policy',
+      url: '/cookie-policy'
+    }
+  ],
+  infoLinks: [
+    {
+      title: 'Faq',
+      url: '/faq'
+    },
+    {
+      title: 'Contact Us',
+      url: '/contact-us'
+    },
+    {
+      title: 'About Us',
+      url: '/about-us'
+    }
+  ],
+  socialLinks: [
+    {
+      title: 'Facebook',
+      url: 'https://www.facebook.com/YourHouseTV',
+      icon: Facebook
+    },
+    {
+      title: 'Twitter',
+      url: 'https://twitter.com/YourHouseTV',
+      icon: Twitter
+    },
+    {
+      title: 'Instagram',
+      url: 'https://www.instagram.com/YourHouseTV',
+      icon: Instagram
+    },
+    {
+      title: 'LinkedIn',
+      url: 'https://www.linkedin.com/company/yourhousetv',
+      icon: Linkedin
     }
   ]
 };
