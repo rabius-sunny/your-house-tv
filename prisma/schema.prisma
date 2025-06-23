@@ -52,7 +52,7 @@ model City {
   slug       String    @unique
   thumbnail  String
   isFeatured Boolean   @default(false)
-  sortOrder  Int?      @unique
+  // sortOrder  Int?      @unique
   network    Network   @relation(fields: [networkId], references: [id], onDelete: Cascade)
   networkId  String    @db.ObjectId
   channels   Channel[]

@@ -78,6 +78,7 @@ export type Station = {
   id: string;
   name: string;
   thumbnail: string;
+  slug: string;
   startedAt: Date;
   endedAt: Date;
   videos: string[];

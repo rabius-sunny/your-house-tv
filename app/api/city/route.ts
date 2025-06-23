@@ -37,11 +37,7 @@ export async function GET(request: NextRequest) {
           network: true,
           channels: true
         },
-        orderBy: [
-          { isFeatured: 'desc' },
-          { sortOrder: 'desc' },
-          { createdAt: 'desc' }
-        ]
+        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }]
       });
 
       return NextResponse.json(cities);
@@ -52,11 +48,7 @@ export async function GET(request: NextRequest) {
           network: true,
           channels: true
         },
-        orderBy: [
-          { isFeatured: 'desc' },
-          { sortOrder: 'desc' },
-          { createdAt: 'desc' }
-        ]
+        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }]
       });
 
       return NextResponse.json(cities);

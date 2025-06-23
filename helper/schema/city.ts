@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const createCitySchema = z.object({
   name: z.string().min(1, 'City name is required'),
   isFeatured: z.boolean(),
-  sortOrder: z.number().int().positive().optional(),
+  // sortOrder: z.number().int().positive().optional(),
   networkSlug: z.string().min(1, 'Network slug is required')
 });
 

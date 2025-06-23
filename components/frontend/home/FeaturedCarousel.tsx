@@ -7,10 +7,17 @@ type TProps = {
   items: CarouselSlide[];
   type: Resource;
   title?: string;
+  link?: string;
+  linkText?: string;
 };
 
-export default function FeaturedCarousel({ items, type, title }: TProps) {
-  console.log('items', items);
+export default function FeaturedCarousel({
+  items,
+  type,
+  title,
+  link,
+  linkText
+}: TProps) {
   return (
     <div className=' py-10 bg-slate-700'>
       <div className='box'>
@@ -18,10 +25,15 @@ export default function FeaturedCarousel({ items, type, title }: TProps) {
           <div className='pb-6 flex items-center justify-between'>
             <h2 className='font-semibold text-2xl text-white'>{title}</h2>
             <Link
-              href={`/${type}`}
+              href={link || `/${type}`}
               className='flex items-center gap-2 text-sm text-slate-300 hover:text-blue-400'
             >
-              <span>View All</span> <ArrowRight className='size-5' />
+              {linkText ? (
+                <span className='capitalize'>{linkText}</span>
+              ) : (
+                <span className='capitalize'>View All {type}</span>
+              )}
+              <ArrowRight className='size-5' />
             </Link>
           </div>
         )}

@@ -1,5 +1,7 @@
 import HeroCarousel from '@/components/frontend/carousel/HeroCarousel';
 import FeaturedCarousel from '@/components/frontend/home/FeaturedCarousel';
+import FeaturedChannels from '@/components/frontend/home/FeaturedChannels';
+import FeaturedNetworks from '@/components/frontend/home/FeaturedNetworks';
 import { baseUrl } from '@/lib/utils';
 
 export default async function page() {
@@ -10,19 +12,12 @@ export default async function page() {
     <div>
       <HeroCarousel slides={data.sliders} />
       <FeaturedCarousel
+        title='Networks'
         items={data.networks || []}
         type='networks'
       />
-      <FeaturedCarousel
-        title={data.cities ? data.cities?.[0]?.network?.name : ''}
-        items={data.cities || []}
-        type='cities'
-      />
-      <FeaturedCarousel
-        title={data.channels ? data.channels?.[0]?.city?.name : ''}
-        items={data.channels || []}
-        type='channels'
-      />
+      <FeaturedNetworks networks={data.featuredNetworks || []} />
+      <FeaturedChannels channels={data.channels || []} />
       <FeaturedCarousel
         title='Video Shows | Vlogs'
         items={data.vlogs || []}

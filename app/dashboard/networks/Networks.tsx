@@ -5,7 +5,7 @@ import request from '@/services/http';
 import { Network } from '@/types';
 import { List, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import NetworkComp from './Network';
+import NetworkComp from './CreateNetwork';
 import NetworkList from './NetworkList';
 
 type TabType = 'list' | 'create';
