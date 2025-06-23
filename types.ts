@@ -121,6 +121,18 @@ export type Settings = {
   value: any;
 };
 
+export type DashboardStats = {
+  users: number;
+  networks: number;
+  cities: number;
+  channels: number;
+  stations: number;
+  blogCategories: number;
+  blogs: number;
+  vlogCategories: number;
+  vlogs: number;
+};
+
 export type Sliders = {
   key: string;
   title: string;
