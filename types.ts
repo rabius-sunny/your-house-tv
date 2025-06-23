@@ -148,6 +148,10 @@ export enum VlogType {
   PODCAST = 'PODCAST'
 }
 
+export type HomePageData = {
+  sliders: Sliders;
+};
+
 // Types without relations (for API responses)
 export type NetworkWithoutRelations = Omit<Network, 'city'>;
 export type CityWithoutRelations = Omit<City, 'network' | 'channels'>;
