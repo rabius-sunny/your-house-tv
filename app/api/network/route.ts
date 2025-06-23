@@ -7,12 +7,12 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const networkId = searchParams.get('id');
+    const slug = searchParams.get('slug');
 
-    if (networkId) {
-      // Get specific network by ID
+    if (slug) {
+      // Get specific network by slug
       const network = await db.network.findUnique({
-        where: { id: networkId },
+        where: { slug },
         include: {
           city: {
             include: {
@@ -95,18 +95,18 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { slug, ...updateData } = body;
 
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
-        { error: 'Network ID is required' },
+        { error: 'Network slug is required' },
         { status: 400 }
       );
     }
 
     // Check if network exists
     const existingNetwork = await db.network.findUnique({
-      where: { id }
+      where: { slug }
     });
 
     if (!existingNetwork) {
@@ -115,15 +115,8 @@ export async function PUT(request: NextRequest) {
 
     // Update the network
     const updatedNetwork = await db.network.update({
-      where: { id },
-      data: updateData,
-      include: {
-        city: {
-          include: {
-            channels: true
-          }
-        }
-      }
+      where: { slug },
+      data: updateData
     });
 
     return NextResponse.json(updatedNetwork);
@@ -140,18 +133,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const networkId = searchParams.get('id');
+    const slug = searchParams.get('slug');
 
-    if (!networkId) {
+    if (!slug) {
       return NextResponse.json(
-        { error: 'Network ID is required' },
+        { error: 'Network slug is required' },
         { status: 400 }
       );
     }
 
     // Check if network exists
     const existingNetwork = await db.network.findUnique({
-      where: { id: networkId },
+      where: { slug },
       include: {
         city: true
       }
@@ -175,7 +168,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the network
     await db.network.delete({
-      where: { id: networkId }
+      where: { slug }
     });
 
     return NextResponse.json(

@@ -3,16 +3,16 @@ import { createVlogCategorySchema } from '@/helper/schema';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Get all categories or a specific category by ID
+// GET - Get all categories or a specific category by slug
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get('id');
+    const categorySlug = searchParams.get('slug');
 
-    if (categoryId) {
-      // Get specific category by ID
+    if (categorySlug) {
+      // Get specific category by slug
       const category = await db.vlogCategory.findUnique({
-        where: { id: categoryId }
+        where: { slug: categorySlug }
       });
 
       if (!category) {
@@ -90,18 +90,18 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { slug, ...updateData } = body;
 
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
-        { error: 'Category ID is required' },
+        { error: 'Category slug is required' },
         { status: 400 }
       );
     }
 
     // Check if category exists
     const existingCategory = await db.vlogCategory.findUnique({
-      where: { id }
+      where: { slug }
     });
 
     if (!existingCategory) {
@@ -111,9 +111,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
+    // If name is being updated, regenerate slug
+    if (updateData.name) {
+      updateData.slug = generateSlug(updateData.name);
+    }
+
     // Update the category
     const updatedCategory = await db.vlogCategory.update({
-      where: { id },
+      where: { slug },
       data: updateData
     });
 
@@ -131,18 +136,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get('id');
+    const categorySlug = searchParams.get('slug');
 
-    if (!categoryId) {
+    if (!categorySlug) {
       return NextResponse.json(
-        { error: 'Category ID is required' },
+        { error: 'Category slug is required' },
         { status: 400 }
       );
     }
 
     // Check if category exists
     const existingCategory = await db.vlogCategory.findUnique({
-      where: { id: categoryId }
+      where: { slug: categorySlug }
     });
 
     if (!existingCategory) {
@@ -154,7 +159,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the category
     await db.vlogCategory.delete({
-      where: { id: categoryId }
+      where: { slug: categorySlug }
     });
 
     return NextResponse.json(

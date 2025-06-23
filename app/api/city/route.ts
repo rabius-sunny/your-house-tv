@@ -3,17 +3,17 @@ import { createCitySchema } from '@/helper/schema/city';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Get all cities or a specific city by ID
+// GET - Get all cities or a specific city by slug
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const cityId = searchParams.get('id');
-    const networkId = searchParams.get('networkId');
+    const citySlug = searchParams.get('slug');
+    const networkSlug = searchParams.get('networkSlug');
 
-    if (cityId) {
-      // Get specific city by ID
+    if (citySlug) {
+      // Get specific city by slug
       const city = await db.city.findUnique({
-        where: { id: cityId },
+        where: { slug: citySlug },
         include: {
           network: true,
           channels: true
@@ -25,10 +25,14 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json(city);
-    } else if (networkId) {
-      // Get cities by network ID
+    } else if (networkSlug) {
+      // Get cities by network slug
       const cities = await db.city.findMany({
-        where: { networkId },
+        where: {
+          network: {
+            slug: networkSlug
+          }
+        },
         include: {
           network: true,
           channels: true
@@ -80,9 +84,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if the network exists
+    // Check if the network exists by slug
     const network = await db.network.findUnique({
-      where: { id: body.networkId }
+      where: { slug: body.networkSlug }
     });
 
     if (!network) {
@@ -91,7 +95,11 @@ export async function POST(request: NextRequest) {
 
     // Create the city
     const city = await db.city.create({
-      data: { ...body, slug: generateSlug(body.name) }
+      data: {
+        ...body,
+        slug: generateSlug(body.name),
+        networkId: network.id
+      }
     });
 
     return NextResponse.json(city, { status: 201 });
@@ -116,28 +124,29 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { slug, ...updateData } = body;
 
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
-        { error: 'City ID is required' },
+        { error: 'City slug is required' },
         { status: 400 }
       );
     }
 
     // Check if city exists
     const existingCity = await db.city.findUnique({
-      where: { id }
+      where: { slug }
     });
 
     if (!existingCity) {
       return NextResponse.json({ error: 'City not found' }, { status: 404 });
     }
 
-    // If networkId is being updated, check if the network exists
-    if (updateData.networkId) {
+    // If networkSlug is being updated, check if the network exists
+    let networkId = updateData.networkId;
+    if (updateData.networkSlug) {
       const network = await db.network.findUnique({
-        where: { id: updateData.networkId }
+        where: { slug: updateData.networkSlug }
       });
 
       if (!network) {
@@ -146,12 +155,22 @@ export async function PUT(request: NextRequest) {
           { status: 404 }
         );
       }
+      networkId = network.id;
+      delete updateData.networkSlug;
+    }
+
+    // Update slug if name is being updated
+    if (updateData.name) {
+      updateData.slug = generateSlug(updateData.name);
     }
 
     // Update the city
     const updatedCity = await db.city.update({
-      where: { id },
-      data: updateData,
+      where: { slug },
+      data: {
+        ...updateData,
+        ...(networkId && { networkId })
+      },
       include: {
         network: true,
         channels: true
@@ -172,18 +191,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const cityId = searchParams.get('id');
+    const citySlug = searchParams.get('slug');
 
-    if (!cityId) {
+    if (!citySlug) {
       return NextResponse.json(
-        { error: 'City ID is required' },
+        { error: 'City slug is required' },
         { status: 400 }
       );
     }
 
     // Check if city exists
     const existingCity = await db.city.findUnique({
-      where: { id: cityId },
+      where: { slug: citySlug },
       include: {
         channels: true
       }
@@ -207,7 +226,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the city
     await db.city.delete({
-      where: { id: cityId }
+      where: { slug: citySlug }
     });
 
     return NextResponse.json(

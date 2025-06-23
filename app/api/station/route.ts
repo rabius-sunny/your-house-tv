@@ -3,17 +3,17 @@ import { createStationSchema } from '@/helper/schema/station';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Get all stations or a specific station by ID
+// GET - Get all stations or a specific station by slug
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const stationId = searchParams.get('id');
-    const channelId = searchParams.get('channelId');
+    const stationSlug = searchParams.get('slug');
+    const channelSlug = searchParams.get('channelSlug');
 
-    if (stationId) {
-      // Get specific station by ID
+    if (stationSlug) {
+      // Get specific station by slug
       const station = await db.station.findUnique({
-        where: { id: stationId },
+        where: { slug: stationSlug },
         include: {
           channel: true
         }
@@ -27,10 +27,14 @@ export async function GET(request: NextRequest) {
       }
 
       return NextResponse.json(station);
-    } else if (channelId) {
-      // Get stations by channel ID
+    } else if (channelSlug) {
+      // Get stations by channel slug
       const stations = await db.station.findMany({
-        where: { channelId },
+        where: {
+          channel: {
+            slug: channelSlug
+          }
+        },
         include: {
           channel: true
         },
@@ -83,9 +87,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if the channel exists
+    // Check if the channel exists by slug
     const channel = await db.channel.findUnique({
-      where: { id: body.channelId }
+      where: { slug: body.channelSlug }
     });
 
     if (!channel) {
@@ -102,7 +106,7 @@ export async function POST(request: NextRequest) {
         endedAt: body.endedAt,
         videos: body.videos,
         isFeatured: body.isFeatured || false,
-        channelId: body.channelId
+        channelId: channel.id
       }
     });
 
@@ -128,11 +132,11 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { id, ...updateData } = body;
+    const { slug, channelSlug, ...updateData } = body;
 
-    if (!id) {
+    if (!slug) {
       return NextResponse.json(
-        { error: 'Station ID is required' },
+        { error: 'Station slug is required' },
         { status: 400 }
       );
     }
@@ -147,17 +151,17 @@ export async function PUT(request: NextRequest) {
 
     // Check if station exists
     const existingStation = await db.station.findUnique({
-      where: { id }
+      where: { slug }
     });
 
     if (!existingStation) {
       return NextResponse.json({ error: 'Station not found' }, { status: 404 });
     }
 
-    // If channelId is being updated, check if the channel exists
-    if (updateData.channelId) {
+    // If channelSlug is being updated, check if the channel exists and get its ID
+    if (channelSlug) {
       const channel = await db.channel.findUnique({
-        where: { id: updateData.channelId }
+        where: { slug: channelSlug }
       });
 
       if (!channel) {
@@ -166,6 +170,7 @@ export async function PUT(request: NextRequest) {
           { status: 404 }
         );
       }
+      updateData.channelId = channel.id;
     }
 
     // Validate date range if both dates are provided
@@ -180,7 +185,7 @@ export async function PUT(request: NextRequest) {
 
     // Update the station
     const updatedStation = await db.station.update({
-      where: { id },
+      where: { slug },
       data: updateData,
       include: {
         channel: {
@@ -209,18 +214,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const stationId = searchParams.get('id');
+    const stationSlug = searchParams.get('slug');
 
-    if (!stationId) {
+    if (!stationSlug) {
       return NextResponse.json(
-        { error: 'Station ID is required' },
+        { error: 'Station slug is required' },
         { status: 400 }
       );
     }
 
     // Check if station exists
     const existingStation = await db.station.findUnique({
-      where: { id: stationId }
+      where: { slug: stationSlug }
     });
 
     if (!existingStation) {
@@ -229,7 +234,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the station
     await db.station.delete({
-      where: { id: stationId }
+      where: { slug: stationSlug }
     });
 
     return NextResponse.json(

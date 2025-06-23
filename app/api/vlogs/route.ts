@@ -3,19 +3,19 @@ import { createVlogSchema } from '@/helper/schema/vlog';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Get all vlogs or a specific vlog by ID
+// GET - Get all vlogs or a specific vlog by slug
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const vlogId = searchParams.get('id');
+    const vlogSlug = searchParams.get('slug');
     const categoryId = searchParams.get('categoryId');
     const type = searchParams.get('type');
     const featured = searchParams.get('featured');
 
-    if (vlogId) {
-      // Get specific vlog by ID
+    if (vlogSlug) {
+      // Get specific vlog by slug
       const vlog = await db.vlog.findUnique({
-        where: { id: vlogId },
+        where: { slug: vlogSlug },
         include: {
           categories: true
         }
@@ -99,11 +99,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    const slug = generateSlug(body.title);
+
+    // Check if slug already exists
+    const existingVlog = await db.vlog.findUnique({
+      where: { slug }
+    });
+
+    if (existingVlog) {
+      return NextResponse.json(
+        { error: 'A vlog with this title already exists' },
+        { status: 409 }
+      );
+    }
+
     // Create the vlog
     const vlog = await db.vlog.create({
       data: {
         title: body.title,
-        slug: generateSlug(body.title),
+        slug,
         thumbnail: body.thumbnail,
         description: body.description,
         video: body.video,
@@ -152,15 +166,32 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { id, ...updateData } = body;
+    const { slug, ...updateData } = body;
 
     // Check if vlog exists
     const existingVlog = await db.vlog.findUnique({
-      where: { id }
+      where: { slug }
     });
 
     if (!existingVlog) {
       return NextResponse.json({ error: 'Vlog not found' }, { status: 404 });
+    }
+
+    // If title is being updated, generate new slug and check for conflicts
+    if (updateData.title && updateData.title !== existingVlog.title) {
+      const newSlug = generateSlug(updateData.title);
+      const slugExists = await db.vlog.findUnique({
+        where: { slug: newSlug }
+      });
+
+      if (slugExists && slugExists.slug !== slug) {
+        return NextResponse.json(
+          { error: 'A vlog with this title already exists' },
+          { status: 409 }
+        );
+      }
+
+      updateData.slug = newSlug;
     }
 
     // If categoryIds are being updated, check if all categories exist
@@ -183,7 +214,7 @@ export async function PUT(request: NextRequest) {
 
     // Update the vlog
     const updatedVlog = await db.vlog.update({
-      where: { id },
+      where: { slug },
       data: updateData,
       include: {
         categories: true
@@ -204,18 +235,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const vlogId = searchParams.get('id');
+    const vlogSlug = searchParams.get('slug');
 
-    if (!vlogId) {
+    if (!vlogSlug) {
       return NextResponse.json(
-        { error: 'Vlog ID is required' },
+        { error: 'Vlog slug is required' },
         { status: 400 }
       );
     }
 
     // Check if vlog exists
     const existingVlog = await db.vlog.findUnique({
-      where: { id: vlogId }
+      where: { slug: vlogSlug }
     });
 
     if (!existingVlog) {
@@ -224,7 +255,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the vlog
     await db.vlog.delete({
-      where: { id: vlogId }
+      where: { slug: vlogSlug }
     });
 
     return NextResponse.json(
