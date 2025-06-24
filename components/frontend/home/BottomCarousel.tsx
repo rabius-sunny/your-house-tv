@@ -5,7 +5,12 @@ import { Sliders } from '@/types';
 import { EmblaCarouselType } from 'embla-carousel';
 import Autoplay from 'embla-carousel-autoplay';
 import useEmblaCarousel from 'embla-carousel-react';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -55,7 +60,7 @@ export default function BottomCarousel({}: TProps) {
   );
 
   const autoplayRef = useRef(
-    Autoplay({ delay: 4000, stopOnInteraction: false })
+    Autoplay({ delay: 3000, stopOnInteraction: false })
   );
 
   const [emblaRef, emblaApi] = useEmblaCarousel(
@@ -116,8 +121,8 @@ export default function BottomCarousel({}: TProps) {
   if (loading) {
     return (
       <div className='relative w-full h-[85vh]'>
-        <div className='absolute inset-0 bg-gradient-to-br from-gray-900 to-black animate-pulse' />
-        <div className='relative z-10 grid grid-cols-3 h-full'>
+        <div className='absolute  inset-0 bg-gradient-to-br from-gray-900 to-black animate-pulse' />
+        <div className='relative box z-10 grid grid-cols-3 h-full'>
           <div className='p-8 flex flex-col justify-center'>
             <div className='space-y-4'>
               {Array.from({ length: 3 }).map((_, idx) => (
@@ -148,7 +153,7 @@ export default function BottomCarousel({}: TProps) {
   const activeSlide = data[selectedIndex];
 
   return (
-    <div className='relative w-full h-[85vh] overflow-hidden'>
+    <div className='relative w-full h-[85vh]  overflow-hidden'>
       {/* Background images - exit animation only */}
       <div className='absolute inset-0'>
         {/* Current image (appears instantly, no entrance animation) */}
@@ -185,10 +190,27 @@ export default function BottomCarousel({}: TProps) {
         <div className='absolute inset-0 bg-black/40' />
       </div>
 
+      <div className='md:hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 flex items-center justify-between w-full max-w-6xl px-4'>
+        <button
+          onClick={onPrevButtonClick}
+          disabled={prevBtnDisabled}
+          className=' w-10 h-10 cursor-pointer bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg'
+        >
+          <ChevronLeft className='w-4 h-4' />
+        </button>
+        <button
+          onClick={onNextButtonClick}
+          disabled={nextBtnDisabled}
+          className='  w-10 h-10 cursor-pointer bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center text-white hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg'
+        >
+          <ChevronRight className='w-4 h-4' />
+        </button>
+      </div>
+
       {/* 3-column grid overlay */}
-      <div className='relative z-10 flex h-full'>
+      <div className='relative z-10 box flex h-full'>
         {/* Column 1: Navigation slider */}
-        <div className='p-8 flex flex-col justify-center max-w-sm w-full'>
+        <div className='p-8 hidden md:flex flex-col justify-center max-w-sm w-full'>
           <div className='relative'>
             <div
               className='embla-vertical'
@@ -253,31 +275,46 @@ export default function BottomCarousel({}: TProps) {
         </div>
 
         {/* Column 2: Active slide information */}
-        <div className='p-8 flex flex-col justify-center '>
-          <div className='max-w-lg'>
-            {activeSlide.title && (
-              <h2 className='text-4xl md:text-5xl font-bold text-white mb-4 leading-tight'>
-                {activeSlide.title}
-              </h2>
-            )}
-            {activeSlide.subtitle && (
-              <p className='text-lg text-gray-200 mb-6 leading-relaxed'>
-                {activeSlide.subtitle}
-              </p>
-            )}
-            {activeSlide.description && (
-              <p className='text-base text-gray-300 mb-8 leading-relaxed'>
-                {activeSlide.description}
-              </p>
-            )}
-            {activeSlide.link && activeSlide.linktext && (
-              <Link
-                href={activeSlide.link}
-                className='inline-flex items-center px-8 py-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white font-medium hover:bg-white/30 transition-all duration-200 shadow-lg'
-              >
-                {activeSlide.linktext}
-              </Link>
-            )}
+        <div className='p-8 flex flex-col justify-center'>
+          <div className='max-w-xl w-full'>
+            {/* Title - Fixed position and height */}
+            <div className='h-10 mb-2'>
+              {activeSlide.title && (
+                <h2 className='text-xl md:text-4xl font-semibold text-white leading-tight line-clamp-1'>
+                  {activeSlide.title}
+                </h2>
+              )}
+            </div>
+
+            {/* Subtitle - Fixed position and height */}
+            <div className='h-10 mb-4'>
+              {activeSlide.subtitle && (
+                <p className='text-lg line-clamp-2 text-gray-200 leading-relaxed'>
+                  {activeSlide.subtitle}
+                </p>
+              )}
+            </div>
+
+            {/* Description - Fixed position and height */}
+            <div className='h-32 mb-12'>
+              {activeSlide.description && (
+                <p className='text-base text-gray-300 leading-relaxed line-clamp-5'>
+                  {activeSlide.description}
+                </p>
+              )}
+            </div>
+
+            {/* CTA Button - Fixed position */}
+            <div className='h-14'>
+              {activeSlide.link && activeSlide.linktext && (
+                <Link
+                  href={activeSlide.link}
+                  className='inline-flex items-center px-8 py-4 bg-white/20 backdrop-blur-md border border-white/30 rounded-full text-white font-medium hover:bg-white/30 transition-all duration-200 shadow-lg'
+                >
+                  {activeSlide.linktext}
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
