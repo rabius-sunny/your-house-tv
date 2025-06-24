@@ -21,7 +21,7 @@ export default async function page() {
       <FeaturedCarousel
         title='Video Shows | Vlogs'
         items={data.vlogs || []}
-        type='vlogs'
+        type='videos'
       />
     </div>
   );

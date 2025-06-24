@@ -100,6 +100,7 @@ export type VlogCategory = {
   description: string;
   thumbnail: string;
   isFeatured: boolean;
+  slug: string;
   sortOrder?: number | null;
   vlogIds: string[];
   _count: any;
@@ -111,9 +112,11 @@ export type VlogCategory = {
 export type Vlog = {
   id: string;
   title: string;
+  thumbnail: string;
+  description?: string;
   video: string;
+  slug: string;
   isFeatured: boolean;
-  sortOrder?: number | null;
   type: VlogType;
   categories: VlogCategory[];
   categoryIds: string[];
@@ -166,14 +169,13 @@ export type CarouselSlide = {
 };
 export type Resource =
   | 'cities'
-  | 'vlogs'
+  | 'videos'
   | 'channels'
   | 'networks'
   | 'stations'
   | 'vlog-categories'
   | 'blog-categories'
-  | 'blogs'
-  | 'vlogs';
+  | 'blogs';
 
 export enum VlogType {
   VLOG = 'VLOG',

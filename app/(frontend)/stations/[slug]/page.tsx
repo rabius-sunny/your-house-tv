@@ -49,6 +49,11 @@ export default function StationDetails() {
             ) : (
               <SponsorCarousel slides={sponsors! || []} />
             )}
+            <div className='mt-10'>
+              <p className='pb-8 text-center text-gray-200'>
+                Share with friends
+              </p>
+            </div>
           </div>
         </div>
       </div>
