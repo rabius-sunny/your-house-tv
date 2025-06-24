@@ -13,7 +13,7 @@ export default function FeaturedNetworks({ networks }: TProps) {
           key={idx}
           items={item.city}
           title={item.name}
-          type='networks'
+          type='cities'
           link={`/networks/${item.slug}`}
           linkText='View This Network'
         />

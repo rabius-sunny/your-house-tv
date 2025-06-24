@@ -20,6 +20,8 @@ export async function GET(request: NextRequest) {
         }
       });
 
+      console.log('network', network);
+
       if (!network) {
         return NextResponse.json(
           { error: 'Network not found' },

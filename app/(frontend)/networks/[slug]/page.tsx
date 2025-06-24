@@ -150,19 +150,7 @@ export default function NetworkDetails() {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100'>
-      <div className='box py-8'>
-        {/* Back Navigation */}
-        <div className='mb-8'>
-          <Button
-            variant='outline'
-            onClick={() => router.back()}
-            className='bg-white hover:bg-slate-50'
-          >
-            <ArrowLeft className='h-4 w-4 mr-2' />
-            Back to Networks
-          </Button>
-        </div>
-
+      <div className='box py-10 md:py-20'>
         {/* Network Hero Section */}
         <div className='mb-8'>
           <div className='flex flex-col lg:flex-row gap-8'>
