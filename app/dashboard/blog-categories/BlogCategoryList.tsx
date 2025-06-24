@@ -192,9 +192,6 @@ export default function BlogCategoryList({
                     Name
                   </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
-                    Description
-                  </th>
-                  <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
                     Status
                   </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
@@ -253,11 +250,6 @@ export default function BlogCategoryList({
                           </p>
                         </div>
                       </div>
-                    </td>
-                    <td className='p-4 max-w-xs'>
-                      <p className='text-sm text-muted-foreground truncate'>
-                        {category.description}
-                      </p>
                     </td>
                     <td className='p-4'>
                       <Badge

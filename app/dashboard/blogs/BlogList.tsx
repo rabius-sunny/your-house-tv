@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
 import { BlogCategory } from '@/types';
-import { ExternalLink, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -126,7 +126,7 @@ export default function BlogList({ blogs, loading, onBlogDeleted }: TProps) {
   }
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+    <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6'>
       {blogs.map((blog) => (
         <Card
           key={blog.id}
@@ -170,12 +170,19 @@ export default function BlogList({ blogs, loading, onBlogDeleted }: TProps) {
             )}
           </div>
 
-          <CardContent className='p-6'>
+          <CardContent className='p-4 pt-0'>
             <div className='space-y-3'>
               {/* Title */}
-              <h3 className='text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors duration-200'>
-                {blog.title}
-              </h3>
+              <div>
+                <h3 className='text-lg font-semibold line-clamp-2 group-hover:text-primary transition-colors duration-200'>
+                  {blog.title}
+                </h3>
+                <div className='flex items-center gap-2 mb-2'>
+                  <span className='text-xs text-muted-foreground'>
+                    {formatDate(blog.createdAt)}
+                  </span>
+                </div>
+              </div>
 
               {/* Description */}
               {blog.description && (
@@ -185,11 +192,6 @@ export default function BlogList({ blogs, loading, onBlogDeleted }: TProps) {
               )}
 
               {/* Meta Info */}
-              <div className='flex items-center gap-2 mb-2'>
-                <span className='text-xs text-muted-foreground'>
-                  {formatDate(blog.createdAt)}
-                </span>
-              </div>
 
               {/* Categories */}
               {blog.categories && blog.categories.length > 0 && (
@@ -216,24 +218,13 @@ export default function BlogList({ blogs, loading, onBlogDeleted }: TProps) {
 
               {/* Actions */}
               <div className='flex items-center justify-between pt-2'>
-                <div className='text-xs text-muted-foreground'>
-                  ID: {blog.id.slice(-6)}
-                </div>
                 <div className='flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-200'>
                   <Button
-                    variant='ghost'
-                    size='sm'
-                    className='h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary'
-                    title='View blog'
-                  >
-                    <ExternalLink className='h-4 w-4' />
-                  </Button>
-                  <Button
-                    variant='ghost'
+                    variant='destructive'
                     size='sm'
                     onClick={() => handleDelete(blog.id)}
                     disabled={deletingId === blog.id}
-                    className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50'
+                    className='h-8 w-8 p-0  disabled:opacity-50'
                     title='Delete blog'
                   >
                     {deletingId === blog.id ? (
