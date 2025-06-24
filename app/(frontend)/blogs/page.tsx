@@ -2,19 +2,9 @@
 
 import Background from '@/components/ui/bg';
 import { useAsync } from '@/hooks/useAsync';
-import { Blog, BlogCategory } from '@/types';
+import { Blog } from '@/types';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// Extended Blog type for API response (includes additional fields)
-interface BlogWithExtras extends Blog {
-  content?: string;
-  excerpt?: string;
-  featuredImage?: string;
-  publishedAt: string;
-  author?: string;
-  category?: BlogCategory;
-}
 
 export default function BlogsPage() {
   const { data, loading, error, refetch } = useAsync<Blog[]>('/blogs/public');
