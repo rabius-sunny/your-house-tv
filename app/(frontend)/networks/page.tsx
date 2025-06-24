@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { CardsSekeleton } from '@/components/ui/card-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/useAsync';
 import { Network } from '@/types';
@@ -19,27 +20,11 @@ export default function AllNetworks() {
       <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100'>
         <div className='box py-20'>
           <div className='text-center mb-12'>
-            <Skeleton className='h-12 w-96 mx-auto mb-4' />
-            <Skeleton className='h-6 w-64 mx-auto' />
+            <Skeleton className='h-12 bg-slate-200 w-96 mx-auto mb-4' />
+            <Skeleton className='h-6 bg-slate-200 w-64 mx-auto' />
           </div>
 
-          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-            {Array.from({ length: 8 }).map((_, idx) => (
-              <Card
-                key={idx}
-                className='overflow-hidden'
-              >
-                <CardContent className='p-0'>
-                  <Skeleton className='h-48 w-full' />
-                  <div className='p-4 space-y-3'>
-                    <Skeleton className='h-6 w-3/4' />
-                    <Skeleton className='h-4 w-full' />
-                    <Skeleton className='h-4 w-2/3' />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          <CardsSekeleton className='mt-10' />
         </div>
       </div>
     );
@@ -89,13 +74,6 @@ export default function AllNetworks() {
                 There are currently no networks available. Please check back
                 later.
               </p>
-              <Button
-                onClick={refetch}
-                variant='outline'
-              >
-                <RefreshCw className='h-4 w-4 mr-2' />
-                Refresh
-              </Button>
             </CardContent>
           </Card>
         </div>

@@ -13,8 +13,11 @@ export async function GET(request: NextRequest) {
         where: { slug },
         include: {
           city: {
-            include: {
-              channels: true
+            select: {
+              name: true,
+              slug: true,
+              thumbnail: true,
+              isFeatured: true
             }
           }
         }

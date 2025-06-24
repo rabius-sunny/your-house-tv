@@ -5,13 +5,18 @@ import { Card, CardContent } from '@/components/ui/card';
 import { CardsSekeleton } from '@/components/ui/card-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/useAsync';
-import { City } from '@/types';
-import { AlertCircle, MapPin, RefreshCw, Star } from 'lucide-react';
+import { Channel } from '@/types';
+import { AlertCircle, RefreshCw, Star, Tv } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function AllCities() {
-  const { data, error, loading, refetch } = useAsync<City[]>('/city/public');
+export default function ChannelsPage() {
+  const {
+    data: channels,
+    error,
+    loading,
+    refetch
+  } = useAsync<Channel[]>('/channel/public');
 
   // Loading skeleton
   if (loading) {
@@ -21,9 +26,8 @@ export default function AllCities() {
           <div className='text-center mb-12'>
             <Skeleton className='h-12 bg-slate-200 w-96 mx-auto mb-4' />
             <Skeleton className='h-6 bg-slate-200 w-64 mx-auto' />
+            <CardsSekeleton className='mt-10' />
           </div>
-
-          <CardsSekeleton className='mt-10' />
         </div>
       </div>
     );
@@ -38,10 +42,10 @@ export default function AllCities() {
             <CardContent className='p-8 text-center'>
               <AlertCircle className='h-16 w-16 text-red-500 mx-auto mb-4' />
               <h2 className='text-2xl font-bold text-red-800 mb-2'>
-                Failed to Load Cities
+                Failed to Load Channels
               </h2>
               <p className='text-red-600 mb-6'>
-                We couldn't load the cities. Please check your connection and
+                We couldn't load the channels. Please check your connection and
                 try again.
               </p>
               <Button
@@ -59,18 +63,18 @@ export default function AllCities() {
   }
 
   // Empty state
-  if (!data || data.length === 0) {
+  if (!channels || channels.length === 0) {
     return (
       <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center'>
         <div className='box py-20'>
           <Card className='max-w-lg mx-auto'>
             <CardContent className='p-8 text-center'>
-              <MapPin className='h-16 w-16 text-slate-400 mx-auto mb-4' />
+              <Tv className='h-16 w-16 text-slate-400 mx-auto mb-4' />
               <h2 className='text-2xl font-bold text-slate-800 mb-2'>
-                No Cities Found
+                No Channels Found
               </h2>
               <p className='text-slate-600 mb-6'>
-                There are currently no cities available. Please check back
+                There are currently no channels available. Please check back
                 later.
               </p>
             </CardContent>
@@ -87,41 +91,42 @@ export default function AllCities() {
         {/* Header Section */}
         <div className='text-center mb-12'>
           <h1 className='text-4xl md:text-5xl font-bold text-slate-800 mb-4'>
-            Cities
+            All Channels
           </h1>
           <div className='flex items-center justify-center gap-4 text-sm text-slate-500'>
             <div className='flex items-center gap-2'>
-              <MapPin className='h-4 w-4' />
+              <Tv className='h-4 w-4' />
               <span>
-                Showing {data.length} cit{data.length !== 1 ? 'ies' : 'y'}
+                Showing {channels.length} channel
+                {channels.length !== 1 ? 's' : ''}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Cities Grid */}
+        {/* Channels Grid */}
         <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-          {data.map((city) => (
+          {channels.map((channel, idx) => (
             <Link
-              key={city.id}
-              href={`/cities/${city.slug}`}
+              key={idx}
+              href={`/channels/${channel.slug}`}
               className='group block'
             >
               <Card className='p-0 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white'>
                 <CardContent className='p-0'>
-                  {/* City Image */}
+                  {/* Channel Image */}
                   <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
-                    {city.thumbnail ? (
+                    {channel.thumbnail ? (
                       <Image
-                        src={city.thumbnail}
-                        alt={city.name}
+                        src={channel.thumbnail}
+                        alt={channel.name}
                         fill
                         className='object-cover group-hover:scale-105 transition-transform duration-300'
                         sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
                       />
                     ) : (
                       <div className='w-full h-full flex items-center justify-center'>
-                        <MapPin className='h-16 w-16 text-slate-400' />
+                        <Tv className='h-16 w-16 text-slate-400' />
                       </div>
                     )}
 
@@ -129,37 +134,31 @@ export default function AllCities() {
                     <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
                   </div>
 
-                  {/* City Info */}
+                  {/* Channel Info */}
                   <div className='p-6'>
                     <h3 className='text-xl font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors duration-200'>
-                      {city.name}
+                      {channel.name}
                     </h3>
 
-                    {/* City Stats */}
-                    <div className='flex items-center justify-between text-xs text-slate-500 mb-3'>
+                    {channel.description && (
+                      <p className='text-slate-600 text-sm line-clamp-2 mb-3'>
+                        {channel.description}
+                      </p>
+                    )}
+
+                    {/* Channel Stats */}
+                    <div className='flex items-center justify-between text-xs text-slate-500'>
                       <span className='bg-slate-100 px-2 py-1 rounded-full'>
-                        {city._count.channels || 0} channel
-                        {(city._count.channels || 0) !== 1 ? 's' : ''}
+                        {channel.stations?.length || 0} station
+                        {(channel.stations?.length || 0) !== 1 ? 's' : ''}
                       </span>
-                      {city.isFeatured && (
+                      {channel.isFeatured && (
                         <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
                           <Star className='h-3 w-3 fill-current' />
                           Featured
                         </span>
                       )}
                     </div>
-
-                    {/* Network Info */}
-                    {city.network && (
-                      <div className='text-xs text-slate-600'>
-                        <span className='font-medium'>Network:</span>
-                        <div className='mt-1'>
-                          <span className='bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs'>
-                            {city.network.name}
-                          </span>
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </CardContent>
               </Card>

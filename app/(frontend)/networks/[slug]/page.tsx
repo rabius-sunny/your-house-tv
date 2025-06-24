@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { CardsSekeleton } from '@/components/ui/card-skeleton';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/useAsync';
 import { Network } from '@/types';
@@ -63,18 +64,7 @@ export default function NetworkDetails() {
               <Skeleton className='h-8 w-48' />
             </CardHeader>
             <CardContent>
-              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-                {Array.from({ length: 6 }).map((_, idx) => (
-                  <div
-                    key={idx}
-                    className='space-y-3'
-                  >
-                    <Skeleton className='h-48 w-full rounded-lg' />
-                    <Skeleton className='h-6 w-3/4' />
-                    <Skeleton className='h-4 w-1/2' />
-                  </div>
-                ))}
-              </div>
+              <CardsSekeleton count={4} />
             </CardContent>
           </Card>
         </div>
@@ -209,16 +199,6 @@ export default function NetworkDetails() {
                   </div>
                 </div>
               </div>
-
-              {/* Network Description */}
-              <div className='bg-slate-50 p-4 rounded-lg'>
-                <p className='text-slate-700 leading-relaxed'>
-                  Welcome to {network.name}, a comprehensive television network
-                  serving multiple cities with diverse programming and content.
-                  Explore our cities and discover the channels and stations
-                  available in each location.
-                </p>
-              </div>
             </div>
 
             {/* Network Image */}
@@ -246,12 +226,6 @@ export default function NetworkDetails() {
         <div className='flex items-center gap-2 text-2xl mb-8'>
           <MapPin className='h-6 w-6 text-blue-600' />
           Cities in {network.name}
-          {network.city && network.city.length > 0 && (
-            <span className='text-sm font-normal text-slate-500 ml-2'>
-              ({network.city.length} cit
-              {network.city.length !== 1 ? 'ies' : 'y'})
-            </span>
-          )}
         </div>
         <div>
           {!network.city || network.city.length === 0 ? (
@@ -276,9 +250,9 @@ export default function NetworkDetails() {
                   if (b.sortOrder !== null) return 1;
                   return a.name.localeCompare(b.name);
                 })
-                .map((city) => (
+                .map((city, idx) => (
                   <Link
-                    key={city.id}
+                    key={idx}
                     href={`/cities/${city.slug}`}
                     className='group block'
                   >
@@ -306,16 +280,12 @@ export default function NetworkDetails() {
 
                         {/* City Info */}
                         <div className='p-4'>
-                          <h3 className='text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors duration-200'>
+                          <h3 className='text-lg font-bold text-slate-800  group-hover:text-blue-600 transition-colors duration-200'>
                             {city.name}
                           </h3>
 
                           {/* City Stats */}
-                          <div className='flex items-center justify-between text-xs text-slate-500 mb-3'>
-                            <span className='bg-slate-100 px-2 py-1 rounded-full'>
-                              {city.channels?.length || 0} channel
-                              {(city.channels?.length || 0) !== 1 ? 's' : ''}
-                            </span>
+                          <div className='flex items-center justify-between text-xs text-slate-500'>
                             {city.isFeatured && (
                               <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
                                 <Star className='h-3 w-3 fill-current' />
@@ -335,7 +305,7 @@ export default function NetworkDetails() {
                                   .slice(0, 3)
                                   .map((channel, idx) => (
                                     <span
-                                      key={channel.id}
+                                      key={idx}
                                       className='bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs'
                                     >
                                       {channel.name}

@@ -12,8 +12,20 @@ export async function GET(request: NextRequest) {
       const city = await db.city.findUnique({
         where: { slug: citySlug },
         include: {
-          network: true,
-          channels: true
+          network: {
+            select: {
+              name: true,
+              slug: true
+            }
+          },
+          channels: {
+            select: {
+              name: true,
+              slug: true,
+              thumbnail: true,
+              isFeatured: true
+            }
+          }
         }
       });
 
@@ -41,10 +53,20 @@ export async function GET(request: NextRequest) {
     } else {
       // Get all cities
       const cities = await db.city.findMany({
-        include: {
-          network: true,
-          channels: true
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          thumbnail: true,
+          isFeatured: true,
+          createdAt: true,
+          _count: {
+            select: {
+              channels: true
+            }
+          }
         },
+
         orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }]
       });
 

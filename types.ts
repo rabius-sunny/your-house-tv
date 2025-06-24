@@ -41,6 +41,7 @@ export type Network = {
   isFeatured: boolean;
   sortOrder?: number | null;
   city: City[];
+  _count: any;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -55,6 +56,7 @@ export type City = {
   network: Network;
   networkId: string;
   channels: Channel[];
+  _count: any;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -70,6 +72,7 @@ export type Channel = {
   cityId: string;
   city: City;
   stations: Station[];
+  _count: any;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -82,6 +85,7 @@ export type Station = {
   startedAt: Date;
   endedAt: Date;
   videos: string[];
+  _count: any;
   isFeatured: boolean;
   sortOrder?: number | null;
   channelId: string;
@@ -98,6 +102,7 @@ export type VlogCategory = {
   isFeatured: boolean;
   sortOrder?: number | null;
   vlogIds: string[];
+  _count: any;
   vlogs: Vlog[];
   createdAt: Date;
   updatedAt: Date;
@@ -112,6 +117,7 @@ export type Vlog = {
   type: VlogType;
   categories: VlogCategory[];
   categoryIds: string[];
+  _count: any;
   createdAt: Date;
   updatedAt: Date;
 };
