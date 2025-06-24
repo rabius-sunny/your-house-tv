@@ -1,6 +1,7 @@
 import { baseUrl } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import MobileNav from './mobile-nav';
 import NavLinks from './nav-links';
 
 export default async function Navbar() {
@@ -22,7 +23,12 @@ export default async function Navbar() {
             height={100}
           />
         </Link>
-        <NavLinks />
+        <div className='hidden md:block'>
+          <NavLinks />
+        </div>
+        <div className='md:hidden'>
+          <MobileNav />
+        </div>
       </div>
     </nav>
   );
