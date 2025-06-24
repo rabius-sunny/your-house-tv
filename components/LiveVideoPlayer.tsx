@@ -29,12 +29,58 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string>('');
   const [initialized, setInitialized] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Start muted for autoplay
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [showPlayButton, setShowPlayButton] = useState(false);
 
   const { currentVideoTime, isPlaying, getCurrentVideo, isTimeSync } =
     useLiveStream(channel);
 
   const currentVideo = getCurrentVideo();
+
+  // Handle user interaction to enable sound (YouTube-like behavior)
+  const handleVideoClick = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    setHasUserInteracted(true);
+    setShowPlayButton(false);
+
+    // Unmute the video on first click
+    if (isMuted) {
+      setIsMuted(false);
+      video.muted = false;
+    }
+
+    // Try to play if not already playing
+    if (video.paused && isPlaying) {
+      try {
+        await video.play();
+      } catch (err) {
+        console.error('Failed to play after user interaction:', err);
+      }
+    }
+  };
+
+  // Safe play function that handles autoplay policy
+  const safePlay = async (video: HTMLVideoElement) => {
+    try {
+      const playPromise = video.play();
+
+      if (playPromise !== undefined) {
+        await playPromise;
+      }
+      setShowPlayButton(false);
+    } catch (error: any) {
+      if (error.name === 'NotAllowedError') {
+        console.log('Autoplay prevented - showing play button');
+        setShowPlayButton(true);
+      } else {
+        console.error('Failed to play video:', error);
+        setError('Failed to play video');
+      }
+    }
+  };
 
   useEffect(() => {
     if (
@@ -59,12 +105,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       video.currentTime = currentVideoTime;
 
       if (isPlaying) {
-        try {
-          await video.play();
-        } catch (err) {
-          console.error('Failed to play video:', err);
-          setError('Failed to play video');
-        }
+        await safePlay(video);
       }
     };
 
@@ -99,14 +140,15 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
     const video = videoRef.current;
     if (!video || !isTimeSync) return;
 
-    if (isPlaying && video.paused && !isLoading) {
-      video.play().catch((err) => {
-        console.error('Failed to play video:', err);
-        setError('Failed to play video');
-      });
-    } else if (!isPlaying && !video.paused) {
-      video.pause();
-    }
+    const handlePlayback = async () => {
+      if (isPlaying && video.paused && !isLoading) {
+        await safePlay(video);
+      } else if (!isPlaying && !video.paused) {
+        video.pause();
+      }
+    };
+
+    handlePlayback();
   }, [isPlaying, isLoading, isTimeSync]);
 
   useEffect(() => {
@@ -187,11 +229,12 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       <div className='relative aspect-video'>
         <video
           ref={videoRef}
-          className='w-full h-full object-cover'
+          className='w-full h-full object-cover cursor-pointer'
           muted={isMuted}
           autoPlay
           playsInline
           preload='metadata'
+          onClick={handleVideoClick}
         />
 
         {isLoading && !error && (
@@ -219,20 +262,35 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
               <span>LIVE</span>
             </div>
 
-            {/* Mute/Unmute Button */}
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className='absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-2 rounded-full transition-all duration-200 hover:scale-110'
-              aria-label={isMuted ? 'Unmute' : 'Mute'}
-            >
-              {isMuted ? (
+            {/* YouTube-like Play Button Overlay - Only shows when autoplay fails */}
+            {showPlayButton && (
+              <div
+                className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer z-30'
+                onClick={handleVideoClick}
+              >
+                <div className='bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all duration-200 hover:scale-110'>
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='currentColor'
+                    viewBox='0 0 24 24'
+                    className='w-12 h-12 text-black'
+                  >
+                    <path d='M8 5v14l11-7z' />
+                  </svg>
+                </div>
+              </div>
+            )}
+
+            {/* Sound indicator when muted */}
+            {isMuted && !showPlayButton && (
+              <div className='absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm flex items-center space-x-2'>
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
                   viewBox='0 0 24 24'
                   strokeWidth={2}
                   stroke='currentColor'
-                  className='w-5 h-5'
+                  className='w-4 h-4'
                 >
                   <path
                     strokeLinecap='round'
@@ -240,23 +298,56 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
                     d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
                   />
                 </svg>
-              ) : (
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={2}
-                  stroke='currentColor'
-                  className='w-5 h-5'
-                >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
-                  />
-                </svg>
-              )}
-            </button>
+                <span>Click on the video to unmute</span>
+              </div>
+            )}
+
+            {/* Mute/Unmute Button - Only show after user interaction */}
+            {hasUserInteracted && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsMuted(!isMuted);
+                  if (videoRef.current) {
+                    videoRef.current.muted = !isMuted;
+                  }
+                }}
+                className='absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-2 rounded-full transition-all duration-200 hover:scale-110'
+                aria-label={isMuted ? 'Unmute' : 'Mute'}
+              >
+                {isMuted ? (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={2}
+                    stroke='currentColor'
+                    className='w-5 h-5'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 24 24'
+                    strokeWidth={2}
+                    stroke='currentColor'
+                    className='w-5 h-5'
+                  >
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      d='M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                    />
+                  </svg>
+                )}
+              </button>
+            )}
           </>
         )}
       </div>
