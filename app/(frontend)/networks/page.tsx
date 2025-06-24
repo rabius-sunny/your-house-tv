@@ -1,9 +1,8 @@
 'use client';
 
+import Background from '@/components/ui/bg';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { CardsSekeleton } from '@/components/ui/card-skeleton';
-import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/useAsync';
 import { Network } from '@/types';
 import { AlertCircle, RefreshCw, Tv } from 'lucide-react';
@@ -17,31 +16,49 @@ export default function AllNetworks() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100'>
+      <Background>
         <div className='box py-20'>
+          {/* Header Skeleton */}
           <div className='text-center mb-12'>
-            <Skeleton className='h-12 bg-slate-200 w-96 mx-auto mb-4' />
-            <Skeleton className='h-6 bg-slate-200 w-64 mx-auto' />
+            <div className='w-80 h-12 bg-white/10 rounded animate-pulse mx-auto mb-4'></div>
+            <div className='w-48 h-6 bg-white/10 rounded animate-pulse mx-auto'></div>
           </div>
 
-          <CardsSekeleton className='mt-10' />
+          {/* Networks Grid Skeleton */}
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div
+                key={index}
+                className='bg-white/5 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden'
+              >
+                {/* Image Skeleton */}
+                <div className='h-48 bg-white/10 animate-pulse'></div>
+
+                {/* Content Skeleton */}
+                <div className='p-6'>
+                  <div className='w-3/4 h-5 bg-white/10 rounded animate-pulse mb-2'></div>
+                  <div className='w-1/2 h-4 bg-white/10 rounded animate-pulse'></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Background>
     );
   }
 
   // Error state
   if (error) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center'>
+      <Background>
         <div className='box py-20'>
-          <Card className='max-w-lg mx-auto border-red-200 bg-red-50'>
+          <Card className='max-w-lg mx-auto bg-white/10 backdrop-blur-md border border-white/20'>
             <CardContent className='p-8 text-center'>
-              <AlertCircle className='h-16 w-16 text-red-500 mx-auto mb-4' />
-              <h2 className='text-2xl font-bold text-red-800 mb-2'>
+              <AlertCircle className='h-16 w-16 text-red-400 mx-auto mb-4' />
+              <h2 className='text-2xl font-bold text-white mb-2'>
                 Failed to Load Networks
               </h2>
-              <p className='text-red-600 mb-6'>
+              <p className='text-white/70 mb-6'>
                 We couldn't load the networks. Please check your connection and
                 try again.
               </p>
@@ -55,42 +72,42 @@ export default function AllNetworks() {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </Background>
     );
   }
 
   // Empty state
   if (!data || data.length === 0) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center'>
+      <Background>
         <div className='box py-20'>
-          <Card className='max-w-lg mx-auto'>
+          <Card className='max-w-lg mx-auto bg-white/10 backdrop-blur-md border border-white/20'>
             <CardContent className='p-8 text-center'>
-              <Tv className='h-16 w-16 text-slate-400 mx-auto mb-4' />
-              <h2 className='text-2xl font-bold text-slate-800 mb-2'>
+              <Tv className='h-16 w-16 text-white/60 mx-auto mb-4' />
+              <h2 className='text-2xl font-bold text-white mb-2'>
                 No Networks Found
               </h2>
-              <p className='text-slate-600 mb-6'>
+              <p className='text-white/70 mb-6'>
                 There are currently no networks available. Please check back
                 later.
               </p>
             </CardContent>
           </Card>
         </div>
-      </div>
+      </Background>
     );
   }
 
   // Success state with data
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-50 to-slate-100'>
+    <Background>
       <div className='box py-20'>
         {/* Header Section */}
         <div className='text-center mb-12'>
-          <h1 className='text-4xl md:text-5xl font-bold text-slate-800 mb-4'>
+          <h1 className='text-4xl md:text-5xl font-bold text-white mb-4'>
             All Networks
           </h1>
-          <div className='flex items-center justify-center gap-4 text-sm text-slate-500'>
+          <div className='flex items-center justify-center gap-4 text-sm text-white/70'>
             <div className='flex items-center gap-2'>
               <Tv className='h-4 w-4' />
               <span>
@@ -108,10 +125,10 @@ export default function AllNetworks() {
               href={`/networks/${network.slug}`}
               className='group block'
             >
-              <Card className='overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white p-0'>
+              <Card className='overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 bg-white/10 backdrop-blur-md border border-white/20 p-0'>
                 <CardContent className='p-0'>
                   {/* Network Logo/Image */}
-                  <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
+                  <div className='relative h-48 bg-gradient-to-br from-white/10 to-white/5 overflow-hidden'>
                     {network.thumbnail ? (
                       <Image
                         src={network.thumbnail}
@@ -122,7 +139,7 @@ export default function AllNetworks() {
                       />
                     ) : (
                       <div className='w-full h-full flex items-center justify-center'>
-                        <Tv className='h-16 w-16 text-slate-400' />
+                        <Tv className='h-16 w-16 text-white/60' />
                       </div>
                     )}
 
@@ -132,13 +149,13 @@ export default function AllNetworks() {
 
                   {/* Network Info */}
                   <div className='p-6'>
-                    <h3 className=' font-medium text-slate-800 mb-2 group-hover:text-blue-600 transition-colors duration-200'>
+                    <h3 className='font-medium text-white mb-2 group-hover:text-blue-400 transition-colors duration-200'>
                       {network.name}
                     </h3>
 
                     {/* City count if available */}
                     {network.city && network.city.length > 0 && (
-                      <div className='mt-3 text-sm text-slate-600'>
+                      <div className='mt-3 text-sm text-white/70'>
                         {network.city.length} cit
                         {network.city.length !== 1 ? 'ies' : 'y'}
                       </div>
@@ -150,6 +167,6 @@ export default function AllNetworks() {
           ))}
         </div>
       </div>
-    </div>
+    </Background>
   );
 }
