@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface TimeSync {
   serverTimeOffset: number;
@@ -40,13 +40,6 @@ export const useTimeSync = () => {
         serverTimeOffset: offset,
         isSync: true,
         lastSyncTime: Date.now()
-      });
-
-      console.log('Time sync completed:', {
-        serverTime: new Date(adjustedServerTime).toISOString(),
-        clientTime: new Date(clientTime).toISOString(),
-        offset: offset,
-        networkLatency: networkLatency
       });
     } catch (error) {
       console.error('Failed to sync with server time:', error);

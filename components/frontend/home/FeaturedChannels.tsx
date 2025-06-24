@@ -13,7 +13,7 @@ export default function FeaturedChannels({ channels }: TProps) {
           key={idx}
           items={item.stations}
           title={item.name}
-          type='channels'
+          type='stations'
           link={`/channels/${item.slug}`}
           linkText='View This Channel'
         />
