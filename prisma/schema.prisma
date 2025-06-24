@@ -134,7 +134,7 @@ model VlogCategory {
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
-  sortOrder   Int?     @unique
+  // sortOrder   Int?     @unique
   vlogIds     String[] @db.ObjectId
   vlogs       Vlog[]   @relation(fields: [vlogIds], references: [id])
 
@@ -150,7 +150,7 @@ model Vlog {
   video       String
   description String
   isFeatured  Boolean        @default(false)
-  sortOrder   Int?           @unique
+  // sortOrder   Int?           @unique
   type        VlogType       @default(VLOG)
   categories  VlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId

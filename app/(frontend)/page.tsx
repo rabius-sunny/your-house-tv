@@ -7,6 +7,9 @@ import { baseUrl } from '@/lib/utils';
 
 export default async function page() {
   const res = await fetch(baseUrl + '/api/homepage');
+  if (!res.ok) {
+    return <div>Building site...</div>;
+  }
   const data = await res.json();
 
   return (
