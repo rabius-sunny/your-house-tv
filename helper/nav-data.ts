@@ -122,23 +122,20 @@ export const frontendNavData = [
   },
   {
     title: 'Networks',
-    url: '/'
+    url: '/networks'
   },
   {
     title: 'Cities',
-    url: '/'
+    url: '/cities'
   },
   {
     title: 'Channels',
-    url: '/'
+    url: '/channels'
   },
-  {
-    title: 'Stations',
-    url: '/'
-  },
+
   {
     title: 'Blogs',
-    url: '/'
+    url: '/blogs'
   }
 ];
 
