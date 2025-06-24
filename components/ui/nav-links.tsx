@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 
 export default function NavLinks() {
   const pathname = usePathname();
-  console.log('pathname', pathname);
   const isActive = (url: string) => {
     if (url === '/') return pathname === url;
     return pathname.startsWith(url);
