@@ -12,6 +12,7 @@ import {
   PieChart,
   RadioTower,
   Settings2,
+  TextIcon,
   TvMinimalPlay,
   Twitter
 } from 'lucide-react';
@@ -47,6 +48,24 @@ export const navData = {
       title: 'Stations',
       url: '/dashboard/stations',
       icon: RadioTower
+    },
+    {
+      title: 'Blogs',
+      url: '#',
+      icon: TextIcon,
+      isActive: true,
+      items: [
+        {
+          title: 'Blogs',
+          url: '/dashboard/blogs',
+          icon: TextIcon
+        },
+        {
+          title: 'Categories',
+          url: '/dashboard/blog-categories',
+          icon: FileStack
+        }
+      ]
     },
     {
       title: 'Video Gallery',
@@ -93,7 +112,7 @@ export const navData = {
     {
       title: 'Sponsors',
       url: '/dashboard/sponsors',
-      icon: FileStack
+      icon: Building2
     }
   ],
   projects: [

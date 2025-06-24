@@ -105,7 +105,6 @@ model BlogCategory {
   description String
   thumbnail   String
   isFeatured  Boolean  @default(false)
-  sortOrder   Int?     @unique
   blogIds     String[] @db.ObjectId
   blogs       Blog[]   @relation(fields: [blogIds], references: [id])
 
@@ -120,7 +119,6 @@ model Blog {
   thumbnail   String
   description String
   isFeatured  Boolean        @default(false)
-  sortOrder   Int?           @unique
   categories  BlogCategory[] @relation(fields: [categoryIds], references: [id])
   categoryIds String[]       @db.ObjectId
   meta        Json?

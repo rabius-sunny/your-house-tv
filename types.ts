@@ -193,3 +193,34 @@ export type ChannelWithoutRelations = Omit<Channel, 'city' | 'stations'>;
 export type StationWithoutRelations = Omit<Station, 'channel'>;
 export type VlogCategoryWithoutRelations = Omit<VlogCategory, 'vlogs'>;
 export type VlogWithoutRelations = Omit<Vlog, 'categories'>;
+export type BlogCategoryWithoutRelations = Omit<BlogCategory, 'blogs'>;
+export type BlogWithoutRelations = Omit<Blog, 'categories'>;
+
+export type BlogCategory = {
+  id: string;
+  name: string;
+  description: string;
+  thumbnail: string;
+  isFeatured: boolean;
+  slug: string;
+  sortOrder?: number | null;
+  blogIds: string[];
+  _count: any;
+  blogs: Blog[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type Blog = {
+  id: string;
+  title: string;
+  thumbnail: string;
+  description?: string;
+  slug: string;
+  isFeatured: boolean;
+  categories: BlogCategory[];
+  categoryIds: string[];
+  _count: any;
+  createdAt: Date;
+  updatedAt: Date;
+};
