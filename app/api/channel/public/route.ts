@@ -6,6 +6,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const slug = searchParams.get('slug');
     const cityId = searchParams.get('cityId');
+    const currentStation = searchParams.get('currentStation');
 
     if (slug) {
       // Get specific channel by slug
@@ -13,6 +14,11 @@ export async function GET(request: NextRequest) {
         where: { slug },
         include: {
           stations: {
+            ...(currentStation && {
+              where: {
+                NOT: { slug: currentStation }
+              }
+            }),
             select: {
               slug: true,
               name: true,

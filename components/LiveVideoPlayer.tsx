@@ -190,20 +190,26 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   if (!isTimeSync) {
     return (
-      <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
-        <div className='flex items-center space-x-2'>
-          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-          <span>Loading...</span>
+      <div className='my-10  video-box bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
+        <div className='flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+          <div className='flex items-center space-x-2'>
+            <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+            <span>Loading...</span>
+          </div>
         </div>
       </div>
     );
   }
   if (!durationsReady) {
     return (
-      <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
-        <div className='flex items-center space-x-2'>
-          <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-          <span>Loading...</span>
+      <div className='video-box'>
+        <div className='my-10 bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
+          <div className='flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+            <div className='flex items-center space-x-2'>
+              <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+              <span>Loading...</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -211,13 +217,15 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   if (!isPlaying) {
     return (
-      <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden'>
-        <div className='aspect-video flex items-center justify-center bg-gray-900 text-white'>
-          <div className='text-center'>
-            <p className='text-gray-300'>
-              Broadcast will start at{' '}
-              {new Date(channel.startedAt).toLocaleString()}
-            </p>
+      <div className='video-box'>
+        <div className='my-10  bg-black rounded-lg overflow-hidden aspect-video'>
+          <div className=' flex items-center justify-center bg-gray-900 text-white'>
+            <div className='text-center'>
+              <p className='text-gray-300'>
+                Broadcast will start at{' '}
+                {new Date(channel.startedAt).toLocaleString()}
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -225,104 +233,73 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   }
 
   return (
-    <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden shadow-2xl'>
-      <div className='relative aspect-video'>
-        <video
-          ref={videoRef}
-          className='w-full h-full object-cover cursor-pointer'
-          muted={isMuted}
-          autoPlay
-          playsInline
-          preload='metadata'
-          onClick={handleVideoClick}
-        />
+    <div className='px-4 sm:px-6 lg:px-8 xl:px-12'>
+      <div className='my-10  w-full mx-auto  max-w-7xl  bg-black rounded-lg overflow-hidden shadow-2xl'>
+        <div className='relative aspect-video'>
+          <video
+            ref={videoRef}
+            className='w-full h-full object-cover cursor-pointer'
+            muted={isMuted}
+            autoPlay
+            playsInline
+            preload='metadata'
+            onClick={handleVideoClick}
+          />
 
-        {isLoading && !error && (
-          <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
-            <div className='flex items-center space-x-2'>
-              <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
-              <span>Loading...</span>
-            </div>
-          </div>
-        )}
-
-        {error && (
-          <div className='absolute inset-0 flex items-center justify-center bg-red-900 text-white z-20'>
-            <div className='text-center'>
-              <p className='text-xl font-semibold'>Error</p>
-              <p className='text-sm'>{error}</p>
-            </div>
-          </div>
-        )}
-
-        {!isLoading && !error && (
-          <>
-            <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
-              <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
-              <span>LIVE</span>
-            </div>
-
-            {/* YouTube-like Play Button Overlay - Only shows when autoplay fails */}
-            {showPlayButton && (
-              <div
-                className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer z-30'
-                onClick={handleVideoClick}
-              >
-                <div className='bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all duration-200 hover:scale-110'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='currentColor'
-                    viewBox='0 0 24 24'
-                    className='w-12 h-12 text-black'
-                  >
-                    <path d='M8 5v14l11-7z' />
-                  </svg>
-                </div>
+          {isLoading && !error && (
+            <div className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
+              <div className='flex items-center space-x-2'>
+                <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
+                <span>Loading...</span>
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Sound indicator when muted */}
-            {isMuted && !showPlayButton && (
-              <div className='absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm flex items-center space-x-2'>
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  fill='none'
-                  viewBox='0 0 24 24'
-                  strokeWidth={2}
-                  stroke='currentColor'
-                  className='w-4 h-4'
+          {error && (
+            <div className='absolute inset-0 flex items-center justify-center bg-red-900 text-white z-20'>
+              <div className='text-center'>
+                <p className='text-xl font-semibold'>Error</p>
+                <p className='text-sm'>{error}</p>
+              </div>
+            </div>
+          )}
+
+          {!isLoading && !error && (
+            <>
+              <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
+                <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
+                <span>LIVE</span>
+              </div>
+
+              {/* YouTube-like Play Button Overlay - Only shows when autoplay fails */}
+              {showPlayButton && (
+                <div
+                  className='absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer z-30'
+                  onClick={handleVideoClick}
                 >
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
-                  />
-                </svg>
-                <span>Click on the video to unmute</span>
-              </div>
-            )}
+                  <div className='bg-white bg-opacity-90 hover:bg-opacity-100 rounded-full p-4 transition-all duration-200 hover:scale-110'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='currentColor'
+                      viewBox='0 0 24 24'
+                      className='w-12 h-12 text-black'
+                    >
+                      <path d='M8 5v14l11-7z' />
+                    </svg>
+                  </div>
+                </div>
+              )}
 
-            {/* Mute/Unmute Button - Only show after user interaction */}
-            {hasUserInteracted && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsMuted(!isMuted);
-                  if (videoRef.current) {
-                    videoRef.current.muted = !isMuted;
-                  }
-                }}
-                className='absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-2 rounded-full transition-all duration-200 hover:scale-110'
-                aria-label={isMuted ? 'Unmute' : 'Mute'}
-              >
-                {isMuted ? (
+              {/* Sound indicator when muted */}
+              {isMuted && !showPlayButton && (
+                <div className='absolute bottom-4 left-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded text-sm flex items-center space-x-2'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     fill='none'
                     viewBox='0 0 24 24'
                     strokeWidth={2}
                     stroke='currentColor'
-                    className='w-5 h-5'
+                    className='w-4 h-4'
                   >
                     <path
                       strokeLinecap='round'
@@ -330,26 +307,59 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
                       d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
                     />
                   </svg>
-                ) : (
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={2}
-                    stroke='currentColor'
-                    className='w-5 h-5'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
-                    />
-                  </svg>
-                )}
-              </button>
-            )}
-          </>
-        )}
+                  <span>Click on the video to unmute</span>
+                </div>
+              )}
+
+              {/* Mute/Unmute Button - Only show after user interaction */}
+              {hasUserInteracted && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsMuted(!isMuted);
+                    if (videoRef.current) {
+                      videoRef.current.muted = !isMuted;
+                    }
+                  }}
+                  className='absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-2 rounded-full transition-all duration-200 hover:scale-110'
+                  aria-label={isMuted ? 'Unmute' : 'Mute'}
+                >
+                  {isMuted ? (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={2}
+                      stroke='currentColor'
+                      className='w-5 h-5'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                      />
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={2}
+                      stroke='currentColor'
+                      className='w-5 h-5'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                      />
+                    </svg>
+                  )}
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

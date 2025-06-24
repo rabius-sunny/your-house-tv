@@ -81,13 +81,13 @@ export type Station = {
   id: string;
   name: string;
   thumbnail: string;
+  description?: string;
   slug: string;
   startedAt: Date;
   endedAt: Date;
   videos: string[];
   _count: any;
   isFeatured: boolean;
-  sortOrder?: number | null;
   channelId: string;
   channel: Channel;
   createdAt: Date;

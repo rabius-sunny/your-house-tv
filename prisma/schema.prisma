@@ -80,18 +80,19 @@ model Channel {
 }
 
 model Station {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  slug       String   @unique
-  thumbnail  String
-  startedAt  DateTime
-  endedAt    DateTime
-  videos     String[]
-  isFeatured Boolean  @default(false)
-  sortOrder  Int?     @unique
-  channelId  String   @db.ObjectId
-  channel    Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  meta       Json?
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  slug        String   @unique
+  thumbnail   String
+  description String?
+  startedAt   DateTime
+  endedAt     DateTime
+  videos      String[]
+  isFeatured  Boolean  @default(false)
+
+  channelId String  @db.ObjectId
+  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  meta      Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
