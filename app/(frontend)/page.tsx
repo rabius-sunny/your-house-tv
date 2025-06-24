@@ -3,13 +3,14 @@ import BottomCarousel from '@/components/frontend/home/BottomCarousel';
 import FeaturedCarousel from '@/components/frontend/home/FeaturedCarousel';
 import FeaturedChannels from '@/components/frontend/home/FeaturedChannels';
 import FeaturedNetworks from '@/components/frontend/home/FeaturedNetworks';
+import { skipApi } from '@/config/site';
 import { baseUrl } from '@/lib/utils';
 
 export default async function page() {
-  const res = await fetch(baseUrl + '/api/homepage');
-  if (!res.ok) {
+  if (skipApi) {
     return <div>Building site...</div>;
   }
+  const res = await fetch(baseUrl + '/api/homepage');
   const data = await res.json();
 
   return (
