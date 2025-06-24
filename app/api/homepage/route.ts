@@ -28,7 +28,7 @@ export async function GET() {
         take: 5
       }),
       db.network.findMany({
-        where: { isFeatured: true },
+        where: { isFeatured: true, city: { some: {} } },
         select: {
           isFeatured: true,
           sortOrder: true,
@@ -59,7 +59,6 @@ export async function GET() {
             }
           }
         }
-        // orderBy: [{ sortOrder: 'desc' }]
       }),
       db.channel.findMany({
         where: { isFeatured: true },
@@ -107,6 +106,7 @@ export async function GET() {
 
     // Parse the JSON value
     const sliders = JSON.parse((slidersSettings?.value as string) || '[]');
+
     return NextResponse.json(
       {
         sliders,

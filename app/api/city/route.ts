@@ -185,9 +185,9 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const citySlug = searchParams.get('slug');
+    const slug = searchParams.get('slug');
 
-    if (!citySlug) {
+    if (!slug) {
       return NextResponse.json(
         { error: 'City slug is required' },
         { status: 400 }
@@ -196,7 +196,7 @@ export async function DELETE(request: NextRequest) {
 
     // Check if city exists
     const existingCity = await db.city.findUnique({
-      where: { slug: citySlug },
+      where: { slug },
       include: {
         channels: true
       }
@@ -220,7 +220,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the city
     await db.city.delete({
-      where: { slug: citySlug }
+      where: { slug }
     });
 
     return NextResponse.json(

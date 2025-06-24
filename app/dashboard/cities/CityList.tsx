@@ -18,7 +18,7 @@ type TProps = {
 };
 
 export default function CityList({ cities, loading, onCityDeleted }: TProps) {
-  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -27,21 +27,21 @@ export default function CityList({ cities, loading, onCityDeleted }: TProps) {
     setDialogOpen(true);
   };
 
-  const handleDelete = async (cityId: string) => {
+  const handleDelete = async (slug: string) => {
     if (!confirm('Are you sure you want to delete this city?')) {
       return;
     }
 
     try {
-      setDeletingId(cityId);
-      await request.delete(`/city?id=${cityId}`);
+      setDeletingSlug(slug);
+      await request.delete(`/city?slug=${slug}`);
       toast.success('City deleted successfully!');
       onCityDeleted();
     } catch (error) {
       console.error('Error deleting city:', error);
       toast.error('Failed to delete city');
     } finally {
-      setDeletingId(null);
+      setDeletingSlug(null);
     }
   };
 
@@ -296,12 +296,12 @@ export default function CityList({ cities, loading, onCityDeleted }: TProps) {
                         <Button
                           variant='ghost'
                           size='sm'
-                          onClick={() => handleDelete(city.id)}
-                          disabled={deletingId === city.id}
+                          onClick={() => handleDelete(city.slug)}
+                          disabled={deletingSlug === city.slug}
                           className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50'
                           title='Delete city'
                         >
-                          {deletingId === city.id ? (
+                          {deletingSlug === city.slug ? (
                             <div className='w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin' />
                           ) : (
                             <Trash2 className='h-4 w-4' />
