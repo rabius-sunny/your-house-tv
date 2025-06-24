@@ -1,4 +1,5 @@
 import HeroCarousel from '@/components/frontend/carousel/HeroCarousel';
+import BottomCarousel from '@/components/frontend/home/BottomCarousel';
 import FeaturedCarousel from '@/components/frontend/home/FeaturedCarousel';
 import FeaturedChannels from '@/components/frontend/home/FeaturedChannels';
 import FeaturedNetworks from '@/components/frontend/home/FeaturedNetworks';
@@ -23,6 +24,7 @@ export default async function page() {
         items={data.vlogs || []}
         type='videos'
       />
+      <BottomCarousel />
     </div>
   );
 }
