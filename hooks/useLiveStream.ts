@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTimeSync } from './useTimeSync';
 
 interface Video {
@@ -10,10 +10,8 @@ interface Video {
 }
 
 interface Channel {
-  name: string;
-  description: string;
-  startedAt: string;
-  endedAt: string;
+  startedAt: Date;
+  endedAt: Date;
   videos: Video[];
 }
 

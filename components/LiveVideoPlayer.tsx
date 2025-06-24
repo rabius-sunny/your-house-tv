@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
 import { useLiveStream } from '@/hooks/useLiveStream';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Video {
   id: number;
@@ -10,10 +10,8 @@ interface Video {
 }
 
 interface Channel {
-  name: string;
-  description: string;
-  startedAt: string;
-  endedAt: string;
+  startedAt: Date;
+  endedAt: Date;
   videos: Video[];
 }
 
@@ -31,18 +29,10 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentVideoUrl, setCurrentVideoUrl] = useState<string>('');
   const [initialized, setInitialized] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
 
-  const {
-    currentVideoIndex,
-    currentVideoTime,
-    isPlaying,
-    totalElapsedTime,
-    getCurrentVideo,
-    getNextVideo,
-    formatTime,
-    totalDuration,
-    isTimeSync
-  } = useLiveStream(channel);
+  const { currentVideoTime, isPlaying, getCurrentVideo, isTimeSync } =
+    useLiveStream(channel);
 
   const currentVideo = getCurrentVideo();
 
@@ -182,7 +172,6 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
       <div className='w-full max-w-4xl mx-auto bg-black rounded-lg overflow-hidden'>
         <div className='aspect-video flex items-center justify-center bg-gray-900 text-white'>
           <div className='text-center'>
-            <h2 className='text-2xl font-bold mb-2'>{channel.name}</h2>
             <p className='text-gray-300'>
               Broadcast will start at{' '}
               {new Date(channel.startedAt).toLocaleString()}
@@ -199,7 +188,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
         <video
           ref={videoRef}
           className='w-full h-full object-cover'
-          muted
+          muted={isMuted}
           autoPlay
           playsInline
           preload='metadata'
@@ -224,47 +213,52 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
         )}
 
         {!isLoading && !error && (
-          <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
-            <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
-            <span>LIVE</span>
-          </div>
+          <>
+            <div className='absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center space-x-1'>
+              <div className='w-2 h-2 bg-white rounded-full animate-pulse'></div>
+              <span>LIVE</span>
+            </div>
+
+            {/* Mute/Unmute Button */}
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className='absolute top-4 right-4 bg-black bg-opacity-60 hover:bg-opacity-80 text-white p-2 rounded-full transition-all duration-200 hover:scale-110'
+              aria-label={isMuted ? 'Unmute' : 'Mute'}
+            >
+              {isMuted ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={2}
+                  stroke='currentColor'
+                  className='w-5 h-5'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M17.25 9.75L19.5 12m0 0l2.25 2.25M19.5 12l2.25-2.25M19.5 12l-2.25 2.25m-10.5-6l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={2}
+                  stroke='currentColor'
+                  className='w-5 h-5'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.59-.79-1.59-1.76V9.51c0-.97.71-1.76 1.59-1.76h6.75z'
+                  />
+                </svg>
+              )}
+            </button>
+          </>
         )}
-      </div>
-
-      <div className='p-4 bg-gray-900 text-white'>
-        <div className='flex justify-between items-start mb-2'>
-          <div>
-            <h2 className='text-xl font-bold'>{channel.name}</h2>
-            <p className='text-gray-300 text-sm'>{channel.description}</p>
-          </div>
-          <div className='text-right text-sm'>
-            <p className='text-gray-400'>
-              Now Playing: Video {currentVideo.id}
-            </p>
-          </div>
-        </div>
-
-        <div className='mt-4'>
-          <div className='flex justify-between text-xs text-gray-400 mb-1'>
-            <span>{formatTime(currentVideoTime)}</span>
-            <span>
-              Video {currentVideoIndex + 1} of {channel.videos.length}
-            </span>
-            <span>{formatTime(currentVideo.duration)}</span>
-          </div>
-          <div className='w-full bg-gray-700 rounded-full h-1'>
-            <div
-              className='bg-red-600 h-1 rounded-full transition-all duration-1000'
-              style={{
-                width: `${(currentVideoTime / currentVideo.duration) * 100}%`
-              }}
-            ></div>
-          </div>
-        </div>
-
-        <div className='mt-3 text-xs text-gray-400'>
-          Up next: Video {getNextVideo().id}
-        </div>
       </div>
     </div>
   );

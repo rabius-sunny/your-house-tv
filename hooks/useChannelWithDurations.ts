@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Station } from '@/types';
 import { fetchVideoDurations } from '@/utils/videoDuration';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface Video {
   id: number;
@@ -10,61 +12,45 @@ interface Video {
 }
 
 interface Channel {
-  name: string;
-  description: string;
-  startedAt: string;
-  endedAt: string;
+  startedAt: Date;
+  endedAt: Date;
   videos: Video[];
 }
 
 interface UseChannelWithDurationsResult {
   channel: Channel | null;
-  loading: boolean;
-  error: string | null;
   durationsReady: boolean;
 }
 
 /**
  * Hook to fetch channel data with actual video durations
  */
-export const useChannelWithDurations = (): UseChannelWithDurationsResult => {
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const useChannelWithDurations = (
+  station: Station
+): UseChannelWithDurationsResult => {
   const [durationsReady, setDurationsReady] = useState(false);
+  const [channel, setChannel] = useState<Channel | null>(null);
 
   useEffect(() => {
+    console.log('data', { station, channel, durationsReady });
     const fetchChannelData = async () => {
       try {
-        setLoading(true);
-        setError(null);
-
-        // First, fetch the initial channel data from API
-        const response = await fetch('/api/get-videos');
-        if (!response.ok) {
-          throw new Error('Failed to fetch channel data');
-        }
-
-        const initialChannel: Channel = await response.json();
-        setChannel(initialChannel);
-        setLoading(false);
-
-        // Then, fetch actual video durations in the background
-        console.log('Fetching actual video durations...');
         setDurationsReady(false);
 
         const videosWithActualDurations = await fetchVideoDurations(
-          initialChannel.videos.map((video) => ({
-            id: video.id,
-            url: video.url
+          station.videos.map((video, idx) => ({
+            id: idx,
+            url: video
           }))
         );
 
         // Update channel with actual durations
         const updatedChannel = {
-          ...initialChannel,
+          ...station,
           videos: videosWithActualDurations
         };
+
+        console.log('log', { videosWithActualDurations, updatedChannel });
 
         console.log(
           'Video durations fetched:',
@@ -76,19 +62,16 @@ export const useChannelWithDurations = (): UseChannelWithDurationsResult => {
         setChannel(updatedChannel);
         setDurationsReady(true);
       } catch (err) {
-        console.error('Error fetching channel data:', err);
-        setError(err instanceof Error ? err.message : 'An error occurred');
-        setLoading(false);
+        setDurationsReady(false);
+        toast.error('Failed to fetch video durations. Please try again later.');
       }
     };
 
     fetchChannelData();
-  }, []);
+  }, [station]);
 
   return {
     channel,
-    loading,
-    error,
     durationsReady
   };
 };
