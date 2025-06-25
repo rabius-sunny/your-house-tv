@@ -6,9 +6,8 @@ export const createStationSchema = z
     name: z.string().min(1, 'Station name is required'),
     startedAt: z.date(),
     endedAt: z.date(),
-    // sortOrder: z.number().int().positive().optional(),
     isFeatured: z.boolean(),
-    channelSlug: z.string().min(1, 'Channel ID is required')
+    channelId: z.string().min(1, 'Channel ID is required')
   })
   .refine((data) => data.endedAt > data.startedAt, {
     message: 'End date must be after start date',

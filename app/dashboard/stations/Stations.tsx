@@ -5,7 +5,7 @@ import request from '@/services/http';
 import { Channel, Station } from '@/types';
 import { List, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import StationComp from './Station';
+import CreateStationComp from './CreateStation';
 import StationList from './StationList';
 
 type TabType = 'list' | 'create';
@@ -85,7 +85,7 @@ export default function Stations({ channels }: StationsProps) {
 
         {activeTab === 'create' && (
           <div className='max-w-4xl mx-auto animate-in fade-in-0 slide-in-from-right-1 duration-300'>
-            <StationComp
+            <CreateStationComp
               channels={channels}
               onCreate={handleStationCreated}
             />

@@ -90,7 +90,7 @@ export async function POST(request: NextRequest) {
 
     // Check if the channel exists by slug
     const channel = await db.channel.findUnique({
-      where: { slug: body.channelSlug }
+      where: { id: body.channelId }
     });
 
     if (!channel) {

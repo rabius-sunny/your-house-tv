@@ -30,7 +30,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
-export default function StationComp({
+export default function CreateStationComp({
   channels,
   onCreate
 }: {
@@ -65,7 +65,7 @@ export default function StationComp({
       startedAt: new Date(),
       endedAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       isFeatured: false,
-      channelSlug: ''
+      channelId: ''
     }
   });
 
@@ -163,7 +163,7 @@ export default function StationComp({
             {/* Channel Selection */}
             <FormField
               control={form.control}
-              name='channelSlug'
+              name='channelId'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Channel</FormLabel>
@@ -180,7 +180,7 @@ export default function StationComp({
                       {channels.map((channel) => (
                         <SelectItem
                           key={channel.id}
-                          value={channel.slug}
+                          value={channel.id}
                         >
                           {channel.name}
                         </SelectItem>
