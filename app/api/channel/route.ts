@@ -108,8 +108,7 @@ export async function POST(request: NextRequest) {
         description: body.description,
         thumbnail: body.thumbnail,
         isFeatured: body.isFeatured || false,
-        cityId: body.cityId,
-        sortOrder: body.sortOrder
+        cityId: body.cityId
       }
     });
 

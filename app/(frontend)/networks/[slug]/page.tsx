@@ -240,90 +240,78 @@ export default function NetworkDetails() {
             </div>
           ) : (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-              {network.city
-                .sort((a, b) => {
-                  // Sort by sortOrder if available, then by name
-                  if (a.sortOrder !== null && b.sortOrder !== null) {
-                    return (a.sortOrder || 0) - (b.sortOrder || 0);
-                  }
-                  if (a.sortOrder !== null) return -1;
-                  if (b.sortOrder !== null) return 1;
-                  return a.name.localeCompare(b.name);
-                })
-                .map((city, idx) => (
-                  <Link
-                    key={idx}
-                    href={`/cities/${city.slug}`}
-                    className='group block'
-                  >
-                    <Card className='overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white p-0'>
-                      <CardContent className='p-0'>
-                        {/* City Image */}
-                        <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
-                          {city.thumbnail ? (
-                            <Image
-                              src={city.thumbnail}
-                              alt={city.name}
-                              fill
-                              className='object-cover group-hover:scale-105 transition-transform duration-300'
-                              sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
-                            />
-                          ) : (
-                            <div className='w-full h-full flex items-center justify-center'>
-                              <MapPin className='h-12 w-12 text-slate-400' />
-                            </div>
-                          )}
-
-                          {/* Overlay gradient */}
-                          <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
-                        </div>
-
-                        {/* City Info */}
-                        <div className='p-4'>
-                          <h3 className='text-lg font-bold text-slate-800  group-hover:text-blue-600 transition-colors duration-200'>
-                            {city.name}
-                          </h3>
-
-                          {/* City Stats */}
-                          <div className='flex items-center justify-between text-xs text-slate-500'>
-                            {city.isFeatured && (
-                              <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
-                                <Star className='h-3 w-3 fill-current' />
-                                Featured
-                              </span>
-                            )}
+              {network.city.map((city, idx) => (
+                <Link
+                  key={idx}
+                  href={`/cities/${city.slug}`}
+                  className='group block'
+                >
+                  <Card className='overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white p-0'>
+                    <CardContent className='p-0'>
+                      {/* City Image */}
+                      <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
+                        {city.thumbnail ? (
+                          <Image
+                            src={city.thumbnail}
+                            alt={city.name}
+                            fill
+                            className='object-cover group-hover:scale-105 transition-transform duration-300'
+                            sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
+                          />
+                        ) : (
+                          <div className='w-full h-full flex items-center justify-center'>
+                            <MapPin className='h-12 w-12 text-slate-400' />
                           </div>
+                        )}
 
-                          {/* Channels preview */}
-                          {city.channels && city.channels.length > 0 && (
-                            <div className='text-xs text-slate-600'>
-                              <span className='font-medium'>
-                                Popular channels:
-                              </span>
-                              <div className='flex flex-wrap gap-1 mt-1'>
-                                {city.channels
-                                  .slice(0, 3)
-                                  .map((channel, idx) => (
-                                    <span
-                                      key={idx}
-                                      className='bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs'
-                                    >
-                                      {channel.name}
-                                    </span>
-                                  ))}
-                                {city.channels.length > 3 && (
-                                  <span className='text-slate-400 text-xs'>
-                                    +{city.channels.length - 3} more
-                                  </span>
-                                )}
-                              </div>
-                            </div>
+                        {/* Overlay gradient */}
+                        <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+                      </div>
+
+                      {/* City Info */}
+                      <div className='p-4'>
+                        <h3 className='text-lg font-bold text-slate-800  group-hover:text-blue-600 transition-colors duration-200'>
+                          {city.name}
+                        </h3>
+
+                        {/* City Stats */}
+                        <div className='flex items-center justify-between text-xs text-slate-500'>
+                          {city.isFeatured && (
+                            <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
+                              <Star className='h-3 w-3 fill-current' />
+                              Featured
+                            </span>
                           )}
                         </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
+
+                        {/* Channels preview */}
+                        {city.channels && city.channels.length > 0 && (
+                          <div className='text-xs text-slate-600'>
+                            <span className='font-medium'>
+                              Popular channels:
+                            </span>
+                            <div className='flex flex-wrap gap-1 mt-1'>
+                              {city.channels.slice(0, 3).map((channel, idx) => (
+                                <span
+                                  key={idx}
+                                  className='bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-xs'
+                                >
+                                  {channel.name}
+                                </span>
+                              ))}
+                              {city.channels.length > 3 && (
+                                <span className='text-slate-400 text-xs'>
+                                  +{city.channels.length - 3} more
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              ))}
             </div>
           )}
         </div>

@@ -75,7 +75,6 @@ export default function ChannelComp({
         name: editChannel.name,
         description: editChannel.description,
         isFeatured: editChannel.isFeatured,
-        sortOrder: editChannel.sortOrder || undefined,
         cityId: editChannel.cityId
       });
       setThumbnail(editChannel.thumbnail);
@@ -259,38 +258,6 @@ export default function ChannelComp({
             </FormItem>
           )}
         />
-
-        {/* Sort Order - Only show when featured */}
-        {form.watch('isFeatured') && (
-          <FormField
-            control={form.control}
-            name='sortOrder'
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Display Order</FormLabel>
-                <FormControl>
-                  <Input
-                    type='number'
-                    placeholder='Enter display order (1, 2, 3...)'
-                    {...field}
-                    value={field.value || ''}
-                    onChange={(e) =>
-                      field.onChange(
-                        e.target.value ? parseInt(e.target.value) : undefined
-                      )
-                    }
-                    disabled={isLoading}
-                    min='1'
-                  />
-                </FormControl>
-                <div className='text-xs text-muted-foreground'>
-                  Lower numbers appear first (1 = first position)
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        )}
 
         {/* Featured Toggle */}
         <FormField

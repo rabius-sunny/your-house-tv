@@ -225,9 +225,6 @@ export default function CityList({
                     Status
                   </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
-                    Order
-                  </th>
-                  <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
                     Created
                   </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
@@ -280,15 +277,6 @@ export default function CityList({
                       >
                         {city.isFeatured ? 'Featured' : 'Regular'}
                       </Badge>
-                    </td>
-                    <td className='p-4'>
-                      {city.isFeatured && city.sortOrder ? (
-                        <span className='text-sm font-medium text-foreground'>
-                          {city.sortOrder}
-                        </span>
-                      ) : (
-                        <span className='text-sm text-muted-foreground'>-</span>
-                      )}
                     </td>
                     <td className='p-4'>
                       <span className='text-sm text-muted-foreground'>

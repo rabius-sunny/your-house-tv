@@ -39,7 +39,7 @@ export type Network = {
   slug: string;
   thumbnail: string;
   isFeatured: boolean;
-  sortOrder?: number | null;
+  sortOrder: number;
   city: City[];
   _count: any;
   createdAt: Date;
@@ -51,7 +51,6 @@ export type City = {
   name: string;
   thumbnail: string;
   isFeatured: boolean;
-  sortOrder?: number | null;
   slug: string;
   network: Network;
   networkId: string;
@@ -68,7 +67,6 @@ export type Channel = {
   thumbnail: string;
   description: string;
   isFeatured: boolean;
-  sortOrder?: number | null;
   cityId: string;
   city: City;
   stations: Station[];
@@ -101,7 +99,6 @@ export type VlogCategory = {
   thumbnail: string;
   isFeatured: boolean;
   slug: string;
-  sortOrder?: number | null;
   vlogIds: string[];
   _count: any;
   vlogs: Vlog[];
@@ -203,7 +200,6 @@ export type BlogCategory = {
   thumbnail: string;
   isFeatured: boolean;
   slug: string;
-  sortOrder?: number | null;
   blogIds: string[];
   _count: any;
   blogs: Blog[];

@@ -53,7 +53,7 @@ export default function NetworkComp({
     defaultValues: {
       name: '',
       isFeatured: false,
-      sortOrder: undefined
+      sortOrder: 0
     }
   });
 
@@ -63,14 +63,14 @@ export default function NetworkComp({
       form.reset({
         name: editNetwork.name,
         isFeatured: editNetwork.isFeatured,
-        sortOrder: editNetwork.sortOrder || undefined
+        sortOrder: editNetwork.sortOrder
       });
       setThumbnail(editNetwork.thumbnail);
     } else {
       form.reset({
         name: '',
         isFeatured: false,
-        sortOrder: undefined
+        sortOrder: 0
       });
       setThumbnail(undefined);
     }
@@ -94,14 +94,14 @@ export default function NetworkComp({
 
       if (isEditMode && editNetwork) {
         // Update existing network
-        const response = await request.put('/network', {
+        await request.put('/network', {
           slug: editNetwork.slug,
           ...formData
         });
         toast.success('Network updated successfully!');
       } else {
         // Create new network
-        const response = await request.post('/network', formData);
+        await request.post('/network', formData);
         toast.success('Network created successfully!');
       }
 

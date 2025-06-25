@@ -64,7 +64,6 @@ export async function GET() {
         where: { isFeatured: true },
         select: {
           isFeatured: true,
-          sortOrder: true,
           thumbnail: true,
           slug: true,
           name: true,
@@ -81,7 +80,7 @@ export async function GET() {
             }
           }
         },
-        orderBy: [{ sortOrder: 'desc' }]
+        orderBy: [{ createdAt: 'desc' }]
       }),
       db.station.findMany({
         where: { isFeatured: true },

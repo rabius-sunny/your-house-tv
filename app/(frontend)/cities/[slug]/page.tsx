@@ -249,70 +249,60 @@ export default function CityDetails() {
               </div>
             ) : (
               <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
-                {city.channels
-                  .sort((a, b) => {
-                    // Sort by sortOrder if available, then by name
-                    if (a.sortOrder !== null && b.sortOrder !== null) {
-                      return (a.sortOrder || 0) - (b.sortOrder || 0);
-                    }
-                    if (a.sortOrder !== null) return -1;
-                    if (b.sortOrder !== null) return 1;
-                    return a.name.localeCompare(b.name);
-                  })
-                  .map((channel, idx) => (
-                    <Link
-                      key={idx}
-                      href={`/channels/${channel.slug}`}
-                      className='group block'
-                    >
-                      <Card className='p-0 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white'>
-                        <CardContent className='p-0'>
-                          {/* Channel Image */}
-                          <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
-                            {channel.thumbnail ? (
-                              <Image
-                                src={channel.thumbnail}
-                                alt={channel.name}
-                                fill
-                                className='object-cover group-hover:scale-105 transition-transform duration-300'
-                                sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
-                              />
-                            ) : (
-                              <div className='w-full h-full flex items-center justify-center'>
-                                <Tv className='h-12 w-12 text-slate-400' />
-                              </div>
-                            )}
-
-                            {/* Overlay gradient */}
-                            <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
-                          </div>
-
-                          {/* Channel Info */}
-                          <div className='p-4'>
-                            <h3 className='text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors duration-200'>
-                              {channel.name}
-                            </h3>
-
-                            {channel.description && (
-                              <p className='text-slate-600 text-sm line-clamp-2 mb-3'>
-                                {channel.description}
-                              </p>
-                            )}
-
-                            {/* Channel Stats */}
-                            <div className='flex items-center justify-between text-xs text-slate-500 mb-3'>
-                              {channel.isFeatured && (
-                                <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
-                                  <Star className='h-3 w-3 fill-current' />
-                                  Featured
-                                </span>
-                              )}
+                {city.channels.map((channel, idx) => (
+                  <Link
+                    key={idx}
+                    href={`/channels/${channel.slug}`}
+                    className='group block'
+                  >
+                    <Card className='p-0 overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-slate-200 bg-white'>
+                      <CardContent className='p-0'>
+                        {/* Channel Image */}
+                        <div className='relative h-48 bg-gradient-to-br from-slate-100 to-slate-200 overflow-hidden'>
+                          {channel.thumbnail ? (
+                            <Image
+                              src={channel.thumbnail}
+                              alt={channel.name}
+                              fill
+                              className='object-cover group-hover:scale-105 transition-transform duration-300'
+                              sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw'
+                            />
+                          ) : (
+                            <div className='w-full h-full flex items-center justify-center'>
+                              <Tv className='h-12 w-12 text-slate-400' />
                             </div>
+                          )}
+
+                          {/* Overlay gradient */}
+                          <div className='absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300' />
+                        </div>
+
+                        {/* Channel Info */}
+                        <div className='p-4'>
+                          <h3 className='text-lg font-bold text-slate-800 mb-2 group-hover:text-blue-600 transition-colors duration-200'>
+                            {channel.name}
+                          </h3>
+
+                          {channel.description && (
+                            <p className='text-slate-600 text-sm line-clamp-2 mb-3'>
+                              {channel.description}
+                            </p>
+                          )}
+
+                          {/* Channel Stats */}
+                          <div className='flex items-center justify-between text-xs text-slate-500 mb-3'>
+                            {channel.isFeatured && (
+                              <span className='bg-yellow-100 text-yellow-600 px-2 py-1 rounded-full flex items-center gap-1'>
+                                <Star className='h-3 w-3 fill-current' />
+                                Featured
+                              </span>
+                            )}
                           </div>
-                        </CardContent>
-                      </Card>
-                    </Link>
-                  ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
               </div>
             )}
           </CardContent>

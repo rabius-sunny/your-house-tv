@@ -105,14 +105,6 @@ export default function CityDetailsDialog({ city, open, onOpenChange }: Props) {
               >
                 {city.isFeatured ? 'Featured City' : 'Regular City'}
               </Badge>
-              {city.isFeatured && city.sortOrder && (
-                <Badge
-                  variant='secondary'
-                  className='text-xs'
-                >
-                  Order: {city.sortOrder}
-                </Badge>
-              )}
             </div>
           </div>
 
@@ -137,17 +129,6 @@ export default function CityDetailsDialog({ city, open, onOpenChange }: Props) {
                 {formatDate(city.updatedAt)}
               </p>
             </div>
-          </div>
-
-          {/* City ID */}
-          <div className='space-y-2'>
-            <div className='flex items-center gap-2 text-sm font-medium text-muted-foreground'>
-              <Building className='h-4 w-4' />
-              City ID
-            </div>
-            <p className='text-xs text-muted-foreground font-mono bg-muted/30 rounded px-2 py-1 break-all'>
-              {city.id}
-            </p>
           </div>
         </div>
       </DialogContent>
