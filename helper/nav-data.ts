@@ -13,6 +13,7 @@ import {
   RadioTower,
   Settings2,
   TextIcon,
+  TextSelect,
   TvMinimalPlay,
   Twitter
 } from 'lucide-react';
@@ -103,6 +104,38 @@ export const navData = {
           title: 'Bottom Sliders',
           url: '/dashboard/bottom-sliders',
           icon: Frame
+        }
+      ]
+    },
+    {
+      title: 'Pages',
+      url: '#',
+      icon: TextSelect,
+      items: [
+        {
+          title: 'Cookie Policy',
+          url: '/dashboard/cookie-policy',
+          icon: TextSelect
+        },
+        {
+          title: 'Privace Policy',
+          url: '/dashboard/privacy-policy',
+          icon: TextSelect
+        },
+        {
+          title: 'Terms & Conditions',
+          url: '/dashboard/terms-and-conditions',
+          icon: TextSelect
+        },
+        {
+          title: 'Faq',
+          url: '/dashboard/faq',
+          icon: TextSelect
+        },
+        {
+          title: 'About Us',
+          url: '/dashboard/about-us',
+          icon: TextSelect
         }
       ]
     },
