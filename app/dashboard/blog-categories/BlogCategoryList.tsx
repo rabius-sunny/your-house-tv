@@ -11,25 +11,37 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import BlogCategoryDetailsDialog from './BlogCategoryDetailsDialog';
+import BlogCategoryForm from './BlogCategoryForm';
 
 type TProps = {
   categories: BlogCategory[];
   loading: boolean;
   onCategoryDeleted: () => void;
+  onCategoryUpdated: () => void;
 };
 
 export default function BlogCategoryList({
   categories,
   loading,
-  onCategoryDeleted
+  onCategoryDeleted,
+  onCategoryUpdated
 }: TProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<BlogCategory | null>(
     null
   );
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editCategory, setEditCategory] = useState<BlogCategory | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleDelete = async (categoryId: string) => {
+    if (
+      !confirm(
+        'Are you sure you want to delete this blog category? This action cannot be undone.'
+      )
+    ) {
+      return;
+    }
     try {
       setDeletingId(categoryId);
       await request.delete(`/blog-category?id=${categoryId}`);
@@ -48,6 +60,17 @@ export default function BlogCategoryList({
   const handleViewDetails = (category: BlogCategory) => {
     setSelectedCategory(category);
     setDialogOpen(true);
+  };
+
+  const handleEdit = (category: BlogCategory) => {
+    setEditCategory(category);
+    setEditDialogOpen(true);
+  };
+
+  const handleCategoryUpdated = () => {
+    onCategoryUpdated();
+    setEditDialogOpen(false);
+    setEditCategory(null);
   };
 
   const formatDate = (date: string | Date) => {
@@ -278,6 +301,7 @@ export default function BlogCategoryList({
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600'
                           title='Edit category'
+                          onClick={() => handleEdit(category)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
@@ -310,6 +334,15 @@ export default function BlogCategoryList({
         category={selectedCategory}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      {/* Edit Category Dialog */}
+      <BlogCategoryForm
+        editCategory={editCategory}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onCategoryCreated={handleCategoryUpdated}
       />
     </>
   );

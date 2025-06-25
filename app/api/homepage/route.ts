@@ -17,6 +17,7 @@ export async function GET() {
         where: { key: 'hero_sliders' }
       }),
       db.network.findMany({
+        where: { isFeatured: true },
         select: {
           isFeatured: true,
           sortOrder: true,
@@ -24,7 +25,7 @@ export async function GET() {
           slug: true,
           name: true
         },
-        orderBy: [{ sortOrder: 'desc' }],
+        orderBy: [{ sortOrder: 'asc' }],
         take: 5
       }),
       db.network.findMany({

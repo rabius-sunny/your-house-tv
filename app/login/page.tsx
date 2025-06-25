@@ -20,6 +20,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { useForm } from 'react-hook-form';
@@ -67,6 +68,13 @@ export default function LoginPage() {
     <div className='flex justify-center items-center min-h-screen py-12 px-4'>
       <Card className='w-full max-w-md'>
         <CardHeader className='space-y-1'>
+          <Image
+            src='/logo-black.png'
+            alt='Logo'
+            width={200}
+            height={150}
+            className='mx-auto mb-4'
+          />
           <CardTitle className='text-2xl font-bold text-center'>
             Sign In
           </CardTitle>

@@ -217,6 +217,9 @@ export default function NetworkList({
                     Created
                   </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
+                    Order
+                  </th>
+                  <th className='p-4 text-left text-sm font-semibold text-muted-foreground'>
                     Actions
                   </th>
                 </tr>
@@ -265,6 +268,11 @@ export default function NetworkList({
                     <td className='p-4'>
                       <span className='text-sm text-muted-foreground'>
                         {formatDate(network.createdAt)}
+                      </span>
+                    </td>
+                    <td className='p-4'>
+                      <span className='text-sm text-muted-foreground'>
+                        {network.sortOrder}
                       </span>
                     </td>
                     <td className='p-4'>

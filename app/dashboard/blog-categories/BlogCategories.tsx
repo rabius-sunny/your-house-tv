@@ -40,6 +40,10 @@ export default function BlogCategories() {
     fetchCategories();
   };
 
+  const handleCategoryUpdated = () => {
+    fetchCategories();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header */}
@@ -80,6 +84,7 @@ export default function BlogCategories() {
               categories={categories}
               loading={loading}
               onCategoryDeleted={handleCategoryDeleted}
+              onCategoryUpdated={handleCategoryUpdated}
             />
           </div>
         )}

@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
 import { Blog, BlogCategory } from '@/types';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Eye, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -214,8 +214,23 @@ export default function BlogList({
                     <Button
                       variant='ghost'
                       size='sm'
+                      onClick={() =>
+                        router.push(
+                          process.env.NEXT_PUBLIC_BASE_URL! +
+                            '/blogs/' +
+                            blog.slug
+                        )
+                      }
+                      className='h-8 w-8 p-0 hover:bg-primary/10 hover:text-primary'
+                      title='View blog'
+                    >
+                      <Eye className='h-4 w-4' />
+                    </Button>
+                    <Button
+                      variant='ghost'
+                      size='sm'
                       onClick={() => handleEdit(blog)}
-                      className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600'
+                      className='h-8 w-8 p-0 hover:bg-green-500/10 hover:text-green-700'
                       title='Edit blog'
                     >
                       <Edit className='h-4 w-4' />
