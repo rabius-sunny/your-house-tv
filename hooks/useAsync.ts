@@ -11,7 +11,7 @@ const fetcher = async (url: string) => {
   return response.data;
 };
 
-export function useAsync<T = any>(urlInput: UrlInput) {
+export function useAsync<T = any>(urlInput?: UrlInput) {
   // Get the actual URL
   const url = typeof urlInput === 'function' ? urlInput() : urlInput;
 

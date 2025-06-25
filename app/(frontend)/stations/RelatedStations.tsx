@@ -18,7 +18,8 @@ export default function RelatedStations({
   currentStation
 }: TProps) {
   const { data, loading, error } = useAsync<Channel>(
-    `/channel/public?slug=${channelSlug}&currentStation=${currentStation}`
+    channelSlug &&
+      `/channel/public?slug=${channelSlug}&currentStation=${currentStation}`
   );
   if (loading) {
     return <CardsSekeleton />;

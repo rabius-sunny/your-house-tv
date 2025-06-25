@@ -44,6 +44,10 @@ export default function Stations({ channels }: StationsProps) {
     fetchStations();
   };
 
+  const handleStationUpdated = () => {
+    fetchStations();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -77,14 +81,16 @@ export default function Stations({ channels }: StationsProps) {
           <div className='animate-in fade-in-0 slide-in-from-right-1 duration-300'>
             <StationList
               stations={stations}
+              channels={channels}
               loading={loading}
               onStationDeleted={handleStationDeleted}
+              onStationUpdated={handleStationUpdated}
             />
           </div>
         )}
 
         {activeTab === 'create' && (
-          <div className='max-w-4xl mx-auto animate-in fade-in-0 slide-in-from-right-1 duration-300'>
+          <div className='max-w-5xl mx-auto animate-in fade-in-0 slide-in-from-right-1 duration-300'>
             <CreateStationComp
               channels={channels}
               onCreate={handleStationCreated}

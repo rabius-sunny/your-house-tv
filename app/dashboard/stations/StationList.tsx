@@ -5,35 +5,41 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
-import { Station } from '@/types';
+import { Channel, Station } from '@/types';
 import { Edit, Eye, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import StationDetailsDialog from './StationDetailsDialog';
 
 type StationListProps = {
   stations: Station[];
+  channels: Channel[];
   loading: boolean;
   onStationDeleted: () => void;
+  onStationUpdated: () => void;
 };
 
 export default function StationList({
   stations,
+  channels,
   loading,
-  onStationDeleted
+  onStationDeleted,
+  onStationUpdated
 }: StationListProps) {
+  const router = useRouter();
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (station: Station) => {
     if (!confirm('Are you sure you want to delete this station?')) {
       return;
     }
 
     try {
-      setDeletingId(id);
-      await request.delete(`/station?id=${id}`);
+      setDeletingId(station.id);
+      await request.delete(`/station?id=${station.id}`);
       toast.success('Station deleted successfully');
       onStationDeleted();
     } catch (error) {
@@ -47,6 +53,10 @@ export default function StationList({
   const handleViewDetails = (station: Station) => {
     setSelectedStation(station);
     setIsDetailsOpen(true);
+  };
+
+  const handleEdit = (station: Station) => {
+    router.push(`/dashboard/stations/${station.slug}/edit`);
   };
 
   const formatDate = (date: string | Date) => {
@@ -319,13 +329,14 @@ export default function StationList({
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600 flex-shrink-0'
                           title='Edit station'
+                          onClick={() => handleEdit(station)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
                         <Button
                           variant='ghost'
                           size='sm'
-                          onClick={() => handleDelete(station.id)}
+                          onClick={() => handleDelete(station)}
                           disabled={deletingId === station.id}
                           className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 flex-shrink-0'
                           title='Delete station'
