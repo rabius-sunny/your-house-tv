@@ -3,6 +3,7 @@
 import Background from '@/components/ui/bg';
 import { useAsync } from '@/hooks/useAsync';
 import { Blog } from '@/types';
+import parse from 'html-react-parser';
 import { ArrowLeft, Calendar, Tag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -155,7 +156,7 @@ function BlogContent({ blog }: { blog: Blog }) {
 
       {/* Article Content */}
       <div className='text-gray-100 leading-8 tracking-wide'>
-        {blog?.description}
+        {parse(blog?.description || '')}
       </div>
 
       {/* Navigation */}

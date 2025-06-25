@@ -1,8 +1,10 @@
 'use client';
 
 import Background from '@/components/ui/bg';
+import { Button } from '@/components/ui/button';
 import { useAsync } from '@/hooks/useAsync';
 import { Blog } from '@/types';
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -95,13 +97,6 @@ export default function BlogsPage() {
                       {blog.title}
                     </h2>
 
-                    {/* Excerpt */}
-                    {(blog.excerpt || blog.description) && (
-                      <p className='text-gray-300 text-sm line-clamp-3 mb-4'>
-                        {blog.excerpt || blog.description}
-                      </p>
-                    )}
-
                     {/* Meta */}
                     <div className='flex items-center justify-between text-xs text-gray-400'>
                       {blog.author && <span>By {blog.author}</span>}
@@ -111,6 +106,10 @@ export default function BlogsPage() {
                         ).toLocaleDateString()}
                       </time>
                     </div>
+
+                    <Button className='mt-3'>
+                      Read more <ArrowRight />
+                    </Button>
                   </div>
                 </article>
               </Link>
