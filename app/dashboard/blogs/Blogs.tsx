@@ -63,6 +63,7 @@ export default function Blogs({ categories, catLoading }: TProps) {
         <BlogList
           loading={loading || catLoading}
           blogs={blogs || []}
+          categories={categories}
           onBlogDeleted={refetch}
         />
       )}
