@@ -199,18 +199,18 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const stationSlug = searchParams.get('slug');
+    const id = searchParams.get('id');
 
-    if (!stationSlug) {
+    if (!id) {
       return NextResponse.json(
-        { error: 'Station slug is required' },
+        { error: 'Station id is required' },
         { status: 400 }
       );
     }
 
     // Check if station exists
     const existingStation = await db.station.findUnique({
-      where: { slug: stationSlug }
+      where: { id }
     });
 
     if (!existingStation) {
@@ -219,7 +219,7 @@ export async function DELETE(request: NextRequest) {
 
     // Delete the station
     await db.station.delete({
-      where: { slug: stationSlug }
+      where: { id }
     });
 
     return NextResponse.json(

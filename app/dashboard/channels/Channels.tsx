@@ -44,6 +44,10 @@ export default function Channels({ cities }: ChannelsProps) {
     fetchChannels();
   };
 
+  const handleChannelUpdated = () => {
+    fetchChannels();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -77,8 +81,10 @@ export default function Channels({ cities }: ChannelsProps) {
           <div className='animate-in fade-in-0 slide-in-from-right-1 duration-300'>
             <ChannelList
               channels={channels}
+              cities={cities}
               loading={loading}
               onChannelDeleted={handleChannelDeleted}
+              onChannelUpdated={handleChannelUpdated}
             />
           </div>
         )}

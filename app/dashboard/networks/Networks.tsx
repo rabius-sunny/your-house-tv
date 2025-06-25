@@ -40,6 +40,10 @@ export default function Networks() {
     fetchNetworks();
   };
 
+  const handleNetworkUpdated = () => {
+    fetchNetworks();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -80,6 +84,7 @@ export default function Networks() {
               networks={networks}
               loading={loading}
               onNetworkDeleted={handleNetworkDeleted}
+              onNetworkUpdated={handleNetworkUpdated}
             />
           </div>
         )}

@@ -5,40 +5,47 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
-import { Channel } from '@/types';
+import { Channel, City } from '@/types';
 import { Edit, Eye, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import ChannelDetailsDialog from './ChannelDetailsDialog';
+import ChannelComp from './CreateChannel';
 
 type ChannelListProps = {
   channels: Channel[];
+  cities: City[];
   loading: boolean;
   onChannelDeleted: () => void;
+  onChannelUpdated: () => void;
 };
 
 export default function ChannelList({
   channels,
+  cities,
   loading,
-  onChannelDeleted
+  onChannelDeleted,
+  onChannelUpdated
 }: ChannelListProps) {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [editChannel, setEditChannel] = useState<Channel | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (channel: Channel) => {
     if (!confirm('Are you sure you want to delete this channel?')) {
       return;
     }
 
     try {
-      setDeletingId(id);
-      await request.delete(`/channel?id=${id}`);
+      setDeletingId(channel.id);
+      await request.delete(`/channel?id=${channel.id}`);
       toast.success('Channel deleted successfully');
       onChannelDeleted();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting channel:', error);
-      toast.error('Failed to delete channel');
+      toast.error(error?.response?.data?.error || 'Failed to delete channel');
     } finally {
       setDeletingId(null);
     }
@@ -47,6 +54,17 @@ export default function ChannelList({
   const handleViewDetails = (channel: Channel) => {
     setSelectedChannel(channel);
     setIsDetailsOpen(true);
+  };
+
+  const handleEdit = (channel: Channel) => {
+    setEditChannel(channel);
+    setEditDialogOpen(true);
+  };
+
+  const handleChannelUpdated = () => {
+    onChannelUpdated();
+    setEditDialogOpen(false);
+    setEditChannel(null);
   };
 
   const formatDate = (date: string | Date) => {
@@ -295,13 +313,14 @@ export default function ChannelList({
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600 flex-shrink-0'
                           title='Edit channel'
+                          onClick={() => handleEdit(channel)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
                         <Button
                           variant='ghost'
                           size='sm'
-                          onClick={() => handleDelete(channel.id)}
+                          onClick={() => handleDelete(channel)}
                           disabled={deletingId === channel.id}
                           className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50 flex-shrink-0'
                           title='Delete channel'
@@ -327,6 +346,16 @@ export default function ChannelList({
         channel={selectedChannel}
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
+      />
+
+      {/* Edit Channel Dialog */}
+      <ChannelComp
+        onChannelCreated={handleChannelUpdated}
+        cities={cities}
+        editChannel={editChannel}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
       />
     </>
   );

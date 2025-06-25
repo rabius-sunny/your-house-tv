@@ -5,41 +5,62 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
-import { City } from '@/types';
+import { City, Network } from '@/types';
 import { Edit, Eye, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import CityDetailsDialog from './CityDetailsDialog';
+import CityComp from './CreateCity';
 
 type TProps = {
   cities: City[];
+  networks: Network[];
   loading: boolean;
   onCityDeleted: () => void;
+  onCityUpdated: () => void;
 };
 
-export default function CityList({ cities, loading, onCityDeleted }: TProps) {
+export default function CityList({
+  cities,
+  networks,
+  loading,
+  onCityDeleted,
+  onCityUpdated
+}: TProps) {
   const [deletingSlug, setDeletingSlug] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editCity, setEditCity] = useState<City | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleViewDetails = (city: City) => {
     setSelectedCity(city);
     setDialogOpen(true);
   };
 
-  const handleDelete = async (slug: string) => {
+  const handleEdit = (city: City) => {
+    setEditCity(city);
+    setEditDialogOpen(true);
+  };
+
+  const handleCityUpdated = () => {
+    onCityUpdated();
+    setEditDialogOpen(false);
+    setEditCity(null);
+  };
+
+  const handleDelete = async (city: City) => {
     if (!confirm('Are you sure you want to delete this city?')) {
       return;
     }
 
     try {
-      setDeletingSlug(slug);
-      await request.delete(`/city?slug=${slug}`);
+      setDeletingSlug(city.slug);
+      await request.delete(`/city?slug=${city.slug}`);
       toast.success('City deleted successfully!');
       onCityDeleted();
-    } catch (error) {
-      console.error('Error deleting city:', error);
-      toast.error('Failed to delete city');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.error || 'Failed to delete city');
     } finally {
       setDeletingSlug(null);
     }
@@ -290,13 +311,14 @@ export default function CityList({ cities, loading, onCityDeleted }: TProps) {
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600'
                           title='Edit city'
+                          onClick={() => handleEdit(city)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
                         <Button
                           variant='ghost'
                           size='sm'
-                          onClick={() => handleDelete(city.slug)}
+                          onClick={() => handleDelete(city)}
                           disabled={deletingSlug === city.slug}
                           className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50'
                           title='Delete city'
@@ -322,6 +344,16 @@ export default function CityList({ cities, loading, onCityDeleted }: TProps) {
         city={selectedCity}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      {/* Edit City Dialog */}
+      <CityComp
+        onCreate={handleCityUpdated}
+        networks={networks}
+        editCity={editCity}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
       />
     </>
   );

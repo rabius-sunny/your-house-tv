@@ -9,41 +9,57 @@ import { Network } from '@/types';
 import { Edit, Eye, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import NetworkComp from './CreateNetwork';
 import NetworkDetailsDialog from './NetworkDetailsDialog';
 
 type TProps = {
   networks: Network[];
   loading: boolean;
   onNetworkDeleted: () => void;
+  onNetworkUpdated: () => void;
 };
 
 export default function NetworkList({
   networks,
   loading,
-  onNetworkDeleted
+  onNetworkDeleted,
+  onNetworkUpdated
 }: TProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editNetwork, setEditNetwork] = useState<Network | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleViewDetails = (network: Network) => {
     setSelectedNetwork(network);
     setDialogOpen(true);
   };
 
-  const handleDelete = async (networkId: string) => {
+  const handleEdit = (network: Network) => {
+    setEditNetwork(network);
+    setEditDialogOpen(true);
+  };
+
+  const handleNetworkUpdated = () => {
+    onNetworkUpdated();
+    setEditDialogOpen(false);
+    setEditNetwork(null);
+  };
+
+  const handleDelete = async (network: Network) => {
     if (!confirm('Are you sure you want to delete this network?')) {
       return;
     }
 
     try {
-      setDeletingId(networkId);
-      await request.delete(`/network?id=${networkId}`);
+      setDeletingId(network.id);
+      await request.delete(`/network?slug=${network.slug}`);
       toast.success('Network deleted successfully!');
       onNetworkDeleted();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting network:', error);
-      toast.error('Failed to delete network');
+      toast.error(error?.response?.data?.error || 'Failed to delete network');
     } finally {
       setDeletingId(null);
     }
@@ -236,14 +252,6 @@ export default function NetworkList({
                         <span className='font-medium text-foreground'>
                           {network.name}
                         </span>
-                        {network.isFeatured && (
-                          <Badge
-                            variant='secondary'
-                            className='text-xs animate-pulse'
-                          >
-                            Featured
-                          </Badge>
-                        )}
                       </div>
                     </td>
                     <td className='p-4'>
@@ -275,13 +283,14 @@ export default function NetworkList({
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600'
                           title='Edit network'
+                          onClick={() => handleEdit(network)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
                         <Button
                           variant='ghost'
                           size='sm'
-                          onClick={() => handleDelete(network.id)}
+                          onClick={() => handleDelete(network)}
                           disabled={deletingId === network.id}
                           className='h-8 w-8 p-0 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50'
                           title='Delete network'
@@ -307,6 +316,15 @@ export default function NetworkList({
         network={selectedNetwork}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      {/* Edit Network Dialog */}
+      <NetworkComp
+        onCreate={handleNetworkUpdated}
+        editNetwork={editNetwork}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
       />
     </>
   );

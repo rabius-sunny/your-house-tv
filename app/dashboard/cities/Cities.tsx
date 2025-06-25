@@ -51,6 +51,10 @@ export default function Cities() {
     fetchCities();
   };
 
+  const handleCityUpdated = () => {
+    fetchCities();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -89,8 +93,10 @@ export default function Cities() {
           <div className='animate-in fade-in-0 slide-in-from-right-1 duration-300'>
             <CityList
               cities={cities}
+              networks={networks}
               loading={loading}
               onCityDeleted={handleCityDeleted}
+              onCityUpdated={handleCityUpdated}
             />
           </div>
         )}
