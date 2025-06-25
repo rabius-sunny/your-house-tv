@@ -40,7 +40,7 @@ docker compose up -d
 # Check if Docker containers started successfully
 if [ $? -eq 0 ]; then
     echo -e "${GREEN}Docker setup completed successfully!${NC}"
-    echo -e "${GREEN}Your application is now running at: http://localhost:3003${NC}"
+    echo -e "${GREEN}Your application is now running at: http://localhost:3004${NC}"
 else
     echo -e "${RED}Error: Failed to start Docker containers. Please check the logs.${NC}"
     exit 1

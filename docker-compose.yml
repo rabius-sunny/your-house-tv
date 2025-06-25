@@ -17,7 +17,7 @@ services:
         - SKIP_API=${SKIP_API}
     restart: always
     ports:
-      - '3003:3003'
+      - '3004:3004'
     environment:
       - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}

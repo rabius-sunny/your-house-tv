@@ -75,7 +75,7 @@ chmod +x docker-setup.sh
 ./docker-setup.sh
 ```
 
-The application will be available at [http://localhost:3003](http://localhost:3003).
+The application will be available at [http://localhost:3004](http://localhost:3004).
 
 ## Project Structure
 
