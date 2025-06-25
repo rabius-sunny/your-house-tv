@@ -30,6 +30,12 @@ class BunnyStorageService {
       console.warn(
         'Bunny Storage configuration is incomplete. Check your environment variables.'
       );
+      console.log('Config check:', {
+        baseUrl: this.baseUrl,
+        storageZoneName: this.storageZoneName ? 'SET' : 'MISSING',
+        accessKey: this.accessKey ? 'SET' : 'MISSING',
+        pullZoneUrl: this.pullZoneUrl ? 'SET' : 'MISSING'
+      });
     }
   }
 
@@ -40,6 +46,13 @@ class BunnyStorageService {
    */
   async uploadVideo(file: FileBuffer): Promise<BunnyUploadResponse> {
     try {
+      // Check if configuration is valid
+      if (!this.accessKey || !this.storageZoneName) {
+        throw new Error(
+          'Bunny Storage is not properly configured. Missing access key or storage zone name.'
+        );
+      }
+
       // Generate unique filename
       const fileExtension = file.originalname.split('.').pop() || 'mp4';
       const fileName = `${generateRandomString(10)}_${file.originalname.replace(
@@ -48,6 +61,14 @@ class BunnyStorageService {
       )}`;
       const filePath = `videos/${fileName}`;
 
+      console.log('Uploading to Bunny Storage:', {
+        fileName,
+        filePath,
+        fileSize: file.size,
+        mimeType: file.mimetype,
+        url: `${this.baseUrl}/${this.storageZoneName}/${filePath}`
+      });
+
       // Upload to Bunny Storage
       const response = await fetch(
         `${this.baseUrl}/${this.storageZoneName}/${filePath}`,
@@ -55,7 +76,8 @@ class BunnyStorageService {
           method: 'PUT',
           headers: {
             AccessKey: this.accessKey,
-            'Content-Type': file.mimetype
+            'Content-Type': file.mimetype,
+            accept: '*/*'
           },
           body: file.buffer
         }
@@ -63,6 +85,12 @@ class BunnyStorageService {
 
       if (!response.ok) {
         const errorText = await response.text();
+        console.error('Bunny Storage upload error:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorText,
+          headers: Object.fromEntries(response.headers.entries())
+        });
         throw new Error(
           `Bunny Storage upload failed: ${response.status} - ${errorText}`
         );
@@ -70,6 +98,8 @@ class BunnyStorageService {
 
       // Construct the public URL
       const publicUrl = `${this.pullZoneUrl}/${filePath}`;
+
+      console.log('Upload successful:', { publicUrl, fileName });
 
       return {
         fileId: fileName, // Use filename as fileId for Bunny Storage
