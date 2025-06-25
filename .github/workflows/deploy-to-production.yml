@@ -13,16 +13,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
-      - name: Deploy to VPS
+      - name: Set up SSH agent
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
           script: |
-            echo "SSH connection established successfully"
+            echo "SSH setup completed."
             cd app/your-house-tv
             ./docker-setup.sh
             echo "Github Actions deployment completed."
