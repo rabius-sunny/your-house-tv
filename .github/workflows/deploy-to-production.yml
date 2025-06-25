@@ -26,6 +26,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             echo "SSH setup completed."
-            cd apps/your-house-tv
+            cd app/your-house-tv
             ./docker-setup.sh
             echo "Github Actions deployment completed."
