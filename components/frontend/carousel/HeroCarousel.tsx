@@ -72,20 +72,20 @@ const HeroCarousel: React.FC<PropType> = (props) => {
 
                     <div className='relative z-10 text-white'>
                       {/* Title */}
-                      <h1 className='text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight'>
+                      <h1 className='text-2xl md:text-3xl lg:text-6xl font-bold mb-4 leading-tight'>
                         {slide.title}
                       </h1>
 
                       {/* Subtitle */}
                       {slide.subtitle && (
-                        <h2 className='text-xl md:text-2xl lg:text-3xl font-medium mb-6 text-gray-200'>
+                        <h2 className='text-sm md:text-2xl lg:text-3xl font-medium mb-6 text-gray-200'>
                           {slide.subtitle}
                         </h2>
                       )}
 
                       {/* Description */}
                       {slide.description && (
-                        <p className='text-base md:text-lg lg:text-xl mb-8 leading-relaxed text-gray-300 max-w-xl'>
+                        <p className='text-sm md:text-lg lg:text-xl mb-8 leading-relaxed text-gray-300 max-w-xl'>
                           {slide.description}
                         </p>
                       )}

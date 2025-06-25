@@ -16,8 +16,9 @@ export default async function Footer() {
           <Image
             src={data.logo}
             alt='Footer Logo'
-            width={100}
-            height={100}
+            width={250}
+            height={150}
+            className='w-44 md:w-60 h-auto'
           />
           <p className='font-medium text-slate-200 text-sm'>
             {footerData.description}

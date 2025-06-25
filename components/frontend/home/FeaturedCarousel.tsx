@@ -23,15 +23,21 @@ export default function FeaturedCarousel({
       <div className='box'>
         {title && (
           <div className='pb-6 flex items-center justify-between'>
-            <h2 className='font-semibold text-2xl text-white'>{title}</h2>
+            <h2 className='font-semibold text-lg md:text-2xl  text-white'>
+              {title}
+            </h2>
             <Link
               href={link || `/${type}`}
               className='flex items-center gap-2 text-sm text-slate-300 hover:text-blue-400'
             >
               {linkText ? (
-                <span className='capitalize'>{linkText}</span>
+                <span className='capitalize text-xs md:text-base'>
+                  {linkText}
+                </span>
               ) : (
-                <span className='capitalize'>View All {type}</span>
+                <span className='capitalize text-xs md:text-base'>
+                  View All {type}
+                </span>
               )}
               <ArrowRight className='size-5' />
             </Link>

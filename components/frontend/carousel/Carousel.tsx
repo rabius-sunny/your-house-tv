@@ -20,7 +20,21 @@ type PropType = {
 
 const Carousel: React.FC<PropType> = (props) => {
   const { slides } = props;
-  const [emblaRef, emblaApi] = useEmblaCarousel(EmblaOptions, [Autoplay()]);
+
+  // Responsive Embla options for different screen sizes
+  const responsiveOptions = {
+    ...EmblaOptions,
+    breakpoints: {
+      '(min-width: 1280px)': { slidesToScroll: 1 }, // xl: 4 slides visible
+      '(min-width: 1024px)': { slidesToScroll: 1 }, // lg: 3 slides visible
+      '(min-width: 768px)': { slidesToScroll: 1 }, // md: 2 slides visible
+      '(max-width: 767px)': { slidesToScroll: 1 } // sm and below: 1 slide visible
+    }
+  };
+
+  const [emblaRef, emblaApi] = useEmblaCarousel(responsiveOptions, [
+    Autoplay()
+  ]);
 
   const onNavButtonClick = useCallback((emblaApi: EmblaCarouselType) => {
     const autoplay = emblaApi?.plugins()?.autoplay;
@@ -50,7 +64,7 @@ const Carousel: React.FC<PropType> = (props) => {
         <div className='embla__container box'>
           {slides.map((slide, idx) => (
             <div
-              className='embla__slide  pl-4 first:pl-0 min-w-0'
+              className='embla__slide flex-[0_0_100%] sm:flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] pl-4 first:pl-0 min-w-0'
               key={idx}
             >
               <div className='relative group cursor-pointer overflow-hidden rounded-md shadow-md hover:shadow-lg transition-all duration-300 w-full'>
