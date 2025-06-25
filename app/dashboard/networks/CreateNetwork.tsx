@@ -203,14 +203,14 @@ export default function NetworkComp({
                   type='number'
                   placeholder='Enter display order (1, 2, 3...)'
                   {...field}
-                  value={field.value || ''}
+                  value={field.value || 0}
                   onChange={(e) =>
                     field.onChange(
                       e.target.value ? parseInt(e.target.value) : undefined
                     )
                   }
                   disabled={isLoading}
-                  min='1'
+                  min='0'
                 />
               </FormControl>
               <div className='text-xs text-muted-foreground'>
