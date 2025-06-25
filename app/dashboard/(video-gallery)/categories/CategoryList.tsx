@@ -10,27 +10,43 @@ import { Edit, Eye, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import CategoryDetailsDialog from './CategoryDetailsDialog';
+import CategoryForm from './CategoryForm';
 
 type TProps = {
   categories: VlogCategory[];
   loading: boolean;
   onCategoryDeleted: () => void;
+  onCategoryUpdated: () => void;
 };
 
 export default function CategoryList({
   categories,
   loading,
-  onCategoryDeleted
+  onCategoryDeleted,
+  onCategoryUpdated
 }: TProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<VlogCategory | null>(
     null
   );
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editCategory, setEditCategory] = useState<VlogCategory | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
 
   const handleViewDetails = (category: VlogCategory) => {
     setSelectedCategory(category);
     setDialogOpen(true);
+  };
+
+  const handleEdit = (category: VlogCategory) => {
+    setEditCategory(category);
+    setEditDialogOpen(true);
+  };
+
+  const handleCategoryUpdated = () => {
+    onCategoryUpdated();
+    setEditDialogOpen(false);
+    setEditCategory(null);
   };
 
   const handleDelete = async (categoryId: string) => {
@@ -263,6 +279,7 @@ export default function CategoryList({
                           size='sm'
                           className='h-8 w-8 p-0 hover:bg-blue-500/10 hover:text-blue-600'
                           title='Edit category'
+                          onClick={() => handleEdit(category)}
                         >
                           <Edit className='h-4 w-4' />
                         </Button>
@@ -295,6 +312,15 @@ export default function CategoryList({
         category={selectedCategory}
         open={dialogOpen}
         onOpenChange={setDialogOpen}
+      />
+
+      {/* Edit Category Dialog */}
+      <CategoryForm
+        editCategory={editCategory}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onCategoryCreated={handleCategoryUpdated}
       />
     </>
   );

@@ -40,6 +40,10 @@ export default function Categories() {
     fetchCategories();
   };
 
+  const handleCategoryUpdated = () => {
+    fetchCategories();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -80,6 +84,7 @@ export default function Categories() {
               categories={categories}
               loading={loading}
               onCategoryDeleted={handleCategoryDeleted}
+              onCategoryUpdated={handleCategoryUpdated}
             />
           </div>
         )}

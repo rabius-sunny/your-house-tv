@@ -61,11 +61,12 @@ export default function SponsorEditForm({
 
       // Submit form data with uploaded logo URL
       const formData = {
+        id: sponsor.id,
         ...data,
         logo
       };
 
-      await request.put(`/sponsors/${sponsor.id}`, formData);
+      await request.put('/sponsors', formData);
       onUpdate();
 
       toast.success('Sponsor updated successfully!');

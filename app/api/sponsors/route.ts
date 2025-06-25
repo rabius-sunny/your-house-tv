@@ -82,3 +82,128 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// PUT - Update an existing sponsor
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, ...updateData } = body;
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Sponsor ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Validate the update data
+    const validatedData = createSponsorSchema.parse(updateData);
+
+    // Get existing sponsors
+    const sponsorsSettings = await db.settings.findUnique({
+      where: { key: 'sponsors' }
+    });
+
+    if (!sponsorsSettings) {
+      return NextResponse.json({ error: 'No sponsors found' }, { status: 404 });
+    }
+
+    let existingSponsors = JSON.parse(sponsorsSettings.value as string);
+
+    // Find the sponsor to update
+    const sponsorIndex = existingSponsors.findIndex(
+      (sponsor: any) => sponsor.id === id
+    );
+
+    if (sponsorIndex === -1) {
+      return NextResponse.json({ error: 'Sponsor not found' }, { status: 404 });
+    }
+
+    // Update the sponsor
+    const updatedSponsor = {
+      ...existingSponsors[sponsorIndex],
+      ...validatedData,
+      logo: body.logo, // Include the uploaded logo URL
+      updatedAt: new Date().toISOString()
+    };
+
+    existingSponsors[sponsorIndex] = updatedSponsor;
+
+    // Save back to settings
+    await db.settings.update({
+      where: { key: 'sponsors' },
+      data: { value: JSON.stringify(existingSponsors) }
+    });
+
+    return NextResponse.json(updatedSponsor, { status: 200 });
+  } catch (error: any) {
+    console.error('Error updating sponsor:', error);
+
+    if (error.name === 'ZodError') {
+      return NextResponse.json(
+        { error: 'Invalid data provided', details: error.errors },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json(
+      { error: 'Failed to update sponsor' },
+      { status: 500 }
+    );
+  }
+}
+
+// DELETE - Delete a sponsor
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const sponsorId = searchParams.get('id');
+
+    if (!sponsorId) {
+      return NextResponse.json(
+        { error: 'Sponsor ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // Get existing sponsors
+    const sponsorsSettings = await db.settings.findUnique({
+      where: { key: 'sponsors' }
+    });
+
+    if (!sponsorsSettings) {
+      return NextResponse.json({ error: 'No sponsors found' }, { status: 404 });
+    }
+
+    let existingSponsors = JSON.parse(sponsorsSettings.value as string);
+
+    // Find the sponsor to delete
+    const sponsorIndex = existingSponsors.findIndex(
+      (sponsor: any) => sponsor.id === sponsorId
+    );
+
+    if (sponsorIndex === -1) {
+      return NextResponse.json({ error: 'Sponsor not found' }, { status: 404 });
+    }
+
+    // Remove the sponsor
+    existingSponsors.splice(sponsorIndex, 1);
+
+    // Save back to settings
+    await db.settings.update({
+      where: { key: 'sponsors' },
+      data: { value: JSON.stringify(existingSponsors) }
+    });
+
+    return NextResponse.json(
+      { message: 'Sponsor deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('Error deleting sponsor:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete sponsor' },
+      { status: 500 }
+    );
+  }
+}

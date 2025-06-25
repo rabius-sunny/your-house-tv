@@ -39,7 +39,7 @@ export default function SponsorList({
 
     try {
       setDeletingId(sponsor.id);
-      await request.delete(`/sponsors/${sponsor.id}`);
+      await request.delete(`/sponsors?id=${sponsor.id}`);
       toast.success('Sponsor deleted successfully');
       onSponsorDeleted();
     } catch (error) {

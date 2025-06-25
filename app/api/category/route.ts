@@ -122,30 +122,48 @@ export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const categorySlug = searchParams.get('slug');
+    const categoryId = searchParams.get('id');
 
-    if (!categorySlug) {
+    if (!categorySlug && !categoryId) {
       return NextResponse.json(
-        { error: 'Category slug is required' },
+        { error: 'Category slug or ID is required' },
         { status: 400 }
       );
     }
 
-    // Check if category exists
-    const existingCategory = await db.vlogCategory.findUnique({
-      where: { slug: categorySlug }
-    });
+    // Check if category exists and delete it
+    let existingCategory;
+    if (categoryId) {
+      existingCategory = await db.vlogCategory.findUnique({
+        where: { id: categoryId }
+      });
 
-    if (!existingCategory) {
-      return NextResponse.json(
-        { error: 'Category not found' },
-        { status: 404 }
-      );
+      if (!existingCategory) {
+        return NextResponse.json(
+          { error: 'Category not found' },
+          { status: 404 }
+        );
+      }
+
+      await db.vlogCategory.delete({
+        where: { id: categoryId }
+      });
+    } else if (categorySlug) {
+      existingCategory = await db.vlogCategory.findUnique({
+        where: { slug: categorySlug }
+      });
+
+      if (!existingCategory) {
+        return NextResponse.json(
+          { error: 'Category not found' },
+          { status: 404 }
+        );
+      }
+
+      await db.vlogCategory.delete({
+        where: { slug: categorySlug }
+      });
     }
-
-    // Delete the category
-    await db.vlogCategory.delete({
-      where: { slug: categorySlug }
-    });
 
     return NextResponse.json(
       { message: 'Category deleted successfully' },
