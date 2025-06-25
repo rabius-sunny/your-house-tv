@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createCitySchema } from '@/helper/schema/city';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -97,20 +98,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json(city, { status: 201 });
-  } catch (error) {
-    console.error('Error creating city:', error);
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create city' },
-      { status: 500 }
-    );
+  } catch (error: any) {
+    return handleError(error);
   }
 }
 
@@ -173,11 +162,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedCity);
   } catch (error) {
-    console.error('Error updating city:', error);
-    return NextResponse.json(
-      { error: 'Failed to update city' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -228,10 +213,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting city:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete city' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

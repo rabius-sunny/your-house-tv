@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createBlogSchema } from '@/helper/schema';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -139,11 +140,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(blog, { status: 201 });
   } catch (error) {
-    console.error('Error creating blog:', error);
-    return NextResponse.json(
-      { error: 'Failed to create blog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -210,11 +207,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedBlog, { status: 200 });
   } catch (error) {
-    console.error('Error updating blog:', error);
-    return NextResponse.json(
-      { error: 'Failed to update blog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -250,10 +243,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting blog:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete blog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

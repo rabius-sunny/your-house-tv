@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createBlogCategorySchema } from '@/helper/schema';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -89,19 +90,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(category, { status: 201 });
   } catch (error) {
-    console.error('Error creating blog category:', error);
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create blog category' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -143,11 +132,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedCategory, { status: 200 });
   } catch (error) {
-    console.error('Error updating blog category:', error);
-    return NextResponse.json(
-      { error: 'Failed to update blog category' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -204,10 +189,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting blog category:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete blog category' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

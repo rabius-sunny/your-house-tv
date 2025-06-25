@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createNetworkSchema } from '@/helper/schema/network';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -75,19 +76,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(network, { status: 201 });
   } catch (error) {
-    console.error('Error creating network:', error);
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create network' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -121,11 +110,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedNetwork);
   } catch (error) {
-    console.error('Error updating network:', error);
-    return NextResponse.json(
-      { error: 'Failed to update network' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -176,10 +161,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting network:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete network' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createStationSchema } from '@/helper/schema/station';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -112,19 +113,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(station, { status: 201 });
   } catch (error) {
-    console.error('Error creating station:', error);
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create station' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -202,11 +191,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedStation);
   } catch (error) {
-    console.error('Error updating station:', error);
-    return NextResponse.json(
-      { error: 'Failed to update station' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -242,10 +227,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting station:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete station' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }

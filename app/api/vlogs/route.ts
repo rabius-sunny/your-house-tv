@@ -1,4 +1,5 @@
 import db from '@/config/db';
+import { handleError } from '@/helper/errorHandler';
 import { createVlogSchema } from '@/helper/schema/vlog';
 import { generateSlug } from '@/utils/utils';
 import { NextRequest, NextResponse } from 'next/server';
@@ -133,19 +134,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(vlog, { status: 201 });
   } catch (error) {
-    console.error('Error creating vlog:', error);
-
-    if (error instanceof Error && error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to create vlog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -223,11 +212,7 @@ export async function PUT(request: NextRequest) {
 
     return NextResponse.json(updatedVlog);
   } catch (error) {
-    console.error('Error updating vlog:', error);
-    return NextResponse.json(
-      { error: 'Failed to update vlog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
 
@@ -263,10 +248,6 @@ export async function DELETE(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error('Error deleting vlog:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete vlog' },
-      { status: 500 }
-    );
+    return handleError(error);
   }
 }
