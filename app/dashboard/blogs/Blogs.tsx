@@ -10,9 +10,10 @@ import BlogList from './BlogList';
 
 type TProps = {
   categories: BlogCategory[];
+  catLoading: boolean;
 };
 
-export default function Blogs({ categories }: TProps) {
+export default function Blogs({ categories, catLoading }: TProps) {
   const [activeTab, setActiveTab] = useState<'list' | 'create'>('list');
 
   const { data: blogs, loading, refetch } = useAsync('/blogs');
@@ -60,7 +61,7 @@ export default function Blogs({ categories }: TProps) {
         />
       ) : (
         <BlogList
-          loading={loading}
+          loading={loading || catLoading}
           blogs={blogs || []}
           onBlogDeleted={refetch}
         />

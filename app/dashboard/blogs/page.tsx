@@ -8,7 +8,7 @@ import Blogs from './Blogs';
 export default function BlogsPage() {
   const [categories, setCategories] = useState<BlogCategory[]>([]);
 
-  const { data: categoriesData, loading: categoriesLoading } =
+  const { data: categoriesData, loading } =
     useAsync<BlogCategory[]>('/blog-category');
 
   useEffect(() => {
@@ -17,16 +17,10 @@ export default function BlogsPage() {
     }
   }, [categoriesData]);
 
-  if (categoriesLoading) {
-    return (
-      <div className='space-y-6'>
-        <div>
-          <h1 className='text-3xl font-bold tracking-tight'>Blog Posts</h1>
-          <p className='text-muted-foreground mt-1'>Loading...</p>
-        </div>
-      </div>
-    );
-  }
-
-  return <Blogs categories={categories} />;
+  return (
+    <Blogs
+      catLoading={loading}
+      categories={categories}
+    />
+  );
 }

@@ -53,7 +53,6 @@ export const navData = {
       title: 'Blogs',
       url: '#',
       icon: TextIcon,
-      isActive: true,
       items: [
         {
           title: 'Blogs',
@@ -61,7 +60,7 @@ export const navData = {
           icon: TextIcon
         },
         {
-          title: 'Categories',
+          title: 'Blog Categories',
           url: '/dashboard/blog-categories',
           icon: FileStack
         }
@@ -71,10 +70,9 @@ export const navData = {
       title: 'Video Gallery',
       url: '#',
       icon: FileVideo2,
-      isActive: true,
       items: [
         {
-          title: 'Category',
+          title: 'Video Category',
           url: '/dashboard/categories',
           icon: FileStack
         },
@@ -90,7 +88,6 @@ export const navData = {
       title: 'Settings',
       url: '#',
       icon: Settings2,
-      isActive: true,
       items: [
         {
           title: 'Logo',

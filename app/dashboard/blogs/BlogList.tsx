@@ -66,7 +66,7 @@ export default function BlogList({ blogs, loading, onBlogDeleted }: TProps) {
 
   // Loading Skeleton
   const BlogCardSkeleton = () => (
-    <Card className='overflow-hidden'>
+    <Card className='p-0 overflow-hidden'>
       <div className='relative h-48 bg-muted animate-pulse'></div>
       <CardContent className='p-6'>
         <div className='space-y-3'>
