@@ -2,17 +2,14 @@
 
 import { Home, LogOut, Menu } from 'lucide-react';
 
+import { logout } from '@/actions/users/auth';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import {
-  SidebarMenu,
-  SidebarMenuItem,
-  useSidebar
-} from '@/components/ui/sidebar';
+import { SidebarMenu, SidebarMenuItem } from '@/components/ui/sidebar';
 import { useRouter } from 'next/navigation';
 
 export function NavUser({
@@ -24,8 +21,13 @@ export function NavUser({
     avatar: string;
   };
 }) {
-  const { isMobile } = useSidebar();
   const { push } = useRouter();
+  const handleLogout = async () => {
+    await logout();
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
+  };
 
   return (
     <SidebarMenu>
@@ -61,7 +63,7 @@ export function NavUser({
               <Home />
               Go to Site
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

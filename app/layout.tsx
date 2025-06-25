@@ -1,4 +1,6 @@
 import { Toaster } from '@/components/ui/sonner';
+import { UserProvider } from '@/lib/auth';
+import getUserSession from '@/lib/auth/getUser';
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import './globals.css';
@@ -17,13 +19,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userPromise = getUserSession();
+
   return (
     <html lang='en'>
       <body
         suppressHydrationWarning
         className={`${montserrat.className} antialiased`}
       >
-        {children}
+        <UserProvider userPromise={userPromise}>{children}</UserProvider>
         <Toaster
           richColors
           closeButton
