@@ -3,7 +3,6 @@
 import * as React from 'react';
 
 import { NavMain } from '@/components/nav-main';
-import { NavUser } from '@/components/nav-user';
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +11,7 @@ import {
   SidebarRail
 } from '@/components/ui/sidebar';
 import { navData } from '@/helper/nav-data';
+import Image from 'next/image';
 
 // This is sample data.
 
@@ -22,7 +22,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {...props}
     >
       <SidebarHeader>
-        <NavUser user={navData.user} />
+        <div>
+          <Image
+            src='/logo.png'
+            alt='Logo'
+            width={150}
+            height={150}
+            className='w-full p-2  bg-black'
+          />
+        </div>
+        {/* <NavUser user={navData.user} /> */}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navData.navMain} />

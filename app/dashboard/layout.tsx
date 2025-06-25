@@ -1,6 +1,7 @@
 'use client';
 
 import { AppSidebar } from '@/components/app-sidebar';
+import { NavUser } from '@/components/nav-user';
 import {
   SidebarInset,
   SidebarProvider,
@@ -30,9 +31,14 @@ export default function DashboardLayout({
       <AppSidebar />
       <SidebarInset>
         <div className='p-4 md:p-6 xl:p-8'>
-          <div className='flex items-center gap-3 mb-8'>
-            <SidebarTrigger className='-ml-1' />
-            <h2 className='font-bold'>{title}</h2>
+          <div className='flex items-center w-full justify-between gap-3 mb-8'>
+            <div className='flex gap-3'>
+              <SidebarTrigger className='-ml-1' />
+              <h2 className='font-bold'>{title}</h2>
+            </div>
+            <div>
+              <NavUser user={navData.user} />
+            </div>
           </div>
 
           {children}
