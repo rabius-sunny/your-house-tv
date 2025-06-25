@@ -10,7 +10,7 @@ export default function Faq() {
   return (
     <div>
       <SectionHeader title='FAQ' />
-      <div className='my-20 box max-w-3xl'>
+      <div className='my-12 md:my-20 box max-w-3xl'>
         {loading && (
           <div className='animate-pulse space-y-4'>
             <div className='h-4 bg-gray-200 rounded w-3/4'></div>
