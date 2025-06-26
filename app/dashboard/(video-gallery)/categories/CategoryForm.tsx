@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { CreateVlogCategory, createVlogCategorySchema } from '@/helper/schema';
 import request from '@/services/http';
 import { VlogCategory } from '@/types';
@@ -53,7 +52,7 @@ export default function CategoryForm({
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      description: '',
+      // description: '',
       isFeatured: false
     }
   });
@@ -63,14 +62,14 @@ export default function CategoryForm({
     if (editCategory) {
       form.reset({
         name: editCategory.name,
-        description: editCategory.description || '',
+        // description: editCategory.description || '',
         isFeatured: editCategory.isFeatured
       });
       setThumbnail(editCategory.thumbnail);
     } else {
       form.reset({
         name: '',
-        description: '',
+        // description: '',
         isFeatured: false
       });
       setThumbnail(undefined);
@@ -168,7 +167,7 @@ export default function CategoryForm({
         />
 
         {/* Category Description */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name='description'
           render={({ field }) => (
@@ -184,7 +183,7 @@ export default function CategoryForm({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Thumbnail Upload */}
         <div className='space-y-2'>

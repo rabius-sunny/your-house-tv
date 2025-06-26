@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       data: {
         name: body.name,
         slug: generateSlug(body.name),
-        description: body.description,
+        // description: body.description,
         thumbnail: body.thumbnail,
         isFeatured: body.isFeatured || false
       }

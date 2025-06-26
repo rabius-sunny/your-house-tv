@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { CreateBlogCategory, createBlogCategorySchema } from '@/helper/schema';
 import request from '@/services/http';
 import { BlogCategory } from '@/types';
@@ -53,7 +52,7 @@ export default function BlogCategoryForm({
     mode: 'onSubmit',
     defaultValues: {
       name: '',
-      description: '',
+      // description: '',
       isFeatured: false
     }
   });
@@ -63,14 +62,14 @@ export default function BlogCategoryForm({
     if (editCategory) {
       form.reset({
         name: editCategory.name,
-        description: editCategory.description || '',
+        // description: editCategory.description || '',
         isFeatured: editCategory.isFeatured
       });
       setThumbnail(editCategory.thumbnail);
     } else {
       form.reset({
         name: '',
-        description: '',
+        // description: '',
         isFeatured: false
       });
       setThumbnail(undefined);
@@ -158,7 +157,7 @@ export default function BlogCategoryForm({
         />
 
         {/* Category Description */}
-        <FormField
+        {/* <FormField
           control={form.control}
           name='description'
           render={({ field }) => (
@@ -174,7 +173,7 @@ export default function BlogCategoryForm({
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         {/* Thumbnail Upload */}
         <div className='space-y-2'>

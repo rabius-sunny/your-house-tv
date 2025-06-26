@@ -103,7 +103,7 @@ model BlogCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   slug        String   @unique
-  description String
+  description String?
   thumbnail   String
   isFeatured  Boolean  @default(false)
   blogIds     String[] @db.ObjectId
@@ -132,7 +132,7 @@ model VlogCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   slug        String   @unique
-  description String
+  description String?
   thumbnail   String
   isFeatured  Boolean  @default(false)
   vlogIds     String[] @db.ObjectId
