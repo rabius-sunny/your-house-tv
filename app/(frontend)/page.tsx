@@ -2,9 +2,12 @@ import HeroCarousel from '@/components/frontend/carousel/HeroCarousel';
 import BottomCarousel from '@/components/frontend/home/BottomCarousel';
 import FeaturedCarousel from '@/components/frontend/home/FeaturedCarousel';
 import FeaturedChannels from '@/components/frontend/home/FeaturedChannels';
-import FeaturedNetworks from '@/components/frontend/home/FeaturedNetworks';
 import { skipApi } from '@/config/site';
 import { baseUrl } from '@/lib/utils';
+
+export const metadata = {
+  title: 'Home'
+};
 
 export default async function page() {
   if (skipApi) {
@@ -21,7 +24,6 @@ export default async function page() {
         items={data.networks || []}
         type='networks'
       />
-      <FeaturedNetworks networks={data.featuredNetworks || []} />
       <FeaturedChannels channels={data.channels || []} />
       <FeaturedCarousel
         title='Video Shows | Vlogs'
