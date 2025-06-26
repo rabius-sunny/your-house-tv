@@ -5,6 +5,7 @@ export const createChannelSchema = z.object({
   name: z.string().min(1, 'Channel name is required'),
   description: z.string().min(1, 'Description is required'),
   isFeatured: z.boolean(),
+  sortOrder: z.number().int().nonnegative(),
   cityId: z.string().min(1, 'City ID is required')
 });
 

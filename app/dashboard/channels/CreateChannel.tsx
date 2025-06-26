@@ -64,7 +64,8 @@ export default function ChannelComp({
       name: '',
       description: '',
       isFeatured: false,
-      cityId: ''
+      cityId: '',
+      sortOrder: 0
     }
   });
 
@@ -75,7 +76,8 @@ export default function ChannelComp({
         name: editChannel.name,
         description: editChannel.description,
         isFeatured: editChannel.isFeatured,
-        cityId: editChannel.cityId
+        cityId: editChannel.cityId,
+        sortOrder: editChannel.sortOrder || 0
       });
       setThumbnail(editChannel.thumbnail);
     } else {
@@ -83,7 +85,8 @@ export default function ChannelComp({
         name: '',
         description: '',
         isFeatured: false,
-        cityId: ''
+        cityId: '',
+        sortOrder: 0
       });
       setThumbnail(undefined);
     }
@@ -280,6 +283,32 @@ export default function ChannelComp({
                   disabled={isLoading}
                 />
               </FormControl>
+            </FormItem>
+          )}
+        />
+
+        {/* Sort Order */}
+        <FormField
+          control={form.control}
+          name='sortOrder'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Sort Order</FormLabel>
+              <FormControl>
+                <Input
+                  type='number'
+                  {...field}
+                  onChange={(e) =>
+                    field.onChange(
+                      e.target.value ? parseInt(e.target.value) : 0
+                    )
+                  }
+                  placeholder='Enter sort order (1, 2, 3...)'
+                  min={0}
+                  disabled={isLoading}
+                />
+              </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />

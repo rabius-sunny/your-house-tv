@@ -67,6 +67,7 @@ export type Channel = {
   thumbnail: string;
   description: string;
   isFeatured: boolean;
+  sortOrder: number;
   cityId: string;
   city: City;
   stations: Station[];

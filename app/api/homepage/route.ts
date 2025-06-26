@@ -68,6 +68,7 @@ export async function GET() {
           thumbnail: true,
           slug: true,
           name: true,
+          sortOrder: true,
           city: {
             select: {
               name: true
@@ -81,7 +82,7 @@ export async function GET() {
             }
           }
         },
-        orderBy: [{ createdAt: 'desc' }]
+        orderBy: [{ sortOrder: 'asc' }]
       }),
       db.station.findMany({
         where: { isFeatured: true },

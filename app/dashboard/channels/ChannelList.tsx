@@ -225,6 +225,9 @@ export default function ChannelList({
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground w-24 min-w-[90px]'>
                     Status
                   </th>
+                  <th className='p-4 text-left text-sm font-semibold text-muted-foreground w-24 min-w-[40px]'>
+                    Order
+                  </th>
                   <th className='p-4 text-left text-sm font-semibold text-muted-foreground w-32 min-w-[120px]'>
                     Created
                   </th>
@@ -291,6 +294,9 @@ export default function ChannelList({
                       >
                         {channel.isFeatured ? 'Featured' : 'Regular'}
                       </Badge>
+                    </td>
+                    <td className='p-4 text-center font-semibold text-sm'>
+                      {channel.sortOrder}
                     </td>
                     <td className='p-4'>
                       <span className='text-sm text-muted-foreground whitespace-nowrap'>
