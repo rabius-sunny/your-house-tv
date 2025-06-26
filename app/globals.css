@@ -227,6 +227,9 @@
   .video-box {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-12;
   }
+  .bg-color {
+    @apply bg-[#271b49];
+  }
 }
 
 @layer utilities {

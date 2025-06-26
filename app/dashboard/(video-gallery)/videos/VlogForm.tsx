@@ -25,23 +25,26 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { createVlogSchema } from '@/helper/schema/vlog';
 import request from '@/services/http';
-import { VlogCategory } from '@/types';
+import { Vlog, VlogCategory } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
 export default function VlogForm({
   categories,
-  onSuccess
+  onSuccess,
+  editVlog = null
 }: {
   categories: VlogCategory[];
   onSuccess?: () => void;
+  editVlog?: Vlog | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
   const [selectedVideo, setSelectedVideo] = useState<string>();
+  const isEditMode = Boolean(editVlog);
 
   const form = useForm({
     resolver: zodResolver(createVlogSchema),
@@ -54,6 +57,31 @@ export default function VlogForm({
       categoryIds: []
     }
   });
+
+  // Reset form when editVlog changes
+  useEffect(() => {
+    if (editVlog) {
+      form.reset({
+        title: editVlog.title,
+        description: editVlog.description,
+        isFeatured: editVlog.isFeatured,
+        type: editVlog.type,
+        categoryIds: editVlog.categories?.map((cat) => cat.id) || []
+      });
+      setThumbnail(editVlog.thumbnail);
+      setSelectedVideo(editVlog.video);
+    } else {
+      form.reset({
+        title: '',
+        description: '',
+        isFeatured: false,
+        type: 'VLOG' as const,
+        categoryIds: []
+      });
+      setThumbnail(undefined);
+      setSelectedVideo(undefined);
+    }
+  }, [editVlog, form]);
 
   const onSubmit = async (data: any) => {
     try {
@@ -77,21 +105,35 @@ export default function VlogForm({
         video: selectedVideo
       };
 
-      const response = await request.post('/vlogs', formData);
+      if (isEditMode && editVlog) {
+        // Update existing vlog
+        await request.put('/vlogs', {
+          slug: editVlog.slug,
+          ...formData
+        });
+        toast.success('Video updated successfully!');
+      } else {
+        // Create new vlog
+        await request.post('/vlogs', formData);
+        toast.success('Video created successfully!');
+      }
 
-      toast.success('Video created successfully!');
-
-      // Reset form
-      //   form.reset();
-      //   setThumbnail(undefined);
-      //   setSelectedVideo(undefined);
+      // Reset form only if not in edit mode
+      if (!isEditMode) {
+        form.reset();
+        setThumbnail(undefined);
+        setSelectedVideo(undefined);
+      }
 
       // Call success callback
       onSuccess?.();
     } catch (error: any) {
-      console.error('Error creating vloVideog:', error);
+      console.error(
+        `Error ${isEditMode ? 'updating' : 'creating'} video:`,
+        error
+      );
 
-      let errorMessage = 'Failed to create Video';
+      let errorMessage = `Failed to ${isEditMode ? 'update' : 'create'} video`;
 
       if (error.name === 'ZodError') {
         errorMessage = error.errors[0]?.message || 'Invalid data provided';
@@ -99,7 +141,7 @@ export default function VlogForm({
         errorMessage = error.response.data.error;
       }
 
-      toast.error('Failed to create Video', {
+      toast.error(`Failed to ${isEditMode ? 'update' : 'create'} video`, {
         description: errorMessage
       });
     } finally {
@@ -110,7 +152,9 @@ export default function VlogForm({
   return (
     <Card className='w-full max-w-2xl mx-auto'>
       <CardHeader>
-        <CardTitle className='text-2xl font-bold'>Create New Video</CardTitle>
+        <CardTitle className='text-2xl font-bold'>
+          {isEditMode ? 'Edit Video' : 'Create New Video'}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -158,22 +202,53 @@ export default function VlogForm({
             {/* Thumbnail Upload */}
             <div className='space-y-2'>
               <Label>Thumbnail</Label>
+              {thumbnail && (
+                <div className='mb-2'>
+                  <p className='text-xs text-muted-foreground mb-1'>
+                    {isEditMode ? 'Current thumbnail:' : 'Uploaded thumbnail:'}
+                  </p>
+                  <img
+                    src={thumbnail}
+                    alt={
+                      isEditMode ? 'Current thumbnail' : 'Uploaded thumbnail'
+                    }
+                    className='w-32 h-18 object-cover rounded border border-border/40'
+                  />
+                </div>
+              )}
               <ImageUploader
                 setSelectedFile={setThumbnail}
                 isLoading={isLoading}
               />
               <p className='text-xs text-muted-foreground'>
                 Recommended size: 1280x720px (16:9 aspect ratio)
+                {isEditMode &&
+                  ' • Upload a new image to replace the current one'}
               </p>
             </div>
 
             {/* Video Upload */}
             <div className='space-y-2'>
               <Label>Video</Label>
+              {isEditMode && selectedVideo && (
+                <div className='mb-2'>
+                  <p className='text-xs text-muted-foreground mb-1'>
+                    Current video uploaded
+                  </p>
+                  <p className='text-xs text-blue-600'>
+                    Video URL: {selectedVideo}
+                  </p>
+                </div>
+              )}
               <VideoUploader
                 setIsLoading={setIsUploading}
                 setSelectedVideo={setSelectedVideo}
               />
+              {isEditMode && (
+                <p className='text-xs text-muted-foreground'>
+                  Upload a new video to replace the current one
+                </p>
+              )}
             </div>
 
             {/* Vlog Type */}
@@ -185,7 +260,7 @@ export default function VlogForm({
                   <FormLabel>Type</FormLabel>
                   <Select
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    value={field.value}
                   >
                     <FormControl>
                       <SelectTrigger className='w-full'>
@@ -281,7 +356,13 @@ export default function VlogForm({
                 disabled={isLoading || isUploading}
                 className='flex-1'
               >
-                {isLoading ? 'Creating...' : 'Create Video'}
+                {isLoading
+                  ? isEditMode
+                    ? 'Updating...'
+                    : 'Creating...'
+                  : isEditMode
+                  ? 'Update Video'
+                  : 'Create Video'}
               </Button>
             </div>
           </form>

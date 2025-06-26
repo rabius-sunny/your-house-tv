@@ -174,14 +174,14 @@ export default function BlogForm({
         {/* Thumbnail Upload */}
         <div className='space-y-2'>
           <Label>Thumbnail Image</Label>
-          {isEditMode && selectedThumbnail && (
+          {selectedThumbnail && (
             <div className='mb-2'>
               <p className='text-xs text-muted-foreground mb-1'>
-                Current thumbnail:
+                {isEditMode ? 'Current thumbnail:' : 'Uploaded thumbnail:'}
               </p>
               <img
                 src={selectedThumbnail}
-                alt='Current thumbnail'
+                alt={isEditMode ? 'Current thumbnail' : 'Uploaded thumbnail'}
                 className='w-24 h-16 object-cover rounded border border-border/40'
               />
             </div>

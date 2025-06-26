@@ -24,11 +24,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <div>
           <Image
-            src='/logo.png'
+            src='/logo-black.png'
             alt='Logo'
             width={150}
             height={150}
-            className='w-full p-2  bg-black'
+            className='w-full'
           />
         </div>
         {/* <NavUser user={navData.user} /> */}

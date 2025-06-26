@@ -10,7 +10,7 @@ export default async function Footer() {
   }
   const data = await res.json();
   return (
-    <footer className='bg-slate-800 pt-10 border-t border-slate-400 text-white'>
+    <footer className='bg-color pt-10 border-t border-slate-400 text-white'>
       <div className='box grid grid-cols-2 lg:grid-cols-4 gap-8'>
         <div className='grid gap-3'>
           <Image

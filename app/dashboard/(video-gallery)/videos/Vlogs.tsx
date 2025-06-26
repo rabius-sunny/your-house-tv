@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { useAsync } from '@/hooks/useAsync';
-import { VlogCategory } from '@/types';
+import { Vlog, VlogCategory } from '@/types';
 import { List, Plus } from 'lucide-react';
 import { useState } from 'react';
 import VlogForm from './VlogForm';
@@ -13,8 +13,22 @@ type TProps = {
 };
 
 export default function Vlogs({ categories }: TProps) {
-  const [activeTab, setActiveTab] = useState<'list' | 'create'>('list');
+  const [activeTab, setActiveTab] = useState<'list' | 'create' | 'edit'>(
+    'list'
+  );
+  const [editingVlog, setEditingVlog] = useState<Vlog | null>(null);
   const { data: vlogs, refetch, loading } = useAsync('/vlogs');
+
+  const handleEdit = (vlog: Vlog) => {
+    setEditingVlog(vlog);
+    setActiveTab('edit');
+  };
+
+  const handleVlogUpdated = () => {
+    setActiveTab('list');
+    setEditingVlog(null);
+    refetch();
+  };
 
   return (
     <div className='container mx-auto py-6'>
@@ -23,7 +37,10 @@ export default function Vlogs({ categories }: TProps) {
         <div className='flex gap-2'>
           <Button
             variant={activeTab === 'list' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('list')}
+            onClick={() => {
+              setActiveTab('list');
+              setEditingVlog(null);
+            }}
             className='flex items-center gap-2'
           >
             <List className='h-4 w-4' />
@@ -31,12 +48,20 @@ export default function Vlogs({ categories }: TProps) {
           </Button>
           <Button
             variant={activeTab === 'create' ? 'default' : 'outline'}
-            onClick={() => setActiveTab('create')}
+            onClick={() => {
+              setActiveTab('create');
+              setEditingVlog(null);
+            }}
             className='flex items-center gap-2'
           >
             <Plus className='h-4 w-4' />
             Create Video
           </Button>
+          {activeTab === 'edit' && (
+            <div className='text-muted-foreground flex items-center'>
+              Editing: {editingVlog?.title}
+            </div>
+          )}
         </div>
       </div>
 
@@ -49,11 +74,18 @@ export default function Vlogs({ categories }: TProps) {
             refetch();
           }}
         />
+      ) : activeTab === 'edit' ? (
+        <VlogForm
+          categories={categories}
+          editVlog={editingVlog}
+          onSuccess={handleVlogUpdated}
+        />
       ) : (
         <VlogList
           loading={loading}
           vlogs={vlogs || []}
           onVlogDeleted={refetch}
+          onVlogEdit={handleEdit}
         />
       )}
     </div>

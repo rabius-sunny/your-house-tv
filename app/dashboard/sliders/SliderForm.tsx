@@ -221,14 +221,16 @@ export default function SliderForm({
         {/* Slider Image Upload */}
         <div className='space-y-2'>
           <Label>Slider Image</Label>
-          {isEditMode && image && (
+          {image && (
             <div className='mb-2'>
               <p className='text-xs text-muted-foreground mb-1'>
-                Current image:
+                {isEditMode ? 'Current image:' : 'Uploaded image:'}
               </p>
               <img
                 src={image}
-                alt='Current slider image'
+                alt={
+                  isEditMode ? 'Current slider image' : 'Uploaded slider image'
+                }
                 className='w-32 h-18 object-cover rounded border border-border/40'
               />
             </div>

@@ -5,30 +5,26 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
-import { VlogCategory } from '@/types';
-import { ExternalLink, Trash2 } from 'lucide-react';
+import { Vlog } from '@/types';
+import { Edit, ExternalLink, Trash2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
-
-type Vlog = {
-  id: string;
-  title: string;
-  thumbnail: string;
-  video: string;
-  type: 'VLOG' | 'PODCAST';
-  isFeatured: boolean;
-  categories: VlogCategory[];
-  createdAt: string;
-  updatedAt: string;
-};
 
 type TProps = {
   vlogs: Vlog[];
   loading: boolean;
   onVlogDeleted: () => void;
+  onVlogEdit: (vlog: Vlog) => void;
 };
 
-export default function VlogList({ vlogs, loading, onVlogDeleted }: TProps) {
+export default function VlogList({
+  vlogs,
+  loading,
+  onVlogDeleted,
+  onVlogEdit
+}: TProps) {
+  const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [typeFilter, setTypeFilter] = useState<'ALL' | 'VLOG' | 'PODCAST'>(
     'ALL'
@@ -40,14 +36,14 @@ export default function VlogList({ vlogs, loading, onVlogDeleted }: TProps) {
     return vlog.type === typeFilter;
   });
 
-  const handleDelete = async (vlogId: string) => {
+  const handleDelete = async (vlogSlug: string) => {
     if (!confirm('Are you sure you want to delete this vlog?')) {
       return;
     }
 
     try {
-      setDeletingId(vlogId);
-      await request.delete(`/vlogs?id=${vlogId}`);
+      setDeletingId(vlogSlug);
+      await request.delete(`/vlogs?slug=${vlogSlug}`);
       toast.success('Vlog deleted successfully!');
       onVlogDeleted();
     } catch (error) {
@@ -58,7 +54,7 @@ export default function VlogList({ vlogs, loading, onVlogDeleted }: TProps) {
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | Date) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
@@ -282,20 +278,34 @@ export default function VlogList({ vlogs, loading, onVlogDeleted }: TProps) {
                   <Button
                     variant='outline'
                     size='sm'
-                    onClick={() => window.open(vlog.video, '_blank')}
+                    onClick={() =>
+                      router.push(
+                        process.env.NEXT_PUBLIC_BASE_URL! +
+                          '/videos/' +
+                          vlog.slug
+                      )
+                    }
                     className='flex items-center gap-1 hover:scale-105 transition-transform duration-200 flex-1'
                   >
                     <ExternalLink className='h-4 w-4' />
                     Watch
                   </Button>
                   <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => onVlogEdit(vlog)}
+                    className='flex items-center gap-1 hover:scale-105 transition-transform duration-200'
+                  >
+                    <Edit className='h-4 w-4' />
+                  </Button>
+                  <Button
                     variant='destructive'
                     size='sm'
-                    onClick={() => handleDelete(vlog.id)}
-                    disabled={deletingId === vlog.id}
+                    onClick={() => handleDelete(vlog.slug)}
+                    disabled={deletingId === vlog.slug}
                     className='flex items-center gap-1 hover:scale-105 transition-transform duration-200 disabled:hover:scale-100'
                   >
-                    {deletingId === vlog.id ? (
+                    {deletingId === vlog.slug ? (
                       <div className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin' />
                     ) : (
                       <Trash2 className='h-4 w-4' />
