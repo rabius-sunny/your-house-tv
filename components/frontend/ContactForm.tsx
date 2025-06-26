@@ -65,8 +65,15 @@ export default function ContactForm() {
   };
 
   return (
-    <div className='w-full max-w-2xl mx-auto my-20'>
-      <h1 className='text-3xl text-center mb-10 uppercase'>Keep in Touch</h1>
+    <div className='w-full max-w-2xl px-4 md:px-8  mx-auto my-20'>
+      <div className='flex flex-col items-center gap-6 mb-10'>
+        <div className='flex justify-center items-center gap-3 md:gap-6'>
+          <div className='w-2.5 h-2.5 bg-black rounded-full' />
+          <h1 className='text-3xl text-center uppercase'>Keep in Touch</h1>
+          <div className='w-2.5 h-2.5 bg-black rounded-full' />
+        </div>
+        <div className='h-1 bg-black/80 w-20 rounded-full' />
+      </div>
       <div>
         <Form {...form}>
           <form
@@ -155,7 +162,7 @@ export default function ContactForm() {
             {/* Submit Button */}
             <Button
               type='submit'
-              className='w-full'
+              className='w-full md:py-6'
               disabled={isLoading}
             >
               {isLoading ? 'Sending...' : 'Send Message'}
