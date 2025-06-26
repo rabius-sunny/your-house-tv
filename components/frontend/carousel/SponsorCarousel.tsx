@@ -49,7 +49,7 @@ const SponsorCarousel: React.FC<PropType> = (props) => {
                   alt={slide.name || 'Slide image'}
                   width={400}
                   height={300}
-                  className='w-full h-auto lg:h-48 object-cover '
+                  className='w-full h-auto lg:h-48 object-contain '
                 />
               </div>
             </div>
