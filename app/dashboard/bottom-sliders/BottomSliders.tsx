@@ -40,6 +40,10 @@ export default function BottomSliders() {
     fetchSliders();
   };
 
+  const handleSliderUpdated = () => {
+    fetchSliders();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -79,6 +83,7 @@ export default function BottomSliders() {
             sliders={sliders}
             loading={loading}
             onSliderDeleted={handleSliderDeleted}
+            onSliderUpdated={handleSliderUpdated}
             sliderKey='bottom_sliders'
             title='Bottom Sliders'
           />

@@ -143,3 +143,62 @@ export async function DELETE(request: NextRequest) {
     );
   }
 }
+
+// PUT - Update an existing slider
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { key, sliderKey, ...updateData } = body;
+
+    if (!key) {
+      return NextResponse.json(
+        { error: 'Slider key is required' },
+        { status: 400 }
+      );
+    }
+
+    const sliderCollectionKey = sliderKey || 'hero_sliders';
+
+    // Get existing sliders
+    const slidersSettings = await db.settings.findUnique({
+      where: { key: sliderCollectionKey }
+    });
+
+    if (!slidersSettings) {
+      return NextResponse.json({ error: 'No sliders found' }, { status: 404 });
+    }
+
+    let existingSliders = JSON.parse(slidersSettings.value as string);
+
+    // Find the slider to update
+    const sliderIndex = existingSliders.findIndex(
+      (slider: any) => slider.key === key
+    );
+
+    if (sliderIndex === -1) {
+      return NextResponse.json({ error: 'Slider not found' }, { status: 404 });
+    }
+
+    // Update the slider
+    const updatedSlider = {
+      ...existingSliders[sliderIndex],
+      ...updateData
+    };
+
+    existingSliders[sliderIndex] = updatedSlider;
+
+    // Save back to settings
+    await db.settings.update({
+      where: { key: sliderCollectionKey },
+      data: { value: JSON.stringify(existingSliders) }
+    });
+
+    return NextResponse.json(updatedSlider, { status: 200 });
+  } catch (error: any) {
+    console.error('Error updating slider:', error);
+    return NextResponse.json(
+      { error: 'Failed to update slider' },
+      { status: 500 }
+    );
+  }
+}

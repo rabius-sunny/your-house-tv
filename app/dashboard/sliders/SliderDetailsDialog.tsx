@@ -72,21 +72,11 @@ export default function SliderDetailsDialog({
           {/* Action Buttons */}
           <div className='flex flex-col sm:flex-row gap-3 pt-4 border-t'>
             <Button
-              variant='outline'
+              variant='destructive'
               onClick={onClose}
               className='sm:ml-auto'
             >
               Close
-            </Button>
-            <Button variant='outline'>Edit {title}</Button>
-            <Button
-              variant='destructive'
-              onClick={() => {
-                // Handle delete
-                onClose();
-              }}
-            >
-              Delete {title}
             </Button>
           </div>
         </div>

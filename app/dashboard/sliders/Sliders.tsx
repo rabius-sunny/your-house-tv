@@ -40,6 +40,10 @@ export default function Sliders() {
     fetchSliders();
   };
 
+  const handleSliderUpdated = () => {
+    fetchSliders();
+  };
+
   return (
     <div className='space-y-6'>
       {/* Header with Tabs */}
@@ -79,6 +83,7 @@ export default function Sliders() {
             sliders={sliders}
             loading={loading}
             onSliderDeleted={handleSliderDeleted}
+            onSliderUpdated={handleSliderUpdated}
             sliderKey='hero_sliders'
             title='Hero Sliders'
           />

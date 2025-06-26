@@ -10,11 +10,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import SliderDetailsDialog from './SliderDetailsDialog';
+import SliderForm from './SliderForm';
 
 type TProps = {
   sliders: Sliders;
   loading: boolean;
   onSliderDeleted: () => void;
+  onSliderUpdated: () => void;
   sliderKey: 'hero_sliders' | 'bottom_sliders';
   title?: string;
 };
@@ -23,11 +25,14 @@ export default function SliderList({
   sliders,
   loading,
   onSliderDeleted,
+  onSliderUpdated,
   sliderKey = 'hero_sliders',
   title = 'Hero Sliders'
 }: TProps) {
   const [selectedSlider, setSelectedSlider] = useState<Sliders[0] | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editSlider, setEditSlider] = useState<Sliders[0] | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deletingKey, setDeletingKey] = useState<string | null>(null);
 
   const handleDelete = async (slider: Sliders[0]) => {
@@ -58,6 +63,17 @@ export default function SliderList({
   const handleViewDetails = (slider: Sliders[0]) => {
     setSelectedSlider(slider);
     setIsDialogOpen(true);
+  };
+
+  const handleEdit = (slider: Sliders[0]) => {
+    setEditSlider(slider);
+    setEditDialogOpen(true);
+  };
+
+  const handleSliderUpdated = () => {
+    onSliderUpdated();
+    setEditDialogOpen(false);
+    setEditSlider(null);
   };
 
   if (loading) {
@@ -160,6 +176,7 @@ export default function SliderList({
                         size='sm'
                         variant='outline'
                         className='flex-1'
+                        onClick={() => handleEdit(slider)}
                       >
                         <Edit className='h-4 w-4 mr-1' />
                         Edit
@@ -261,6 +278,7 @@ export default function SliderList({
                             size='sm'
                             variant='ghost'
                             className='h-8 w-8 p-0'
+                            onClick={() => handleEdit(slider)}
                           >
                             <Edit className='h-4 w-4' />
                           </Button>
@@ -296,6 +314,17 @@ export default function SliderList({
           setIsDialogOpen(false);
           setSelectedSlider(null);
         }}
+        title={title.slice(0, -1)}
+      />
+
+      {/* Edit Slider Dialog */}
+      <SliderForm
+        editSlider={editSlider}
+        isDialogMode={true}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onCreate={handleSliderUpdated}
+        sliderKey={sliderKey}
         title={title.slice(0, -1)}
       />
     </>
