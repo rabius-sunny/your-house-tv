@@ -87,3 +87,59 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+// DELETE - Delete a slider
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const sliderKey = searchParams.get('key'); // The specific slider key to delete
+    const sliderCollectionKey = searchParams.get('sliderKey') || 'hero_sliders'; // The parent settings key
+
+    if (!sliderKey) {
+      return NextResponse.json(
+        { error: 'Slider key is required' },
+        { status: 400 }
+      );
+    }
+
+    // Get existing sliders
+    const slidersSettings = await db.settings.findUnique({
+      where: { key: sliderCollectionKey }
+    });
+
+    if (!slidersSettings) {
+      return NextResponse.json({ error: 'No sliders found' }, { status: 404 });
+    }
+
+    let existingSliders = JSON.parse(slidersSettings.value as string);
+
+    // Find the slider to delete
+    const sliderIndex = existingSliders.findIndex(
+      (slider: any) => slider.key === sliderKey
+    );
+
+    if (sliderIndex === -1) {
+      return NextResponse.json({ error: 'Slider not found' }, { status: 404 });
+    }
+
+    // Remove the slider
+    existingSliders.splice(sliderIndex, 1);
+
+    // Save back to settings
+    await db.settings.update({
+      where: { key: sliderCollectionKey },
+      data: { value: JSON.stringify(existingSliders) }
+    });
+
+    return NextResponse.json(
+      { message: 'Slider deleted successfully' },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error('Error deleting slider:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete slider' },
+      { status: 500 }
+    );
+  }
+}

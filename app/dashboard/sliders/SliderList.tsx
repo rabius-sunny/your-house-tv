@@ -15,7 +15,7 @@ type TProps = {
   sliders: Sliders;
   loading: boolean;
   onSliderDeleted: () => void;
-  sliderKey?: string;
+  sliderKey: 'hero_sliders' | 'bottom_sliders';
   title?: string;
 };
 
@@ -43,10 +43,7 @@ export default function SliderList({
 
     try {
       setDeletingKey(slider.key);
-      const deleteUrl =
-        sliderKey === 'hero_sliders'
-          ? `/sliders/${slider.key}`
-          : `/sliders/${slider.key}?sliderKey=${sliderKey}`;
+      const deleteUrl = `/sliders?key=${slider.key}&sliderKey=${sliderKey}`;
       await request.delete(deleteUrl);
       toast.success(`${title.slice(0, -1)} deleted successfully`);
       onSliderDeleted();

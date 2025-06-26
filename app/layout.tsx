@@ -3,6 +3,7 @@ import { UserProvider } from '@/lib/auth';
 import getUserSession from '@/lib/auth/getUser';
 import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
+import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
 
 const montserrat = Montserrat({
@@ -27,6 +28,11 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${montserrat.className} antialiased`}
       >
+        <NextTopLoader
+          color='#9b7aff'
+          showSpinner={false}
+          height={5}
+        />
         <UserProvider userPromise={userPromise}>{children}</UserProvider>
         <Toaster
           richColors
