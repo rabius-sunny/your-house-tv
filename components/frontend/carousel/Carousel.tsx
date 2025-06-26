@@ -2,11 +2,11 @@
 
 import { EmblaOptions } from '@/config/site';
 import { CarouselSlide } from '@/types';
-import { EmblaCarouselType } from 'embla-carousel';
+import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useCallback } from 'react';
+import React from 'react';
 import {
   NextButton,
   PrevButton,
@@ -21,31 +21,14 @@ const Carousel: React.FC<PropType> = (props) => {
   const { slides } = props;
 
   // Responsive Embla options for different screen sizes
-  const responsiveOptions = {
-    ...EmblaOptions
-    // breakpoints: {
-    //   '(min-width: 1280px)': { slidesToScroll: 1 }, // xl: 4 slides visible
-    //   '(min-width: 1024px)': { slidesToScroll: 1 }, // lg: 3 slides visible
-    //   '(min-width: 768px)': { slidesToScroll: 1 }, // md: 2 slides visible
-    //   '(max-width: 767px)': { slidesToScroll: 1 } // sm and below: 1 slide visible
-    // }
+  const responsiveOptions: EmblaOptionsType = {
+    ...EmblaOptions,
+    align: 'start',
+    skipSnaps: true,
+    slidesToScroll: 1
   };
 
-  const [emblaRef, emblaApi] = useEmblaCarousel(responsiveOptions, [
-    // Autoplay()
-  ]);
-
-  const onNavButtonClick = useCallback((emblaApi: EmblaCarouselType) => {
-    const autoplay = emblaApi?.plugins()?.autoplay;
-    if (!autoplay) return;
-
-    const resetOrStop =
-      autoplay.options.stopOnInteraction === false
-        ? autoplay.reset
-        : autoplay.stop;
-
-    resetOrStop();
-  }, []);
+  const [emblaRef, emblaApi] = useEmblaCarousel(responsiveOptions, []);
 
   const {
     prevBtnDisabled,
@@ -61,10 +44,10 @@ const Carousel: React.FC<PropType> = (props) => {
           className='embla__viewport'
           ref={emblaRef}
         >
-          <div className='embla__container'>
+          <div className='embla__container gap-4'>
             {slides.map((slide, idx) => (
               <div
-                className='embla__slide flex-[0_0_100%] sm:flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%] pl-4 first:pl-0 min-w-0'
+                className='embla__slide flex-[0_0_100%] sm:flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] xl:flex-[0_0_25%]  min-w-0'
                 key={idx}
               >
                 <div className='relative group cursor-pointer overflow-hidden rounded-md shadow-md hover:shadow-lg transition-all duration-300 w-full'>

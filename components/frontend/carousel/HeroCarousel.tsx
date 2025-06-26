@@ -22,7 +22,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
   const { slides } = props;
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { ...EmblaOptions, loop: true },
-    [Autoplay()]
+    [Autoplay({ stopOnInteraction: false, stopOnMouseEnter: false })]
   );
 
   const onNavButtonClick = useCallback((emblaApi: EmblaCarouselType) => {
