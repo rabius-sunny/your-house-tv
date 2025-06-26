@@ -149,6 +149,11 @@ export const navData = {
       title: 'Users',
       url: '/dashboard/users',
       icon: UserCog2Icon
+    },
+    {
+      title: 'Contact Requests',
+      url: '/dashboard/contacts',
+      icon: UserCog2Icon
     }
   ],
   projects: [
@@ -218,7 +223,7 @@ export const footerData = {
     },
     {
       title: 'Contact Us',
-      url: '/contact-us'
+      url: '/contact'
     },
     {
       title: 'About Us',

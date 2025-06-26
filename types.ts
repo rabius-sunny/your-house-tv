@@ -159,6 +159,17 @@ export type Sliders = {
   linktext: string;
 }[];
 
+export type Contact = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  message: string;
+  meta?: any | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type CarouselSlide = {
   thumbnail: string;
   name?: string;
