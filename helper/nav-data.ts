@@ -15,7 +15,8 @@ import {
   TextIcon,
   TextSelect,
   TvMinimalPlay,
-  Twitter
+  Twitter,
+  UserCog2Icon
 } from 'lucide-react';
 
 export const navData = {
@@ -143,6 +144,11 @@ export const navData = {
       title: 'Sponsors',
       url: '/dashboard/sponsors',
       icon: Building2
+    },
+    {
+      title: 'Users',
+      url: '/dashboard/users',
+      icon: UserCog2Icon
     }
   ],
   projects: [
