@@ -46,7 +46,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
 
   return (
     <div className='relative'>
-      <section className='embla-hero min-h-[60vh] relative overflow-hidden'>
+      <section className='embla-hero min-h-[60vh] md:min-h-[70vh] relative overflow-hidden'>
         <div
           className='embla__viewport h-full'
           ref={emblaRef}
@@ -58,7 +58,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
                 key={idx}
               >
                 {/* 70vh viewport image */}
-                <div className='relative w-full h-[60vh]'>
+                <div className='relative w-full h-[60vh] md:h-[70vh]'>
                   <Image
                     src={slide.image}
                     alt={slide.title}
@@ -76,20 +76,20 @@ const HeroCarousel: React.FC<PropType> = (props) => {
 
                       <div className='relative z-10 text-white'>
                         {/* Title */}
-                        <h1 className='text-2xl md:text-3xl lg:text-6xl font-bold mb-4 leading-tight'>
+                        <h1 className='text-2xl md:text-3xl lg:text-4xl font-bold mb-4 leading-tight'>
                           {slide.title}
                         </h1>
 
                         {/* Subtitle */}
                         {slide.subtitle && (
-                          <h2 className='text-sm md:text-2xl lg:text-3xl font-medium mb-6 text-gray-200'>
+                          <h2 className='text-sm md:text-xl lg:text-2xl font-medium mb-6 text-gray-200'>
                             {slide.subtitle}
                           </h2>
                         )}
 
                         {/* Description */}
                         {slide.description && (
-                          <p className='text-sm md:text-lg lg:text-xl mb-8 leading-relaxed text-gray-300 max-w-xl'>
+                          <p className='text-sm md:text-base lg:text-lg mb-8 leading-relaxed text-gray-300 max-w-xl'>
                             {slide.description}
                           </p>
                         )}
@@ -98,7 +98,7 @@ const HeroCarousel: React.FC<PropType> = (props) => {
                         {slide.link && slide.linktext && (
                           <Link
                             href={slide.link}
-                            className='inline-flex items-center px-6 py-3 md:px-8 md:py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm md:text-base'
+                            className='inline-flex items-center px-4 py-3 md:px-6 md:py-3 lg:px-8 lg:py-4 bg-white text-black font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-200 text-sm md:text-base'
                           >
                             {slide.linktext}
                             <svg
