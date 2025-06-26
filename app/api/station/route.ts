@@ -97,11 +97,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
     }
 
+    const slug = channel.slug + '-' + generateSlug(body.name);
+
     // Create the station
     const station = await db.station.create({
       data: {
         name: body.name,
-        slug: generateSlug(body.name),
+        slug,
         thumbnail: body.thumbnail,
         startedAt: body.startedAt,
         endedAt: body.endedAt,
