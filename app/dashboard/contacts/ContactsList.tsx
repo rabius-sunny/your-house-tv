@@ -162,6 +162,7 @@ export default function ContactsList() {
                         size='icon'
                         onClick={() => handleView(contact)}
                         title='View details'
+                        className='bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition-colors'
                       >
                         <Eye className='h-4 w-4' />
                       </Button>
@@ -171,6 +172,7 @@ export default function ContactsList() {
                         onClick={() => handleDelete(contact.id)}
                         disabled={isDeleting === contact.id}
                         title='Delete contact'
+                        className='bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
                       >
                         <Trash2 className='h-4 w-4' />
                       </Button>
