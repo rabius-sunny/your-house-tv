@@ -6,6 +6,16 @@
   --slide-size: 100%;
 }
 
+.embla-hero .embla__viewport {
+  overflow: hidden;
+}
+
+.embla-hero .embla__container {
+  display: flex;
+  margin-top: calc(var(--slide-spacing) * -1);
+  height: calc(var(--slide-spacing) + var(--slide-height));
+}
+
 /* General Carousel - Responsive height */
 .embla {
   margin: auto;
@@ -18,7 +28,6 @@
 }
 .embla__container {
   display: flex;
-  touch-action: pan-x pinch-zoom;
   margin-top: calc(var(--slide-spacing) * -1);
   height: calc(var(--slide-spacing) + var(--slide-height));
   /* flex-direction: column; */
@@ -96,4 +105,17 @@
   min-height: 0;
   flex: 0 0 33.333%; /* Each slide takes 1/3 of the container height */
   padding: 2px 0; /* Small gap between slides */
+}
+
+/* Ensure body can scroll vertically on mobile */
+@media (max-width: 768px) {
+  body {
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .embla-hero {
+    position: relative;
+    pointer-events: auto;
+  }
 }
