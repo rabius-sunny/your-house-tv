@@ -20,41 +20,47 @@ export default async function Footer() {
             height={150}
             className='w-44 md:w-60 h-auto'
           />
-          <p className='font-medium text-slate-200 text-sm'>
+          <p className='font-medium text-slate-200 text-xs md:text-sm'>
             {footerData.description}
           </p>
         </div>
         <div className='grid gap-3'>
-          <p className='font-semibold uppercase'>Policy Links</p>
+          <p className='font-semibold uppercase text-sm md:text-base'>
+            Policy Links
+          </p>
           {footerData.policyLinks.map((link, idx) => (
             <Link
               key={idx}
               href={link.url}
-              className='text-slate-300 hover:text-white transition-colors'
+              className='text-slate-300 hover:text-white transition-colors text-xs md:text-sm font-medium'
             >
               {link.title}
             </Link>
           ))}
         </div>
         <div className='grid gap-3'>
-          <p className='font-semibold uppercase'>Info Links</p>
+          <p className='font-semibold uppercase text-sm md:text-base'>
+            Info Links
+          </p>
           {footerData.infoLinks.map((link, idx) => (
             <Link
               key={idx}
               href={link.url}
-              className='text-slate-300 hover:text-white transition-colors'
+              className='text-slate-300 hover:text-white transition-colors text-xs md:text-sm font-medium'
             >
               {link.title}
             </Link>
           ))}
         </div>
         <div className='grid gap-3'>
-          <p className='font-semibold uppercase'>Social Links</p>
+          <p className='font-semibold uppercase text-sm md:text-base'>
+            Social Links
+          </p>
           {footerData.socialLinks.map((link, idx) => (
             <Link
               key={idx}
               href={link.url}
-              className='text-slate-300 hover:text-white transition-colors flex items-center gap-2'
+              className='text-slate-300 hover:text-white transition-colors text-xs md:text-sm font-medium flex items-center gap-2'
             >
               <link.icon className='size-5' />
               {link.title}
@@ -62,14 +68,14 @@ export default async function Footer() {
           ))}
         </div>
       </div>
-      <div className='box text-slate-300'>
-        <div className='mt-12 h-[1px] bg-slate-300' />
-        <div className='flex items-center justify-between'>
-          <p className='uppercase font-medium text-sm py-4'>
+      <div className='box text-slate-400'>
+        <div className='mt-12 h-[1px] bg-slate-500' />
+        <div className='flex flex-col md:flex-row items-center justify-center md:justify-between'>
+          <p className='uppercase font-medium text-xs md:text-sm py-4'>
             copyright Rogue Wolf, LLC © {new Date().getFullYear()}. All right
             reserved.
           </p>
-          <p className='uppercase font-medium text-sm py-4'>
+          <p className='uppercase font-medium text-xs md:text-sm pt-0 md:py-4'>
             Developed by{' '}
             <Link
               className='text-white'

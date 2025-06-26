@@ -1,9 +1,11 @@
 'use client';
 
+import Share from '@/components/frontend/Share';
 import { VideoPlayer } from '@/components/SimpleVideoPlayer';
+import Background from '@/components/ui/bg';
 import { useAsync } from '@/hooks/useAsync';
 import { Vlog } from '@/types';
-import { ArrowLeft, Calendar, Heart, Share2, Tag } from 'lucide-react';
+import { ArrowLeft, Calendar, Heart, Tag } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -17,10 +19,7 @@ export default function VideoDetails() {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'>
-        {/* Background Pattern */}
-        <div className='absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")]'></div>
-
+      <Background>
         {/* Navigation Skeleton */}
         <div className='relative z-10 px-6 py-8'>
           <div className='w-32 h-6 bg-white/10 rounded animate-pulse mb-8'></div>
@@ -115,7 +114,7 @@ export default function VideoDetails() {
             </div>
           </div>
         </div>
-      </div>
+      </Background>
     );
   }
 
@@ -138,10 +137,7 @@ export default function VideoDetails() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'>
-      {/* Background Pattern */}
-      <div className='absolute inset-0 bg-[url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")]'></div>
-
+    <Background>
       {/* Navigation */}
       <div className='relative z-10 px-6 py-8'>
         <Link
@@ -240,51 +236,10 @@ export default function VideoDetails() {
             </div>
 
             {/* Sharing Section - 1 column */}
-            <div className='space-y-6'>
-              {/* Action Buttons */}
-              <div className='space-y-3'>
-                <button className='w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2'>
-                  <Heart className='w-4 h-4' />
-                  <span>Like Video</span>
-                </button>
-
-                <button className='w-full bg-white/10 hover:bg-white/20 text-white py-3 px-4 rounded-xl font-medium transition-colors flex items-center justify-center space-x-2 border border-white/20'>
-                  <Share2 className='w-4 h-4' />
-                  <span>Share</span>
-                </button>
-              </div>
-
-              {/* Additional Video Details */}
-              <div className='bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20'>
-                <h3 className='text-lg font-semibold text-white mb-4'>
-                  Details
-                </h3>
-
-                <div className='space-y-3 text-sm'>
-                  <div>
-                    <span className='text-white/60'>Published:</span>
-                    <p className='text-white mt-1'>
-                      {new Date(video.createdAt).toLocaleString()}
-                    </p>
-                  </div>
-
-                  <div>
-                    <span className='text-white/60'>Type:</span>
-                    <p className='text-white mt-1'>{video.type}</p>
-                  </div>
-
-                  {video.isFeatured && (
-                    <div>
-                      <span className='text-white/60'>Status:</span>
-                      <p className='text-red-300 mt-1'>Featured Content</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
+            <Share />
           </div>
         </div>
       </div>
-    </div>
+    </Background>
   );
 }

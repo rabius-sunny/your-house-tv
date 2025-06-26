@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export default function ContactPage() {
   return (
-    <div className='container mx-auto px-4 py-8'>
+    <div className=''>
       <SectionHeader title='Contact Us' />
 
       <div className='mt-8'>

@@ -1,7 +1,9 @@
 'use client';
 
 import SponsorCarousel from '@/components/frontend/carousel/SponsorCarousel';
+import Share from '@/components/frontend/Share';
 import StationPlayer from '@/components/shared/StationPlayer';
+import Background from '@/components/ui/bg';
 import { useAsync } from '@/hooks/useAsync';
 import { Sponsor, Station } from '@/types';
 import parse from 'html-react-parser';
@@ -22,50 +24,50 @@ export default function StationDetails() {
   }
 
   return (
-    <div>
-      <StationPlayer
-        loading={loading}
-        station={data!}
-      />
-      <div className='box'>
-        <div className='grid grid-cols-1 lg:grid-cols-4'>
-          <div className='col-span-4 lg:col-span-3'>
-            <h1 className='font-semibold text-2xl'>{data?.name}</h1>
-            <p className='mt-1'>
-              <Link
-                className='hover:underline'
-                href={`/channels/${data?.channel?.slug}`}
-              >
-                {data?.channel?.name}
-              </Link>
-            </p>
-            {data?.description && (
-              <div className='mt-4 mb-10'>{parse(data.description)}</div>
-            )}
-          </div>
-          <div className='col-span-4 lg:col-span-1'>
-            {sponsorLoading ? (
-              <div>Loading sponsors...</div>
-            ) : (
-              <SponsorCarousel slides={sponsors! || []} />
-            )}
-            <div className='mt-10'>
-              <p className='pb-8 text-center text-gray-200'>
-                Share with friends
+    <Background>
+      <div className='py-20'>
+        <StationPlayer
+          loading={loading}
+          station={data!}
+        />
+        <div className='box mt-10'>
+          <div className='grid grid-cols-1 lg:grid-cols-4'>
+            <div className='col-span-4 lg:col-span-3 text-slate-200'>
+              <h1 className='font-semibold text-2xl'>{data?.name}</h1>
+              <p className='mt-1'>
+                <Link
+                  className='hover:underline'
+                  href={`/channels/${data?.channel?.slug}`}
+                >
+                  {data?.channel?.name}
+                </Link>
               </p>
+              {data?.description && (
+                <div className='mt-4'>{parse(data.description)}</div>
+              )}
+            </div>
+            <div className='col-span-4 lg:col-span-1'>
+              {sponsorLoading ? (
+                <div>Loading sponsors...</div>
+              ) : (
+                <SponsorCarousel slides={sponsors! || []} />
+              )}
+              <div className='mt-10'>
+                <Share />
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className='box mt-10'>
-        <Suspense fallback={<div></div>}>
-          <RelatedStations
-            currentStation={params.slug as string}
-            channelSlug={data?.channel?.slug}
-          />
-        </Suspense>
+        <div className='box mt-10'>
+          <Suspense fallback={<div></div>}>
+            <RelatedStations
+              currentStation={params.slug as string}
+              channelSlug={data?.channel?.slug}
+            />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </Background>
   );
 }

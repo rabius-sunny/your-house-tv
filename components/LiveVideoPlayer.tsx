@@ -190,7 +190,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   if (!isTimeSync) {
     return (
-      <div className='my-10  video-box bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
+      <div className=' video-box bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
         <div className='flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
           <div className='flex items-center space-x-2'>
             <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
@@ -203,7 +203,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   if (!durationsReady) {
     return (
       <div className='video-box'>
-        <div className='my-10 bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
+        <div className='bg-black rounded-lg overflow-hidden shadow-2xl aspect-video flex items-center justify-center'>
           <div className='flex items-center justify-center bg-black bg-opacity-75 text-white z-10'>
             <div className='flex items-center space-x-2'>
               <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-white'></div>
@@ -218,7 +218,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
   if (!isPlaying) {
     return (
       <div className='video-box'>
-        <div className='my-10  bg-black rounded-lg overflow-hidden aspect-video'>
+        <div className=' bg-black rounded-lg overflow-hidden aspect-video'>
           <div className=' flex items-center justify-center bg-gray-900 text-white'>
             <div className='text-center'>
               <p className='text-gray-300'>
@@ -234,7 +234,7 @@ export const LiveVideoPlayer: React.FC<LiveVideoPlayerProps> = ({
 
   return (
     <div className='px-4 sm:px-6 lg:px-8 xl:px-12'>
-      <div className='my-10  w-full mx-auto  max-w-7xl  bg-black rounded-lg overflow-hidden shadow-2xl'>
+      <div className=' w-full mx-auto  max-w-7xl  bg-black rounded-lg overflow-hidden shadow-2xl'>
         <div className='relative aspect-video'>
           <video
             ref={videoRef}

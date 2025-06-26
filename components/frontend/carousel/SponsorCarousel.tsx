@@ -37,10 +37,10 @@ const SponsorCarousel: React.FC<PropType> = (props) => {
             >
               <div className='flex flex-col justify-center'>
                 <div className='p-4 text-center'>
-                  <h3 className='text-sm md:text-base text-gray-800 font-semibold'>
+                  <h3 className='text-sm md:text-base text-gray-200 font-semibold'>
                     {slide.name}
                   </h3>
-                  <p className='text-xs md:text-sm text-gray-600'>
+                  <p className='text-xs md:text-sm text-gray-300'>
                     {slide.designation}
                   </p>
                 </div>
