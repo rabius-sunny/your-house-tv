@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const { slug, channelSlug, ...updateData } = body;
+    const { slug, ...updateData } = body;
 
     if (!slug) {
       return NextResponse.json(
@@ -149,21 +149,6 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'Station not found' }, { status: 404 });
     }
 
-    // If channelSlug is being updated, check if the channel exists and get its ID
-    if (channelSlug) {
-      const channel = await db.channel.findUnique({
-        where: { slug: channelSlug }
-      });
-
-      if (!channel) {
-        return NextResponse.json(
-          { error: 'Channel not found' },
-          { status: 404 }
-        );
-      }
-      updateData.channelId = channel.id;
-    }
-
     // Validate date range if both dates are provided
     if (updateData.startedAt && updateData.endedAt) {
       if (updateData.endedAt <= updateData.startedAt) {
@@ -174,21 +159,21 @@ export async function PUT(request: NextRequest) {
       }
     }
 
+    // Check if the channel exists by slug
+    const channel = await db.channel.findUnique({
+      where: { id: body.channelId }
+    });
+
+    if (!channel) {
+      return NextResponse.json({ error: 'Channel not found' }, { status: 404 });
+    }
+
+    const updatedSlug = channel.slug + '-' + generateSlug(body.name);
+
     // Update the station
     const updatedStation = await db.station.update({
       where: { slug },
-      data: updateData,
-      include: {
-        channel: {
-          include: {
-            city: {
-              include: {
-                network: true
-              }
-            }
-          }
-        }
-      }
+      data: { ...updateData, slug: updatedSlug }
     });
 
     return NextResponse.json(updatedStation);
