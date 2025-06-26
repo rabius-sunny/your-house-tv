@@ -230,6 +230,9 @@
   .bg-color {
     @apply bg-[#271b49];
   }
+  .bg-nav {
+    @apply bg-[#271b49cb];
+  }
 }
 
 @layer utilities {
