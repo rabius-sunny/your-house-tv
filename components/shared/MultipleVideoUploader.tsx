@@ -35,14 +35,11 @@ export default function MultipleVideoUploader({
   const [currentFiles, setCurrentFiles] = useState<FileList | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [isCurrentlyUploading, setIsCurrentlyUploading] = useState(false);
-  const [activeId, setActiveId] = useState<string | null>(null);
   const [uploadStatus, setUploadStatus] = useState<{
     total: number;
     completed: number;
     currentFile: string;
   }>({ total: 0, completed: 0, currentFile: '' });
-
-  console.log('isCurrentlyUploading', isCurrentlyUploading);
 
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -92,6 +89,8 @@ export default function MultipleVideoUploader({
       });
 
       try {
+        let successfulUploads = 0;
+
         // Upload files one by one to show progress
         for (let i = 0; i < filesArray.length; i++) {
           const file = filesArray[i];
@@ -129,6 +128,7 @@ export default function MultipleVideoUploader({
 
           if (uploadResult.data?.length > 0) {
             onVideoAdd(uploadResult.data[0]);
+            successfulUploads++;
             setUploadStatus((prev) => ({
               ...prev,
               completed: prev.completed + 1
@@ -139,15 +139,16 @@ export default function MultipleVideoUploader({
           }
         }
 
-        if (uploadStatus.completed === filesArray.length) {
+        // Show appropriate success/failure message based on actual results
+        if (successfulUploads === filesArray.length) {
           toast.success(
             `Successfully uploaded ${filesArray.length} video${
               filesArray.length > 1 ? 's' : ''
             }!`
           );
-        } else if (uploadStatus.completed > 0) {
+        } else if (successfulUploads > 0) {
           toast.success(
-            `Successfully uploaded ${uploadStatus.completed} out of ${filesArray.length} videos`
+            `Successfully uploaded ${successfulUploads} out of ${filesArray.length} videos`
           );
         } else {
           toast.error('Failed to upload videos');

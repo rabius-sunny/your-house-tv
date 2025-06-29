@@ -372,7 +372,9 @@ export default function CreateStationComp({
             disabled={isLoading || isUploading}
             className='flex-1'
           >
-            {isLoading
+            {isUploading
+              ? 'Uploading videos...'
+              : isLoading
               ? `${isEditMode ? 'Updating' : 'Creating'}...`
               : `${isEditMode ? 'Update' : 'Create'} Station`}
           </Button>

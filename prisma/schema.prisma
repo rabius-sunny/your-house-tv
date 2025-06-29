@@ -92,12 +92,24 @@ model Station {
   videos      String[]
   isFeatured  Boolean  @default(false)
 
-  channelId String  @db.ObjectId
-  channel   Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  meta      Json?
+  channelId  String    @db.ObjectId
+  channel    Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  sponsors   Sponsor[] @relation(fields: [sponsorIds], references: [id])
+  sponsorIds String[]  @db.ObjectId
+  meta       Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Sponsor {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  designation String?
+  thumbnail   String
+  website     String?
+  station     Station[] @relation(fields: [stationIds], references: [id])
+  stationIds  String[]  @db.ObjectId
 }
 
 model BlogCategory {

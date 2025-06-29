@@ -85,6 +85,8 @@ export type Station = {
   startedAt: Date;
   endedAt: Date;
   videos: string[];
+  sponsors: Sponsor[];
+  sponsorIds: string[];
   _count: any;
   isFeatured: boolean;
   channelId: string;
@@ -126,10 +128,11 @@ export type Vlog = {
 export type Sponsor = {
   id: string;
   name: string;
-  designation: string;
-  logo: string;
-  url: string;
-  createdAt: Date;
+  designation?: string;
+  thumbnail: string;
+  website?: string;
+  station: Station[];
+  stationIds: string[];
 };
 
 export type Settings = {
