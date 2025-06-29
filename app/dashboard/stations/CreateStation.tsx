@@ -2,6 +2,7 @@
 
 import ImageUploader from '@/components/shared/ImageUploader';
 import MultipleVideoUploader from '@/components/shared/MultipleVideoUploader';
+import TextEditor from '@/components/shared/TextEditor';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -45,6 +46,7 @@ export default function CreateStationComp({
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState<string>();
   const [uploadedVideos, setUploadedVideos] = useState<string[]>([]);
+  const [description, setDescription] = useState('');
   const isEditMode = Boolean(editStation);
 
   // Helper function to add a new video
@@ -84,6 +86,7 @@ export default function CreateStationComp({
         isFeatured: editStation.isFeatured,
         channelId: editStation.channelId
       });
+      setDescription(editStation.description || '');
       setThumbnail(editStation.thumbnail);
       // PRESERVE existing videos with DnD ordering
       setUploadedVideos([...editStation.videos]);
@@ -119,6 +122,7 @@ export default function CreateStationComp({
       const formData = {
         ...data,
         thumbnail,
+        description,
         videos: uploadedVideos // This maintains the DnD order
       };
 
@@ -191,6 +195,14 @@ export default function CreateStationComp({
             </FormItem>
           )}
         />
+
+        <div className='my-4'>
+          <Label className='mb-2'>Description</Label>
+          <TextEditor
+            state={description}
+            setState={setDescription}
+          />
+        </div>
 
         {/* Thumbnail Upload */}
         <div className='space-y-2'>
