@@ -264,7 +264,7 @@ export default function ChannelDetailsPage() {
               <div className='text-center py-12'>
                 <Play className='h-16 w-16 text-slate-300 mx-auto mb-4' />
                 <h3 className='text-xl font-semibold text-slate-600 mb-2'>
-                  No Stations Available
+                  No Stations Available.
                 </h3>
                 <p className='text-slate-500'>
                   This channel doesn't have any stations configured yet.

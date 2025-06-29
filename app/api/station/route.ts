@@ -109,7 +109,8 @@ export async function POST(request: NextRequest) {
         endedAt: body.endedAt,
         videos: body.videos,
         isFeatured: body.isFeatured || false,
-        channelId: channel.id
+        channelId: channel.id,
+        description: body.description || ''
       }
     });
 
