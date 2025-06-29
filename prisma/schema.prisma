@@ -110,6 +110,9 @@ model Sponsor {
   website     String?
   station     Station[] @relation(fields: [stationIds], references: [id])
   stationIds  String[]  @db.ObjectId
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model BlogCategory {

@@ -5,10 +5,10 @@ import Share from '@/components/frontend/Share';
 import StationPlayer from '@/components/shared/StationPlayer';
 import Background from '@/components/ui/bg';
 import { useAsync } from '@/hooks/useAsync';
-import { Sponsor, Station } from '@/types';
+import { Station } from '@/types';
 import parse from 'html-react-parser';
 import Link from 'next/link';
-import { notFound, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { Suspense } from 'react';
 import RelatedStations from '../RelatedStations';
 
@@ -17,11 +17,6 @@ export default function StationDetails() {
   const { data, loading, error } = useAsync<Station>(
     `/station/public?slug=${params.slug}`
   );
-  const { data: sponsors, loading: sponsorLoading } =
-    useAsync<Sponsor[]>(`/sponsors`);
-  if (error) {
-    return notFound();
-  }
 
   return (
     <Background>
@@ -46,12 +41,9 @@ export default function StationDetails() {
                 <div className='mt-4'>{parse(data.description)}</div>
               )}
             </div>
-            <div className='col-span-4 lg:col-span-1'>
-              {sponsorLoading ? (
-                <div>Loading sponsors...</div>
-              ) : (
-                <SponsorCarousel slides={sponsors! || []} />
-              )}
+            <div className='max-w-sm mx-auto lg:max-w-max  mt-10 lg:mt-0 col-span-4 lg:col-span-1'>
+              <SponsorCarousel slides={data?.sponsors || []} />
+
               <div className='mt-10'>
                 <Share />
               </div>

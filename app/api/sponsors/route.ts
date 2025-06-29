@@ -2,21 +2,34 @@ import db from '@/config/db';
 import { createSponsorSchema } from '@/helper/schema/sponsor';
 import { NextRequest, NextResponse } from 'next/server';
 
-// GET - Fetch all sponsors
-export async function GET() {
+// GET - Get all sponsors or a specific sponsor by ID
+export async function GET(request: NextRequest) {
   try {
-    // Get sponsors from settings table
-    const sponsorsSettings = await db.settings.findUnique({
-      where: { key: 'sponsors' }
-    });
+    const { searchParams } = new URL(request.url);
+    const sponsorId = searchParams.get('id');
 
-    if (!sponsorsSettings) {
-      return NextResponse.json([], { status: 200 });
+    if (sponsorId) {
+      // Get specific sponsor by ID
+      const sponsor = await db.sponsor.findUnique({
+        where: { id: sponsorId }
+      });
+
+      if (!sponsor) {
+        return NextResponse.json(
+          { error: 'Sponsor not found' },
+          { status: 404 }
+        );
+      }
+
+      return NextResponse.json(sponsor);
+    } else {
+      // Get all sponsors
+      const sponsors = await db.sponsor.findMany({
+        orderBy: { createdAt: 'desc' }
+      });
+
+      return NextResponse.json(sponsors);
     }
-
-    // Parse the JSON value
-    const sponsors = JSON.parse(sponsorsSettings.value as string);
-    return NextResponse.json(sponsors, { status: 200 });
   } catch (error) {
     console.error('Error fetching sponsors:', error);
     return NextResponse.json(
@@ -32,46 +45,56 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     // Validate the request body
-    const validatedData = createSponsorSchema.parse(body);
-
-    // Get existing sponsors
-    const sponsorsSettings = await db.settings.findUnique({
-      where: { key: 'sponsors' }
-    });
-
-    let existingSponsors = [];
-    if (sponsorsSettings) {
-      existingSponsors = JSON.parse(sponsorsSettings.value as string);
+    const validationResult = createSponsorSchema.safeParse(body);
+    if (!validationResult.success) {
+      return NextResponse.json(
+        {
+          error: 'Invalid data provided',
+          details: validationResult.error.errors
+        },
+        { status: 400 }
+      );
     }
 
-    // Create new sponsor with a unique id
-    const newSponsor = {
-      id: `sponsor_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      ...validatedData,
-      logo: body.logo, // Include the uploaded logo URL
-      createdAt: new Date().toISOString()
-    };
+    // Check if stations exist
+    if (body.stationIds && body.stationIds.length > 0) {
+      const existingStations = await db.station.findMany({
+        where: {
+          id: {
+            in: body.stationIds
+          }
+        }
+      });
 
-    // Add to existing sponsors
-    const updatedSponsors = [...existingSponsors, newSponsor];
+      if (existingStations.length !== body.stationIds.length) {
+        return NextResponse.json(
+          { error: 'One or more stations not found' },
+          { status: 404 }
+        );
+      }
+    }
 
-    // Save back to settings
-    await db.settings.upsert({
-      where: { key: 'sponsors' },
-      update: { value: JSON.stringify(updatedSponsors) },
-      create: {
-        key: 'sponsors',
-        value: JSON.stringify(updatedSponsors)
+    // Create the sponsor
+    const sponsor = await db.sponsor.create({
+      data: {
+        name: body.name,
+        designation: body.designation,
+        thumbnail: body.thumbnail,
+        website: body.website,
+        stationIds: body.stationIds || [],
+        station: {
+          connect: body.stationIds?.map((id: string) => ({ id }))
+        }
       }
     });
 
-    return NextResponse.json(newSponsor, { status: 201 });
-  } catch (error: any) {
+    return NextResponse.json(sponsor, { status: 201 });
+  } catch (error) {
     console.error('Error creating sponsor:', error);
 
-    if (error.name === 'ZodError') {
+    if (error instanceof Error && error.name === 'ZodError') {
       return NextResponse.json(
-        { error: 'Invalid data provided', details: error.errors },
+        { error: 'Invalid data provided', details: error },
         { status: 400 }
       );
     }
@@ -83,7 +106,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// PUT - Update an existing sponsor
+// PUT - Update a sponsor
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
@@ -96,56 +119,50 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    // Validate the update data
-    const validatedData = createSponsorSchema.parse(updateData);
-
-    // Get existing sponsors
-    const sponsorsSettings = await db.settings.findUnique({
-      where: { key: 'sponsors' }
+    // Check if sponsor exists
+    const existingSponsor = await db.sponsor.findUnique({
+      where: { id }
     });
 
-    if (!sponsorsSettings) {
-      return NextResponse.json({ error: 'No sponsors found' }, { status: 404 });
-    }
-
-    let existingSponsors = JSON.parse(sponsorsSettings.value as string);
-
-    // Find the sponsor to update
-    const sponsorIndex = existingSponsors.findIndex(
-      (sponsor: any) => sponsor.id === id
-    );
-
-    if (sponsorIndex === -1) {
+    if (!existingSponsor) {
       return NextResponse.json({ error: 'Sponsor not found' }, { status: 404 });
     }
 
-    // Update the sponsor
-    const updatedSponsor = {
-      ...existingSponsors[sponsorIndex],
-      ...validatedData,
-      logo: body.logo, // Include the uploaded logo URL
-      updatedAt: new Date().toISOString()
-    };
+    // Check if stations exist (if stationIds is being updated)
+    if (updateData.stationIds && updateData.stationIds.length > 0) {
+      const existingStations = await db.station.findMany({
+        where: {
+          id: {
+            in: updateData.stationIds
+          }
+        }
+      });
 
-    existingSponsors[sponsorIndex] = updatedSponsor;
-
-    // Save back to settings
-    await db.settings.update({
-      where: { key: 'sponsors' },
-      data: { value: JSON.stringify(existingSponsors) }
-    });
-
-    return NextResponse.json(updatedSponsor, { status: 200 });
-  } catch (error: any) {
-    console.error('Error updating sponsor:', error);
-
-    if (error.name === 'ZodError') {
-      return NextResponse.json(
-        { error: 'Invalid data provided', details: error.errors },
-        { status: 400 }
-      );
+      if (existingStations.length !== updateData.stationIds.length) {
+        return NextResponse.json(
+          { error: 'One or more stations not found' },
+          { status: 404 }
+        );
+      }
     }
 
+    // Update the sponsor
+    const updatedSponsor = await db.sponsor.update({
+      where: { id },
+      data: {
+        ...updateData,
+        station: {
+          connect:
+            updateData.stationIds?.map((stationId: string) => ({
+              id: stationId
+            })) || []
+        }
+      }
+    });
+
+    return NextResponse.json(updatedSponsor);
+  } catch (error) {
+    console.error('Error updating sponsor:', error);
     return NextResponse.json(
       { error: 'Failed to update sponsor' },
       { status: 500 }
@@ -166,40 +183,25 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Get existing sponsors
-    const sponsorsSettings = await db.settings.findUnique({
-      where: { key: 'sponsors' }
+    // Check if sponsor exists
+    const existingSponsor = await db.sponsor.findUnique({
+      where: { id: sponsorId }
     });
 
-    if (!sponsorsSettings) {
-      return NextResponse.json({ error: 'No sponsors found' }, { status: 404 });
-    }
-
-    let existingSponsors = JSON.parse(sponsorsSettings.value as string);
-
-    // Find the sponsor to delete
-    const sponsorIndex = existingSponsors.findIndex(
-      (sponsor: any) => sponsor.id === sponsorId
-    );
-
-    if (sponsorIndex === -1) {
+    if (!existingSponsor) {
       return NextResponse.json({ error: 'Sponsor not found' }, { status: 404 });
     }
 
-    // Remove the sponsor
-    existingSponsors.splice(sponsorIndex, 1);
-
-    // Save back to settings
-    await db.settings.update({
-      where: { key: 'sponsors' },
-      data: { value: JSON.stringify(existingSponsors) }
+    // Delete the sponsor
+    await db.sponsor.delete({
+      where: { id: sponsorId }
     });
 
     return NextResponse.json(
       { message: 'Sponsor deleted successfully' },
       { status: 200 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error deleting sponsor:', error);
     return NextResponse.json(
       { error: 'Failed to delete sponsor' },

@@ -4,16 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import request from '@/services/http';
-import { Sponsor } from '@/types';
+import { Sponsor, Station } from '@/types';
 import { Edit, Eye, Loader2, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import SponsorDetailsDialog from './SponsorDetailsDialog';
-import SponsorEditForm from './SponsorEditForm';
+import SponsorForm from './SponsorForm';
 
 type TProps = {
   sponsors: Sponsor[];
+  stations: Station[];
   loading: boolean;
   onSponsorDeleted: () => void;
   onSponsorUpdated: () => void;
@@ -21,6 +22,7 @@ type TProps = {
 
 export default function SponsorList({
   sponsors,
+  stations,
   loading,
   onSponsorDeleted,
   onSponsorUpdated
@@ -71,7 +73,8 @@ export default function SponsorList({
   // Show edit form if editing
   if (editingSponsor) {
     return (
-      <SponsorEditForm
+      <SponsorForm
+        stations={stations}
         sponsor={editingSponsor}
         onUpdate={handleEditComplete}
         onCancel={handleEditCancel}
@@ -140,7 +143,7 @@ export default function SponsorList({
                     {/* Sponsor Logo */}
                     <div className='relative h-20 w-20 rounded-lg overflow-hidden bg-muted mx-auto'>
                       <Image
-                        src={sponsor.logo}
+                        src={sponsor.thumbnail}
                         alt={sponsor.name}
                         fill
                         className='object-cover'
@@ -157,7 +160,7 @@ export default function SponsorList({
                         {sponsor.designation}
                       </p>
                       <p className='text-xs text-muted-foreground line-clamp-1'>
-                        {sponsor.url}
+                        {sponsor.website}
                       </p>
                     </div>
 
@@ -231,7 +234,7 @@ export default function SponsorList({
                         <div className='col-span-3 flex items-center gap-3'>
                           <div className='relative h-12 w-12 rounded-lg overflow-hidden bg-muted flex-shrink-0'>
                             <Image
-                              src={sponsor.logo}
+                              src={sponsor.thumbnail}
                               alt={sponsor.name}
                               fill
                               className='object-cover'
@@ -255,12 +258,12 @@ export default function SponsorList({
                         {/* Website URL */}
                         <div className='col-span-4 flex items-center'>
                           <a
-                            href={sponsor.url}
+                            href={sponsor.website}
                             target='_blank'
                             rel='noopener noreferrer'
                             className='text-xs text-primary hover:underline line-clamp-1'
                           >
-                            {sponsor.url}
+                            {sponsor.website}
                           </a>
                         </div>
 

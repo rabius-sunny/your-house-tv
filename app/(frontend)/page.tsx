@@ -19,6 +19,7 @@ export default async function page() {
   return (
     <div>
       <HeroCarousel slides={data.sliders} />
+
       <FeaturedCarousel
         title='Networks'
         items={data.networks || []}

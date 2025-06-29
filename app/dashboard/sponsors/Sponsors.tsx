@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import request from '@/services/http';
-import { Sponsor } from '@/types';
+import { Sponsor, Station } from '@/types';
 import { Plus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -17,6 +17,7 @@ const tabs = [
 export default function Sponsors() {
   const [activeTab, setActiveTab] = useState('list');
   const [sponsors, setSponsors] = useState<Sponsor[]>([]);
+  const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchSponsors = async () => {
@@ -32,8 +33,19 @@ export default function Sponsors() {
     }
   };
 
+  const fetchStations = async () => {
+    try {
+      const response = await request.get('/station');
+      setStations(response.data);
+    } catch (error) {
+      console.error('Error fetching stations:', error);
+      toast.error('Failed to fetch stations');
+    }
+  };
+
   useEffect(() => {
     fetchSponsors();
+    fetchStations();
   }, []);
 
   const handleSponsorCreated = () => {
@@ -83,6 +95,7 @@ export default function Sponsors() {
         {activeTab === 'list' && (
           <SponsorList
             sponsors={sponsors}
+            stations={stations}
             loading={loading}
             onSponsorDeleted={handleSponsorDeleted}
             onSponsorUpdated={handleSponsorUpdated}
@@ -90,7 +103,10 @@ export default function Sponsors() {
         )}
 
         {activeTab === 'create' && (
-          <SponsorForm onCreate={handleSponsorCreated} />
+          <SponsorForm
+            stations={stations}
+            onCreate={handleSponsorCreated}
+          />
         )}
       </div>
     </div>

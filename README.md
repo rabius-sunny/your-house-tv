@@ -90,6 +90,8 @@ The application will be available at [http://localhost:3004](http://localhost:30
 - `/api/network` - Network management (GET, POST, PUT, DELETE)
 - `/api/city` - City management (GET, POST, PUT, DELETE)
 - `/api/channel` - Channel management (GET, POST, PUT, DELETE)
+- `/api/station` - Station management (GET, POST, PUT, DELETE)
+- `/api/sponsor` - Sponsor management (GET, POST, PUT, DELETE)
 - `/api/gallery` - Gallery/media management
 - `/api/get-videos` - Video retrieval
 - `/api/server-time` - Server time synchronization

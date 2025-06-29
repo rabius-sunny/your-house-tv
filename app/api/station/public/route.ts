@@ -12,7 +12,8 @@ export async function GET(request: NextRequest) {
       const station = await db.station.findUnique({
         where: { slug },
         include: {
-          channel: true
+          channel: true,
+          sponsors: true
         }
       });
 
@@ -33,7 +34,8 @@ export async function GET(request: NextRequest) {
           }
         },
         include: {
-          channel: true
+          channel: true,
+          sponsors: true
         },
         orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }]
       });

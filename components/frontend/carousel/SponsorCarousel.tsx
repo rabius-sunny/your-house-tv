@@ -45,7 +45,7 @@ const SponsorCarousel: React.FC<PropType> = (props) => {
                   </p>
                 </div>
                 <Image
-                  src={slide.logo || '/placeholder.webp'}
+                  src={slide.thumbnail || '/placeholder.webp'}
                   alt={slide.name || 'Slide image'}
                   width={400}
                   height={300}

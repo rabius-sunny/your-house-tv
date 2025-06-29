@@ -29,7 +29,9 @@ export default function RelatedStations({
   }
   return (
     <div>
-      <p className='uppercase text-center'>Up Next in {channelSlug}</p>
+      <p className='uppercase text-center text-white font-medium mb-2'>
+        Up Next in {channelSlug}
+      </p>
       <div className='mt-4 mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
         {data?.stations?.map((station, idx) => (
           <Link
